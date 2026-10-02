@@ -4,10 +4,73 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  quality:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MONGO_TEST_URI: mongodb://127.0.0.1:27017/studio_phase1_ci?replicaSet=rs0&directConnection=true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Start isolated transactional MongoDB
+        run: |
+          docker run -d --name studio-mongo-ci -p 127.0.0.1:27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+          for attempt in $(seq 1 60); do
+            if docker exec studio-mongo-ci mongosh --quiet --eval 'db.runCommand({ping:1})' >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          docker exec studio-mongo-ci mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"127.0.0.1:27017"}]})'
+          for attempt in $(seq 1 60); do
+            if docker exec studio-mongo-ci mongosh --quiet --eval 'if (!db.hello().isWritablePrimary) quit(1)' >/dev/null 2>&1; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Static checks
+        run: yarn check
+
+      - name: Unit, contract, and MongoDB integration tests
+        run: yarn test
+
+      - name: Independent workflow and readiness audits
+        run: node --test ops/tests/*.cjs
+
+      - name: Production build
+        run: yarn build
+
+      - name: Browser E2E
+        run: yarn test:e2e
+
+  deploy:
+    needs: quality
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -31,6 +94,11 @@ jobs:
             git checkout main
             git pull origin main
             git submodule update --init --recursive
+
+            # Created manually only after the replica-set rollout has been verified.
+            if [ -f .workflow-replica-enabled ]; then
+              export COMPOSE_FILE=docker-compose.yml:docker-compose.workflow.yml
+            fi
 
             if command -v docker compose >/dev/null 2>&1; then
               docker compose up -d --build

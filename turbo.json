@@ -12,6 +12,9 @@
     "check": {
       "cache": false
     },
+    "test": {
+      "cache": false
+    },
     "format": {
       "cache": false
     },

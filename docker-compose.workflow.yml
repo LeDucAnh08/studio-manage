@@ -1,0 +1,59 @@
+# Opt-in overlay: read WORKFLOW_RELEASE.md before converting an existing database.
+# docker compose -f docker-compose.yml -f docker-compose.workflow.yml up -d --build
+services:
+  mongodb-keyfile:
+    image: mongo:7
+    user: "0:0"
+    entrypoint: ["bash", "/workflow/create-keyfile.sh"]
+    volumes:
+      - mongodb_keyfile:/keyfile
+      - ./ops/mongo/create-keyfile.sh:/workflow/create-keyfile.sh:ro
+    restart: "no"
+
+  mongodb:
+    command: ["mongod", "--replSet", "rs0", "--keyFile", "/keyfile/replica.key", "--bind_ip_all"]
+    volumes:
+      - mongodb_keyfile:/keyfile:ro
+    depends_on:
+      mongodb-keyfile:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          mongosh --quiet -u admin -p "$$MONGO_INITDB_ROOT_PASSWORD"
+          --authenticationDatabase admin
+          --eval 'if (!db.hello().isWritablePrimary) quit(1)'
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 20s
+
+  mongodb-replica-init:
+    image: mongo:7
+    entrypoint: ["bash", "/workflow/init-replica.sh"]
+    environment:
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD}
+    volumes:
+      - ./ops/mongo/init-replica.sh:/workflow/init-replica.sh:ro
+      - ./ops/mongo/init-replica.js:/workflow/init-replica.js:ro
+    depends_on:
+      mongodb:
+        condition: service_started
+    networks:
+      - studio-net
+    restart: "no"
+
+  backend:
+    environment:
+      MONGO_URI: mongodb://admin:${MONGO_ROOT_PASSWORD}@mongodb:27017/studio_db?authSource=admin&replicaSet=rs0
+      # Enable only after the legacy resource audit described in WORKFLOW_RELEASE.md.
+      CLIENT_WORKFLOW_ENABLED: ${CLIENT_WORKFLOW_ENABLED:-false}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mongodb-replica-init:
+        condition: service_completed_successfully
+
+volumes:
+  mongodb_keyfile:

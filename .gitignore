@@ -5,3 +5,5 @@ dist/
 .turbo/
 .DS_Store
 .omc
+.workflow-tools/
+.workflow-replica-enabled
