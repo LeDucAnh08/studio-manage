@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Quality checks and optional VPS deploy
 
 on:
   push:
@@ -68,7 +68,7 @@ jobs:
 
   deploy:
     needs: quality
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && vars.ENABLE_VPS_DEPLOY == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 

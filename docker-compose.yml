@@ -48,6 +48,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_CLIENT_PORTAL_ENABLED: ${VITE_CLIENT_PORTAL_ENABLED:-true}
+        VITE_CLIENT_RENTAL_ENABLED: ${VITE_CLIENT_RENTAL_ENABLED:-false}
     container_name: studio-frontend
     restart: unless-stopped
     ports:

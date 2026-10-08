@@ -49,6 +49,7 @@ services:
       MONGO_URI: mongodb://admin:${MONGO_ROOT_PASSWORD}@mongodb:27017/studio_db?authSource=admin&replicaSet=rs0
       # Enable only after the legacy resource audit described in WORKFLOW_RELEASE.md.
       CLIENT_WORKFLOW_ENABLED: ${CLIENT_WORKFLOW_ENABLED:-false}
+      CLIENT_RENTAL_ENABLED: ${CLIENT_RENTAL_ENABLED:-false}
     depends_on:
       mongodb:
         condition: service_healthy

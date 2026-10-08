@@ -1,77 +1,85 @@
-# Phase 1 — Release & UAT Runbook
+# Phase 1 — Portal và nghiệm thu local
 
-## Trạng thái
+Tài liệu này mô tả portal ban đầu. Phiên bản hiện tại còn có chụp, thuê và báo cáo; bộ nghiệm thu tổng thể nằm trong [STUDIO_ACCEPTANCE.md](STUDIO_ACCEPTANCE.md), hướng dẫn chạy nằm trong [DEMO_LOCAL.md](DEMO_LOCAL.md).
 
-- Phần mềm Phase 1 đã có feature flag, unit/component test, HTTP contract test, MongoDB integration test và browser E2E.
-- CI bắt buộc `check → test → build → E2E` trước khi job deploy được phép chạy.
-- Việc bật production chỉ được thực hiện sau khi staging UAT có chữ ký xác nhận. Không dùng kết quả local thay cho UAT staging.
+Đích triển khai của đồ án là demo local lưu dữ liệu bền vững. Không yêu cầu staging, production, dữ liệu khách hàng thật hay chữ ký studio. Người thực hiện đồ án dùng tài khoản mẫu, ghi evidence của các thao tác bằng tay và dẫn tới báo cáo kiểm thử tự động khi phù hợp.
 
-## Cấu hình
+## Khởi động và cấu hình
 
-| Biến | Staging | Production trước canary | Production khi mở |
-| --- | --- | --- | --- |
-| `CLIENT_PORTAL_ENABLED` | `true` | `false` | `true` |
-| `VITE_CLIENT_PORTAL_ENABLED` | `true` | `false` | `true` |
-| `VITE_API_URL` | URL API staging | URL API production | URL API production |
-| `CORS_ORIGIN` | origin frontend staging | origin frontend production | origin frontend production |
+Từ root:
 
-`VITE_CLIENT_PORTAL_ENABLED` được đóng vào frontend tại thời điểm build. Thay đổi biến này phải build/deploy lại frontend. Backend flag có hiệu lực sau khi restart service.
+```powershell
+node ops/demo.cjs start
+node ops/demo.cjs status
+```
 
-## Preflight
+Mở **http://localhost:4001**, API **http://localhost:5002**. MongoDB **127.0.0.1:27029**, replica set **rs0**, database **studio_project_demo**, thư mục dữ liệu **.workflow-tools/demo-mongo-data**. Launcher bật portal/chụp/thuê bằng env riêng cho process; không cần sửa `.env` hiện có. Tài khoản mẫu theo vai trò nằm trong DEMO_LOCAL.md.
 
-1. Xác nhận database staging riêng, không trỏ production và chỉ dùng dữ liệu giả/đã ẩn danh.
-2. Backup database đích; ghi lại image digest, root SHA, backend SHA và frontend SHA.
-3. Chạy `yarn install --frozen-lockfile`, `yarn check`, `yarn test`, `yarn build`, `yarn test:e2e`.
-4. Kiểm tra index duy nhất:
-   - `users.username`
-   - `users.sourceAccountRequest` (sparse)
-   - `accountrequests.username`
-   - `bookings(client, clientRequestId)` với partial filter.
-5. Xác nhận `/api/health` trả `200` và CORS chỉ cho phép đúng origin.
+Nếu tự chạy các workspace thay cho launcher, cấu hình:
 
-Không cần backfill role cho dữ liệu cũ: role `6` chỉ áp dụng cho tài khoản khách hàng tạo mới. Không nhập khách hàng cũ thành client nếu chưa có quy tắc đối soát danh tính.
+| Biến | Giá trị demo |
+|---|---|
+| CLIENT_PORTAL_ENABLED | true |
+| CLIENT_WORKFLOW_ENABLED | true |
+| CLIENT_RENTAL_ENABLED | true |
+| VITE_CLIENT_PORTAL_ENABLED | true |
+| VITE_CLIENT_RENTAL_ENABLED | true |
+| VITE_API_URL | URL API local khớp backend đang chạy |
+| CORS_ORIGIN | Origin frontend local khớp trình duyệt |
+| MONGO_URI | URI replica set local gồm tên database demo rõ ràng |
 
-## UAT staging
+VITE flags được đóng vào frontend tại thời điểm build; thay đổi cần build lại hoặc restart Vite khi chạy dev. Backend flags cần restart process. Khi dùng Docker tùy chọn, xem WORKFLOW_RELEASE.md vì root/backend `.env` có nguồn flag khác nhau.
 
-Thực hiện bằng một Admin và ít nhất một tài khoản client pilot:
+## Preflight local
+
+1. Dùng database demo riêng, không trỏ test harness hoặc seed xóa dữ liệu vào `studio_project_demo`.
+2. Khởi động bằng launcher; xác nhận Mongo writable primary, API `/api/health` trả 200 và frontend truy cập được.
+3. Đăng nhập admin/client mẫu, kiểm tra CORS cho đúng origin.
+4. Chạy readiness audit trên database demo theo STUDIO_ACCEPTANCE.md; xem blocker/warning trước trình diễn.
+5. Khi chỉnh code, chạy các quality gate phù hợp: check, test, build và E2E. CI hiện có chuỗi gate trước job deploy; job deploy VPS là tùy chọn của đồ án.
+6. Khi muốn reset/nâng cấp dữ liệu cần giữ, backup trước; restore thử vào database local riêng nếu kiểm chứng phục hồi dữ liệu.
+
+Index portal gồm `users.username`, `users.sourceAccountRequest` (sparse), `accountrequests.username` và `bookings(client, clientRequestId)` với partial filter. Readiness audit tổng thể còn kiểm tra index và dữ liệu của hai workflow. Không cần backfill role cho dữ liệu cũ: role 6 chỉ áp dụng cho tài khoản khách tạo mới. Không tự ghép khách cũ thành client theo tên/điện thoại.
+
+## UAT portal
+
+Dùng một Admin và ít nhất hai tài khoản client mẫu. Các dòng sau là kịch bản cần thực hiện, chưa phải kết quả nghiệm thu:
 
 - Client đăng ký, đăng nhập và chỉ thấy portal khách hàng.
-- Client gửi booking; giá/gói được snapshot, trạng thái là `pending`, gửi lại cùng idempotency key không tạo bản ghi thứ hai.
+- Client gửi booking; giá/gói được snapshot, trạng thái pending, gửi lại cùng idempotency key không tạo bản ghi thứ hai.
 - Client khác không đọc được booking.
 - Admin thấy yêu cầu và thông báo, nhập phản hồi, duyệt hoặc từ chối đúng một lần.
 - Client thấy trạng thái, phản hồi và lịch sử dành cho client; không thấy event nội bộ.
 - Nhân sự gửi yêu cầu tài khoản; Admin duyệt đúng một lần; password hash bị xóa khỏi request sau xử lý.
-- Khi tắt cả hai feature flag, route đăng ký/portal bị ẩn và API đăng ký/booking trả `503`.
+- Trong kiểm thử flag, tắt portal backend/frontend sẽ ẩn route/entry và chặn đăng ký/booking mới theo flag. Launcher demo mặc định bật các tính năng để trình diễn.
 - Kiểm tra mobile và desktop; thông điệp luôn nêu rõ “chưa giữ chỗ/chưa thu tiền”.
 
-| Bên xác nhận | Người xác nhận | Kết quả | Thời gian | Evidence/issue |
-| --- | --- | --- | --- | --- |
-| Admin nghiệp vụ |  |  |  |  |
-| Client pilot |  |  |  |  |
-| Kỹ thuật/QA |  |  |  |  |
+| Nội dung | Kết quả / evidence |
+|---|---|
+| Admin xử lý yêu cầu | Chưa ghi kết quả thủ công |
+| Client A đăng ký/gửi/xem phản hồi | Chưa ghi kết quả thủ công |
+| Client B thử ownership | Chưa ghi kết quả thủ công |
+| Mobile / desktop / lỗi-retry | Chưa ghi kết quả thủ công |
 
-## Canary production
+Hai hành trình sau intake theo WORKFLOW_RELEASE.md và RENTAL_RELEASE.md. Phê duyệt intake không đồng nghĩa giữ lịch/kho hoặc đã nhận tiền.
 
-1. Deploy production khi cả hai flag vẫn `false`; chạy health check và login nội bộ.
-2. Bật backend flag, restart backend; build/deploy frontend với frontend flag `true` trong cửa sổ canary.
-3. Chỉ mời nhóm client pilot; theo dõi log 4xx/5xx, latency, số đăng ký, booking, duplicate-key và review conflict trong ít nhất một chu kỳ nghiệp vụ.
-4. Dừng mở rộng nếu có lỗi ownership/RBAC, tạo trùng, mất phản hồi hoặc tỷ lệ 5xx tăng bất thường.
-5. Sau sign-off canary mới công bố cho toàn bộ khách hàng.
+## Dừng và rollback ứng dụng
 
-## Rollback
+```powershell
+node ops/demo.cjs stop
+node ops/demo.cjs start
+```
 
-1. Đặt `CLIENT_PORTAL_ENABLED=false` và restart backend để chặn ngay đăng ký/booking mới.
-2. Build/deploy frontend với `VITE_CLIENT_PORTAL_ENABLED=false` để ẩn portal.
-3. Nếu lỗi nằm ngoài portal, rollback về image digest và ba SHA đã ghi ở preflight.
-4. Không xóa booking/account request đã tạo. Giữ dữ liệu để đối soát và chỉ chạy migration đảo chiều đã được kiểm thử.
-5. Chạy lại health/login nội bộ và lập incident record trước khi mở lại.
+Dữ liệu demo được giữ qua stop/start. Không xóa booking, account request, payment hoặc volume để rollback ứng dụng. Khi cần đổi code về phiên bản trước, ghi lại SHA và kiểm tra tương thích với dữ liệu đã tạo.
 
-## Bằng chứng local hiện tại
+Nếu tự cấu hình để tạm đóng portal, đặt CLIENT_PORTAL_ENABLED=false cho backend và VITE_CLIENT_PORTAL_ENABLED=false cho frontend rồi restart/build phù hợp. Giữ dữ liệu để tiếp tục đối soát khi bật lại. Chụp/thuê có flag riêng; tắt chúng vẫn phải bảo vệ nguồn lực đang giữ, xem WORKFLOW_RELEASE.md.
+
+## Bằng chứng tự động đã có
 
 | Gate | Kết quả |
-| --- | --- |
-| Backend contract + Mongo integration | 25 test pass trước khi thêm feature-flag regression; chạy lại trong final gate |
-| Frontend component | 3 test pass |
-| TypeScript backend/frontend | Pass |
-| Browser E2E | Luồng đầy đủ được định nghĩa; kết quả final gate ghi trong `IMPLEMENTATION_PLAN.md` |
+|---|---|
+| Regression bản đã kiểm chứng ngày 05/10/2026 | 107 kiểm thử local đạt; TypeScript, lint, format và build đạt; xem audit/release-readiness-2026-10-05.md |
+| Bằng chứng phiên bản/demo mới | Ghi theo báo cáo runtime và audit mới; không dùng số liệu lịch sử thay cho kết quả vừa chạy |
+| Manual UAT / backup-restore local | Ghi kết quả thực hiện vào STUDIO_ACCEPTANCE.md; không tự đánh dấu đạt |
 
+Nếu sau này muốn triển khai VPS, dùng quy trình Compose replica set, backup/restore và theo dõi trong WORKFLOW_RELEASE.md. Staging/canary/chữ ký nghiệp vụ có thể bổ sung theo nhu cầu vận hành thật, không phải gate bắt buộc để hoàn thành demo đồ án.

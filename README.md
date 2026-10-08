@@ -1,5 +1,15 @@
 # Studio Management - Monorepo - YUME
 
+## Demo local của đồ án
+
+Đồ án dùng môi trường local để triển khai và nghiệm thu, không cần staging hoặc production. Sau khi cài dependencies, chạy từ root:
+
+```powershell
+node ops/demo.cjs start
+```
+
+Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằng `node ops/demo.cjs stop`; dữ liệu được giữ khi chạy lại. Hướng dẫn tài khoản, dữ liệu mẫu và nghiệm thu: [DEMO_LOCAL.md](DEMO_LOCAL.md).
+
 ## Cài đặt
 
 ```bash
@@ -67,16 +77,11 @@ yarn workspace studio-management-backend seed
 yarn workspace studio-management-frontend build
 ```
 
-## CI/CD deploy VPS
+## CI và triển khai VPS tùy chọn
 
 Project da co san workflow GitHub Actions tai [.github/workflows/deploy.yml](.github/workflows/deploy.yml).
 
-Workflow nay se:
-- chay khi push vao nhanh `main`
-- SSH vao VPS
-- pull code moi nhat o repo root
-- cap nhat `backend` va `frontend` submodule
-- build va restart toan bo stack bang `docker compose up -d --build`
+Workflow chạy quality gate khi push/PR vào `main`. Demo đồ án dùng launcher local ở trên. Job SSH/deploy VPS mặc định không chạy; chỉ bật khi đặt repository variable `ENABLE_VPS_DEPLOY=true` và cấu hình VPS thực tế. Khi được bật, job cập nhật root/submodule và build lại stack Docker sau khi quality gate đạt.
 
 Can khai bao cac GitHub Secrets sau:
 - `SSH_HOST`: IP/domain cua VPS

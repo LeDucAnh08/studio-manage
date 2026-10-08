@@ -2,9 +2,19 @@
   "name": "studio-management",
   "private": true,
   "packageManager": "yarn@1.22.22",
-  "workspaces": ["backend", "frontend"],
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "dev": "turbo run dev",
+    "demo": "node ops/demo.cjs start",
+    "demo:stop": "node ops/demo.cjs stop",
+    "demo:status": "node ops/demo.cjs status",
+    "demo:smoke": "node ops/demo-smoke.cjs",
+    "demo:seed": "node ops/seed-realistic.cjs",
+    "demo:seed:check": "node ops/seed-realistic.cjs --validate",
+    "demo:seed:smoke": "node ops/realistic-smoke.cjs",
     "build": "turbo run build",
     "check": "turbo run check",
     "test": "turbo run test",
