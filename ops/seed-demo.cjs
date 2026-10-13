@@ -119,14 +119,14 @@ async function seedDemo(uri = DEMO_URI) {
       'CostumeType',
       { name: 'Demo · Áo dài kỷ yếu' },
       {
-        name: 'Demo · Áo dài kỷ yếu',
+        name: 'Áo dài kỷ yếu',
       },
     );
     const maleType = await ensure(
       'CostumeType',
       { name: 'Demo · Trang phục nam' },
       {
-        name: 'Demo · Trang phục nam',
+        name: 'Trang phục nam',
       },
     );
     const sharedCostume = await ensure(
@@ -180,7 +180,7 @@ async function seedDemo(uri = DEMO_URI) {
       'Package',
       { name: 'Demo · Kỷ yếu thanh xuân' },
       {
-        name: 'Demo · Kỷ yếu thanh xuân',
+        name: 'Kỷ yếu Thanh xuân',
         pricePerMember: 350000,
         duration: 'half_day',
         costumes: [type._id, maleType._id],
@@ -188,7 +188,7 @@ async function seedDemo(uri = DEMO_URI) {
         studentsPerCrew: 15,
         editingScope: 'full',
         deliveryDays: 7,
-        description: 'Gói mẫu đồ án: chụp ngoại cảnh, trang phục và chỉnh màu toàn bộ ảnh.',
+        description: 'Chụp ngoại cảnh, trang phục và chỉnh màu toàn bộ ảnh.',
         isPopular: true,
       },
     );
@@ -196,14 +196,14 @@ async function seedDemo(uri = DEMO_URI) {
       'Package',
       { name: 'Demo · Kỷ yếu trọn ngày' },
       {
-        name: 'Demo · Kỷ yếu trọn ngày',
+        name: 'Kỷ yếu Trọn ngày',
         pricePerMember: 550000,
         duration: 'full_day',
         costumes: [type._id, maleType._id],
         editingScope: 'full',
         deliveryDays: 10,
         studentsPerCrew: 15,
-        description: 'Gói mẫu đồ án: hai địa điểm, ảnh nhóm và chân dung cá nhân.',
+        description: 'Hai địa điểm, ảnh nhóm và chân dung cá nhân.',
       },
     );
 
