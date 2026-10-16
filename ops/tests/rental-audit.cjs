@@ -11,6 +11,8 @@ process.env.JWT_SECRET = 'rental-audit-local';
 process.env.CLIENT_PORTAL_ENABLED = 'true';
 process.env.CLIENT_RENTAL_ENABLED = 'true';
 process.env.CLIENT_WORKFLOW_ENABLED = 'true';
+process.env.GAS_WEBHOOK_URL = '';
+process.env.TELEGRAM_BOT_TOKEN = '';
 r('ts-node/register/transpile-only');
 const mongoose = r('mongoose'),
   express = r('express'),
@@ -44,11 +46,16 @@ test('rental workflow uses the same real resource lock as photography', async (t
       server.closeAllConnections();
       await new Promise((resolve) => server.close(resolve));
     }
+    assert.ok(['127.0.0.1', 'localhost'].includes(mongoose.connection.host));
     assert.equal(mongoose.connection.name, 'studio_rental_audit');
+    assert.equal(mongoose.connection.db.databaseName, 'studio_rental_audit');
     await mongoose.connection.dropDatabase();
     await mongoose.disconnect();
   });
   assert.ok((await mongoose.connection.db.admin().command({ hello: 1 })).setName);
+  assert.ok(['127.0.0.1', 'localhost'].includes(mongoose.connection.host));
+  assert.equal(mongoose.connection.name, 'studio_rental_audit');
+  assert.equal(mongoose.connection.db.databaseName, 'studio_rental_audit');
   await mongoose.connection.dropDatabase();
   const app = express();
   app.use(express.json());
@@ -157,9 +164,24 @@ test('rental workflow uses the same real resource lock as photography', async (t
   });
   const prepare = async (costume, receive = day(), returned = day(2)) => {
     const data = { ...request(costume), receiveDate: receive, returnDate: returned };
-    const created = await call('/rentals', users.client, data);
-    assert.equal(created.status, 201, JSON.stringify(created.body));
-    const id = created.body.data._id;
+    // Pre-existing period-priced records retain manual reservation and their original fees.
+    // New daily-order HTTP coverage lives in rental-daily-audit.cjs.
+    const created = await models.RentalOrder.create({
+      client: users.client._id,
+      creationKey: randomUUID(),
+      creationFingerprint: 'legacy-period-fixture',
+      contactName: data.contactName,
+      phone: data.phone,
+      note: data.note,
+      requestedLines: data.lines.map((row) => ({
+        ...row,
+        name: costume.name,
+        unitPrice: 100000,
+      })),
+      requestedReceiveDate: at(receive),
+      requestedReturnDate: at(returned),
+    });
+    const id = String(created._id);
     await act(id, users.sale, 'quote.propose', {
       lines: data.lines.map((row) => ({ ...row, unitPrice: 100000 })),
       receiveDate: receive,

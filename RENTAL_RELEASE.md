@@ -18,13 +18,16 @@ Chạy `node ops/demo.cjs start` từ root, mở **http://localhost:4001** và d
 
 ## Luồng và quy tắc
 
-- Catalog → /rental/start → đăng nhập khi gửi → /account/rentals/:id. Menu nội bộ Đơn thuê → /rental-orders/:id.
-- Studio chốt đơn giá cho cả kỳ và cọc bảo đảm. Khách đồng ý phiên bản, kế toán/Admin ghi cọc, Admin kiểm tra và giữ hàng. Chưa đủ cọc hoặc không đủ tồn thì không xác nhận.
+- Chọn ngày nhận/trả trong catalog → xem hàng còn trống → /rental/start → đăng nhập khi gửi → /account/rentals/:id. Vào form trực tiếp vẫn phải chọn ngày trước khi xem hàng. Không mặc định ngày; kỳ thuê được giữ qua URL, bản nháp và đăng nhập. Menu nội bộ Đơn thuê → /rental-orders/:id.
+- Staff nhập `rentalDailyPrice` riêng trong Trang phục. Bỏ trống nghĩa là cần báo giá, không phải 0đ và không dùng `rentalPrice` cũ thay thế. Chưa cập nhật giá/ngày cho dữ liệu demo trong đợt triển khai này.
+- Đơn mới có `pricingMode=daily`: phí = tổng đơn giá/ngày × số lượng × số ngày lịch Việt Nam, tính cả ngày nhận và trả (cùng ngày = 1). Server tính phí; báo giá lưu chế độ giá, số ngày và đơn giá đã chốt. Cọc bảo đảm tách riêng. Đơn cũ thiếu chế độ giá vẫn tính theo cả kỳ và giữ quy trình xác nhận thủ công.
+- Khách đồng ý báo giá và kế toán/Admin ghi nhận đủ cọc thì đơn mới tự giữ hàng dưới transaction/khóa dùng chung với chụp. Cọc bằng 0 thì giữ ngay khi đồng ý. Chưa đủ cọc chưa giữ. Nếu thực nhận cọc nhưng hết hàng, tiền và giao dịch vẫn được lưu, đơn có `reservationIssue` và chưa giữ hàng; Admin kiểm tra để thử giữ lại hoặc xử lý hủy/hoàn theo đồng ý của khách.
+- API `/api/public/costumes` bắt buộc `receiveDate` và `returnDate` định dạng YYYY-MM-DD, ngày nhận từ hôm nay ở Việt Nam, tối đa 366 ngày. `availableBySize` là lượng nhỏ nhất còn trống trong toàn kỳ; chỉ trả size có lượng dương, hết mọi size thì ẩn mẫu. Bộ lọc giá áp dụng giá/ngày. API loại hàng và kho staff không bắt buộc kỳ thuê.
 - Trước giao cần đủ phí thuê + cọc, ngày thực tế nằm trong kỳ và kiểm tra lại khả dụng. Gia hạn/hủy đang chờ quyết định chặn giao hàng.
 - Ngày nhận và ngày trả đều chiếm hàng. Quá hạn chưa nhận trả tiếp tục giữ hàng; không tự tăng tồn. Khi bắt đầu chụp, hệ thống cũng kiểm tra lại nguồn lực để tránh dùng hàng đang bị đơn thuê quá hạn giữ.
 - Nhận trả nhập tổng số tốt/hỏng/mất đúng số đã giao. Hỏng chuyển sang damaged, mất sang retired. Đây là sự kiện thực tế: nếu thiếu cho các lịch tương lai, Admin cần xem lại lịch và bố trí thay thế hoặc thỏa thuận hủy; hệ thống chặn giao/bắt đầu chụp khi không đủ.
-- Studio gửi đối soát (có thể không có phụ phí), khách đồng ý rồi mới thu phát sinh/hoàn cọc dư. Không tự đặt mức phí/ngày, phạt trả muộn, hư hỏng hay mất. Thu/hoàn đúng tổng cuối mới hoàn tất.
-- Gia hạn giữ nguyên kỳ cũ đến khi khách đồng ý và kiểm tra mới thành công; lịch sử báo giá/đề xuất/đối soát được giữ. Hủy trước giao có phí giữ lại do studio đề xuất và khách đồng ý.
+- Studio gửi đối soát (có thể không có phụ phí), khách đồng ý rồi mới thu phát sinh/hoàn cọc dư. Không tự đặt giá/ngày trong danh mục, phạt trả muộn, hư hỏng hay mất. Thu/hoàn đúng tổng cuối mới hoàn tất.
+- Gia hạn giữ nguyên kỳ cũ đến khi khách đồng ý và kiểm tra mới thành công; lịch sử báo giá/đề xuất/đối soát được giữ. Đơn theo ngày tính tổng phí gia hạn từ đơn giá đã chốt và toàn kỳ mới; đổi giá danh mục không đổi báo giá. Đơn cũ vẫn dùng phí gia hạn được thỏa thuận. Hủy trước giao có phí giữ lại do studio đề xuất và khách đồng ý.
 - Khách rút yêu cầu chưa đồng ý báo giá bằng nút Rút yêu cầu thuê. Sau đồng ý, yêu cầu hủy được gửi ngay cả khi chưa giữ hàng/đã nhận cọc; đề xuất đang mở chặn giữ hàng và giao. Tiền đã nhận được đối soát và hoàn theo phương án khách đồng ý.
 - Admin 0/1 giao–nhận và đối soát; Sale 2 tư vấn/báo giá; cộng tác viên sale 4 xem giao nhận; kế toán 5 ghi tiền; khách 6 chỉ đơn của mình.
 
@@ -33,6 +36,8 @@ Tắt CLIENT_RENTAL_ENABLED chỉ đóng API/tính năng mới. Các đơn confi
 ## Kiểm thử local
 
 `node --test ops/tests/rental-audit.cjs` dùng database studio_rental_audit, chỉ trên localhost và yêu cầu replica set. Audit luồng chụp: `node --test ops/tests/workflow-audit.cjs ops/tests/workflow-contract.cjs ops/tests/readiness-audit.cjs`.
+
+`node --test ops/tests/rental-daily-audit.cjs` dùng database `studio_rental_daily_audit` trên replica set localhost:27029; kiểm tra ngày/giá, catalog, cọc từng phần, tự giữ hàng, đồng thời thuê/chụp, receipt khi thiếu hàng, retry/hoàn và lịch sử gia hạn. Harness kiểm tra host/tên DB trước khi dọn dữ liệu. Không trỏ vào database demo. Biên bản triển khai: [audit/rental-daily-2026-10-16.md](audit/rental-daily-2026-10-16.md).
 
 Trong frontend: `node ../node_modules/@playwright/test/cli.js test` với MONGO_TEST_URI chỉ vào replica set local; harness đổi sang studio_phase1_e2e. Kịch bản thuê tạo dữ liệu riêng, đi từ bản nháp khách đến hoàn cọc sau trả hàng hỏng và đánh giá. Không dùng database production cho kiểm thử tự động.
 

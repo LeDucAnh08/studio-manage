@@ -17,7 +17,7 @@
 
 **Chụp ảnh kỷ yếu:** Khách xem/so sánh gói và ảnh tham khảo → gửi yêu cầu, thông tin lớp/thành viên/kích cỡ → studio duyệt, báo giá/hợp đồng và kiểm tra lịch/nguồn lực → khách xác nhận → studio phân công, thực hiện, hậu kỳ và bàn giao → khách đánh giá.
 
-**Cho thuê trang phục, phụ kiện:** Khách lọc theo loại, kích cỡ, giá → chọn sản phẩm, số lượng, ngày nhận–trả và gửi yêu cầu → studio kiểm tra số lượng khả dụng, tư vấn điều kiện thuê → khách xác nhận, studio ghi nhận cọc và giao hàng → khách có thể yêu cầu thay đổi/gia hạn → nhận trả, kiểm tra tình trạng, tính phụ phí hoặc hoàn cọc → khách đánh giá.
+**Cho thuê trang phục, phụ kiện:** Khách chọn ngày nhận–trả → xem/lọc sản phẩm và kích cỡ khả dụng trong toàn kỳ → chọn số lượng, xem phí theo ngày và gửi yêu cầu → studio tư vấn/báo giá → khách đồng ý, studio ghi nhận đủ cọc thì hệ thống giữ hàng → giao hàng → khách có thể yêu cầu thay đổi/gia hạn → nhận trả, kiểm tra tình trạng, tính phụ phí hoặc hoàn cọc → khách đánh giá.
 
 Khách xem được trạng thái xử lý, lịch/tiến độ và các khoản đã thanh toán của từng dịch vụ. Studio có lịch sử để tra cứu yêu cầu, lần thuê, giao nhận và khoản thu liên quan.
 
@@ -117,3 +117,30 @@ Mốc triển khai local đã hoàn thành và ứng dụng được giữ chạ
 Seed dùng ID ổn định, transaction và khóa tài nguyên chung. 44 bản ghi trước đó giữ nguyên; chạy lại tạo 0 bản ghi và giữ nguyên 17 collection/1.174 bản ghi. Đối soát thực tế 0 blocker; các khoản còn thu, hoàn cọc, chờ quyết toán và chi vận hành là tình huống mẫu có chủ ý. Lệnh `yarn demo:seed`, hướng dẫn DEMO_LOCAL.md, biên bản audit/realistic-seed-2026-10-06.md.
 
 9 kiểm tra Chrome trên dữ liệu mới và 8 kiểm tra hồ sơ demo ban đầu đạt, 0 lỗi JavaScript; báo cáo 360px không tràn toàn trang. Bộ lọc mặc định chọn mùa hiện tại, có thể chuyển mùa để xem các lớp còn lại.
+
+## 13. Quy tắc thuê theo ngày đã chốt — 16/10/2026
+
+Capability hiện có: rental-orders. Đây là cập nhật nghiệp vụ đã được user làm rõ, không phải kết quả triển khai. Chi tiết: SPEC-rental-orders.md và audit/rental-requirements-2026-10-16.md.
+
+Luồng customer: chọn ngày nhận/trả → xem mẫu/size/số lượng khả dụng toàn kỳ → xem phí theo ngày → gửi yêu cầu và đồng ý báo giá → đủ cọc được ghi nhận thì giữ hàng → giao/nhận trả/đối soát. Không yêu cầu lịch chụp. Không mặc định ngày hoặc hiện danh sách khả dụng trước khi khách chọn ngày.
+
+| Thứ tự | Phần việc | Nghiệm thu chính |
+|---|---|---|
+| RENT-DAY01 | Giá/ngày riêng, cách tính số ngày và snapshot giá | Nhận/trả đều tính phí, cùng ngày=1; server tính tiền; báo giá cũ không đổi, không lấy giá cả kỳ thay giá/ngày ngầm |
+| RENT-DAY02 | Catalog khả dụng theo khoảng ngày, size và lượng | Bắt buộc đủ ngày; trừ đơn thuê và lịch chụp chung kho; còn lượng nhỏ nhất đáp ứng toàn kỳ; hết mọi size thì không trả mẫu |
+| RENT-DAY03 | Catalog/form customer chọn ngày trước | Không tải/hiện hàng trước khi chọn ngày; vào form trực tiếp vẫn chọn ngày được; CTA/draft/login giữ kỳ, xóa lọc phụ không xóa kỳ, đổi ngày kiểm tra lại lựa chọn |
+| RENT-DAY04 | Ghi nhận cọc và giữ hàng đúng thời điểm | Đủ xác nhận+cọc thì chốt dưới khóa/transaction; cạnh tranh chiếc cuối không vượt tồn; khoản tiền thực đã nhận không bị mất khi cần xử lý thiếu hàng/hoàn |
+| RENT-DAY05 | Giao diện quản lý giá và chi tiết báo giá | Staff nhập giá/ngày riêng theo giao diện admin hiện có; customer thấy đ/ngày, số ngày, tổng tiền và cọc riêng; lịch sử hiển thị đúng chế độ giá cũ |
+| RENT-DAY06 | Regression và nghiệm thu local | Ngày/giá, size còn lại, thuê/chụp đồng thời, đổi kỳ, trả muộn, số tiền/idempotency, dữ liệu cũ và browser mobile/desktop |
+
+RENT-DAY01/02 là nền cho RENT-DAY03/04; RENT-DAY05 theo contract giá đã chốt; RENT-DAY06 xác minh toàn hành trình. Tận dụng code kho/khóa tài nguyên hiện có, không tạo tồn available độc lập hoặc thay logic bằng bộ lọc UI. API danh mục loại và kho staff giữ hợp đồng hiện tại.
+
+Kiểm thử tích hợp dùng DB test local riêng; không seed/reset studio_project_demo, không tính lại đơn đã chốt, không tự đặt mức cọc/phạt hoặc thêm cổng thanh toán.
+
+### Kết quả triển khai RENT-DAY — 16/10/2026
+
+Đã hoàn thành RENT-DAY01–06: giá/ngày riêng nullable, catalog/form chọn ngày trước, tồn nhỏ nhất qua toàn kỳ theo size trừ chung thuê/chụp, snapshot giá/ngày/số ngày, gia hạn theo đơn giá đã chốt, tự giữ hàng khi đủ xác nhận+cọc và ghi nhận đúng khoản thu khi thiếu hàng. Đơn cũ vẫn theo giá cả kỳ và giữ hàng thủ công. Không thêm dependency hoặc tính lại dữ liệu cũ.
+
+Kiểm chứng đạt: 119 test frontend; 36 contract backend; 9 test tích hợp tương thích đơn cũ; 9 test tích hợp thuê theo ngày, gồm cọc từng phần và cạnh tranh chiếc cuối. TypeScript hai ứng dụng, ESLint tập trung, Prettier/diff check và build frontend đạt. Browser đã kiểm catalog/form/preview/login/tạo yêu cầu trên DB riêng, giá staff và responsive 360/390px; Playwright E2E đã cập nhật nhưng chưa chạy. Chi tiết và bằng chứng: [audit/rental-daily-2026-10-16.md](audit/rental-daily-2026-10-16.md).
+
+Preview local hiện tại dùng code mới tại http://127.0.0.1:4013/costumes. Giữ nguyên dữ liệu demo; các mẫu chưa nhập giá/ngày hiện cần báo giá, không lấy giá kỳ cũ thay thế. Chưa commit/push hoặc deploy trong đợt này.
