@@ -2,6 +2,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const { createHash } = require('node:crypto');
+const { legacyPresentation } = require('./fixtures/rental-catalog-presentation.cjs');
 const backendRequire = require('node:module').createRequire(
   path.resolve(__dirname, '../backend/package.json'),
 );
@@ -72,6 +73,10 @@ async function seedDemo(uri = DEMO_URI) {
   const safeUri = validateDemoUri(uri);
   const mongoose = backendRequire('mongoose');
   const models = loadModels();
+  if (!models.Costume.schema.path('rentalDailyPrice'))
+    throw new Error(
+      'Backend build is outdated. Run yarn workspace studio-management-backend build before seeding.',
+    );
   const counts = { created: 0, retained: 0 };
   await mongoose.connect(safeUri, { serverSelectionTimeoutMS: 5000 });
   try {
@@ -133,12 +138,13 @@ async function seedDemo(uri = DEMO_URI) {
       'Costume',
       { name: 'Demo · Áo dài trắng' },
       {
-        name: 'Demo · Áo dài trắng',
-        description: 'Trang phục mẫu cho chụp kỷ yếu và thuê; dữ liệu giả lập phục vụ đồ án.',
+        name: legacyPresentation.legacyWhiteAoDai.name,
+        description: legacyPresentation.legacyWhiteAoDai.description,
         gender: 'unisex',
         type: type._id,
         isRentalItem: true,
         rentalPrice: 150000,
+        rentalDailyPrice: legacyPresentation.legacyWhiteAoDai.rentalDailyPrice,
         inventory: [
           { size: 'S', quantity: 6, condition: 'good' },
           { size: 'M', quantity: 10, condition: 'good' },
@@ -151,11 +157,13 @@ async function seedDemo(uri = DEMO_URI) {
       'Costume',
       { name: 'Demo · Vest xanh navy' },
       {
-        name: 'Demo · Vest xanh navy',
+        name: legacyPresentation.legacyNavyVest.name,
+        description: legacyPresentation.legacyNavyVest.description,
         gender: 'male',
         type: maleType._id,
         isRentalItem: true,
         rentalPrice: 200000,
+        rentalDailyPrice: legacyPresentation.legacyNavyVest.rentalDailyPrice,
         inventory: [
           { size: 'M', quantity: 5, condition: 'good' },
           { size: 'L', quantity: 5, condition: 'good' },
@@ -167,12 +175,14 @@ async function seedDemo(uri = DEMO_URI) {
       'Costume',
       { name: 'Demo · Nón lá' },
       {
-        name: 'Demo · Nón lá',
+        name: legacyPresentation.legacyConicalHat.name,
+        description: legacyPresentation.legacyConicalHat.description,
         gender: 'unisex',
         type: type._id,
         itemKind: 'accessory',
         isRentalItem: true,
         rentalPrice: 30000,
+        rentalDailyPrice: legacyPresentation.legacyConicalHat.rentalDailyPrice,
         inventory: [{ size: 'FREE', quantity: 15, condition: 'good' }],
       },
     );

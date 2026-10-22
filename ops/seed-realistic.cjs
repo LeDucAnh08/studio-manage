@@ -331,6 +331,10 @@ async function seedRealistic(uri = DEMO_URI, { validateOnly = false } = {}) {
   const safeUri = validateDemoUri(uri);
   const mongoose = backendRequire('mongoose');
   const { models, withResourceTransaction } = loadModels();
+  if (!models.Costume.schema.path('rentalDailyPrice'))
+    throw new Error(
+      'Backend build is outdated. Run yarn workspace studio-management-backend build before seeding.',
+    );
   const now = new Date();
   const today = new Date(+now + 7 * 3600000).toISOString().slice(0, 10);
   let session;

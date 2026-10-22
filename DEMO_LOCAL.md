@@ -17,26 +17,43 @@ Lệnh start tự khởi tạo MongoDB replica set riêng, compile backend, buil
 
 Yêu cầu: Node.js và dependencies đã cài; MongoDB executable `.workflow-tools/mongod.exe` đang có trên máy này. Trên máy khác, cài MongoDB rồi đưa mongod vào PATH hoặc đặt biến `DEMO_MONGOD` trỏ tới executable. Không cần Docker. Các cổng 4001, 5002, 27029 phải trống; launcher không dừng chương trình khác đang dùng cổng.
 
-| Thành phần | Địa chỉ |
-|---|---|
-| Ứng dụng đã build | http://localhost:4001 |
-| API | http://localhost:5002/api/health |
-| MongoDB demo | 127.0.0.1:27029, replica set rs0, database studio_project_demo |
-| Dữ liệu bền vững | .workflow-tools/demo-mongo-data |
+| Thành phần        | Địa chỉ                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| Ứng dụng đã build | http://localhost:4001                                          |
+| API               | http://localhost:5002/api/health                               |
+| MongoDB demo      | 127.0.0.1:27029, replica set rs0, database studio_project_demo |
+| Dữ liệu bền vững  | .workflow-tools/demo-mongo-data                                |
 
 Frontend được phục vụ từ `frontend/dist`, có SPA fallback và proxy `/api` tới backend. Không phải Vite dev server. Frontend/Mongo bind vào loopback; các lệnh demo dành cho máy local.
+
+## Giá/ngày và thông tin trang phục, phụ kiện
+
+Bộ danh mục trình diễn có 21 mẫu (17 trang phục, 4 phụ kiện), giá/ngày riêng từ 10.000–180.000đ và mô tả rõ từng đơn vị thuê gồm những món nào. Giá và thông tin đi kèm là dữ liệu giả định phục vụ trình diễn; không phải bảng giá studio thật. Nguồn dữ liệu nằm ở `ops/fixtures/rental-catalog-presentation.cjs`.
+
+Seed mới dùng sẵn thông tin này. Với database demo đã tồn tại, xem trước rồi áp dụng một lần:
+
+```powershell
+node ops/update-demo-catalog.cjs
+node ops/update-demo-catalog.cjs --apply
+```
+
+Lệnh chỉ chấp nhận database demo local `127.0.0.1:27029/studio_project_demo` trên replica set `rs0` và đúng project marker. Mặc định chỉ xem trước. Khi áp dụng, lệnh lưu bản sao sản phẩm trước thay đổi vào `.workflow-tools/catalog-presentation-before-*.json`, rồi cập nhật tên, mô tả và `rentalDailyPrice` trong một transaction. Giá cả kỳ cũ (`rentalPrice`), tồn kho, ID danh mục, gói chụp, báo giá và lịch sử thanh toán được giữ nguyên. Marker hoàn tất giúp chạy lại không ghi đè chỉnh sửa về sau của nhân viên; dùng màn hình Kho để thay đổi giá tiếp theo.
+
+Không đổi bộ lọc tên hoặc ID cũ trong seed để tránh tạo sản phẩm trùng. Nếu seed báo backend build cũ thiếu trường giá/ngày, chạy `yarn workspace studio-management-backend build` trước khi seed. Kiểm thử công cụ cập nhật bằng `node --test ops/tests/catalog-presentation.cjs`; kiểm thử chỉ dùng database riêng `studio_catalog_presentation_audit` trên Mongo local cổng 27029.
+
+Ví dụ: áo dài trắng truyền thống 100.000đ/ngày, nhận 22/10 và trả 24/10 tính 3 ngày, tổng tiền thuê một bộ là 300.000đ trước các khoản cọc hoặc điều chỉnh báo giá.
 
 ## Tài khoản trình diễn
 
 Các tài khoản sau chỉ thuộc database demo:
 
-| Vai trò | Tên đăng nhập | Mật khẩu ban đầu |
-|---|---|---|
-| Superadmin | superadmin | Admin@1234 |
-| Khách hàng | demo.client | Client@1234 |
-| Kế toán | demo.accountant | Staff@1234 |
-| Sale | demo.sale | Staff@1234 |
-| Photographer | demo.photographer | Staff@1234 |
+| Vai trò      | Tên đăng nhập     | Mật khẩu ban đầu |
+| ------------ | ----------------- | ---------------- |
+| Superadmin   | superadmin        | Admin@1234       |
+| Khách hàng   | demo.client       | Client@1234      |
+| Kế toán      | demo.accountant   | Staff@1234       |
+| Sale         | demo.sale         | Staff@1234       |
+| Photographer | demo.photographer | Staff@1234       |
 
 Seed chỉ bổ sung dữ liệu mẫu còn thiếu, không reset database hoặc ghi đè hồ sơ đang dùng. Các hồ sơ có nhãn demo và dữ liệu giả để thuyết trình; chúng không đại diện giao dịch studio thật. Kịch bản mẫu có hồ sơ chụp hoàn tất, đơn thuê hoàn tất có hoàn cọc và lịch chụp sắp tới. Sau khi kịch bản đã tạo xong, khởi động lại giữ nguyên các dữ liệu này và những thao tác người dùng thực hiện tiếp.
 
@@ -66,7 +83,7 @@ Cảnh báo công nợ, khoản hoàn cọc/chờ quyết toán và chi vận h�
 
 Launcher bật CLIENT_PORTAL_ENABLED, CLIENT_WORKFLOW_ENABLED, CLIENT_RENTAL_ENABLED cho backend demo và VITE_CLIENT_PORTAL_ENABLED/VITE_CLIENT_RENTAL_ENABLED khi build. URI database, JWT secret local, port và CORS được truyền riêng cho runtime. Không sửa `.env` hiện có; không đổi MongoDB studio_db ở cổng 27017. Các integration/E2E test vẫn dùng database riêng của harness.
 
-Telegram/GAS webhook và các biến PAYMENT_* bị để trống riêng cho demo; thông báo nội bộ vẫn hoạt động. Phần Drive dùng link giả hoặc tài liệu kiểm thử do người trình diễn cung cấp; demo không tạo folder/sheet trên tài khoản Google thật. Không nhập thông tin chuyển khoản thật để trình diễn.
+Telegram/GAS webhook và các biến PAYMENT\_\* bị để trống riêng cho demo; thông báo nội bộ vẫn hoạt động. Phần Drive dùng link giả hoặc tài liệu kiểm thử do người trình diễn cung cấp; demo không tạo folder/sheet trên tài khoản Google thật. Không nhập thông tin chuyển khoản thật để trình diễn.
 
 JWT secret demo và token dừng runtime lưu trong `.workflow-tools/demo-config.json` / `demo-state.json`, thuộc thư mục git-ignore. Không cần đưa chúng vào source hoặc biên bản. Báo cáo đọc dữ liệu được ghi thành `demo-readiness-<timestamp>.json`; status chỉ hiển thị đường dẫn/counts. `phase=ready` nghĩa là ứng dụng đã khởi chạy; trường `readiness.ready` nói riêng về dữ liệu. Cảnh báo công nợ/hoàn tiền còn mở có thể là tình huống nghiệp vụ hợp lệ.
 
