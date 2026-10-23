@@ -43,6 +43,31 @@ Không đổi bộ lọc tên hoặc ID cũ trong seed để tránh tạo sản 
 
 Ví dụ: áo dài trắng truyền thống 100.000đ/ngày, nhận 22/10 và trả 24/10 tính 3 ngày, tổng tiền thuê một bộ là 300.000đ trước các khoản cọc hoặc điều chỉnh báo giá.
 
+## Thử danh mục theo nhiều kỳ thuê
+
+Bộ bổ sung gồm **5 mẫu trang phục, 3 phụ kiện và 5 đơn thuê đã xác nhận/đủ cọc**. Tồn mỗi size chỉ1–4 món để dễ thấy thay đổi theo kỳ thuê. Chỉ thêm sản phẩm/đơn/giao dịch mới, không sửa tồn kho hoặc hồ sơ cũ. Ngày gốc của bộ hiện tại là **22/10/2026**.
+
+```powershell
+node ops/seed-rental-availability.cjs --anchor 2026-10-22
+node ops/seed-rental-availability.cjs --apply --anchor 2026-10-22
+node --test ops/tests/rental-availability.cjs
+```
+
+Lệnh đầu chỉ xem trước; `--apply` nạp trong một transaction vào đúng database demo local/rs0 có project marker. ID ổn định và marker riêng giúp chạy lại không tạo trùng, không ghi đè chỉnh sửa sau đó của người dùng và không tự dời kỳ thuê. Các đơn bổ sung thuộc tài khoản `demo.client` và có giao dịch cọc tương ứng; chưa bàn giao đồ nên không tạo trạng thái quá hạn giữ hàng vô thời hạn. Test dùng database riêng `studio_rental_availability_audit`.
+
+| Kỳ chọn năm2026 | Kết quả cần thấy với mẫu mới                                                  |
+| --------------- | ----------------------------------------------------------------------------- |
+| 22–24/10        | Áo dài lụa đào ẩn; áo dài linen xanh rêu còn M:1/L:1; mũ nồi còn1             |
+| 24–26/10        | Áo dài lụa đào và vest xám than ẩn vì kỳ chọn giao cả hai đợt giữ hàng        |
+| 25–27/10        | Áo dài lụa đào trở lại; vest xám than ẩn; mũ nồi còn2                         |
+| 28–30/10        | Chân váy xếp ly xanh navy ẩn; bà ba xanh lá nhạt còn M:1/L:2                  |
+| 31/10–02/11     | Ô ren trắng ẩn; kỳ thuê xuyên tháng vẫn tính3 ngày                            |
+| 05–07/11        | Mũ cói phối nơ kem ẩn                                                         |
+| 08–10/11        | Cả8 mẫu mới hiện đủ size/số lượng ban đầu                                     |
+| 22–27/10        | Mũ nồi còn1: lấy tồn nhỏ nhất từng ngày, không cộng hai đơn ở hai kỳ rời nhau |
+
+Đây là kết quả nền ngay sau seed; những yêu cầu bạn xác nhận/cọc tiếp theo có thể làm thay đổi availability. Xem danh sách mẫu, liên kết mở từng kỳ và bằng chứng tại [audit/rental-availability-2026-10-22.md](audit/rental-availability-2026-10-22.md).
+
 ## Tài khoản trình diễn
 
 Các tài khoản sau chỉ thuộc database demo:
