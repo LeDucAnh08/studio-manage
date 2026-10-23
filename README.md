@@ -14,7 +14,7 @@ Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằ
 
 ```bash
 # Clone repo kèm submodule
-git clone --recurse-submodules https://github.com/tienhg13102001/studio-manage.git
+git clone --branch codex/customer-booking-intake --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
 cd studio-manage
 
 # Cài tất cả dependencies
@@ -22,6 +22,8 @@ yarn install
 ```
 
 ## Lệnh chung (từ root)
+
+Hướng dẫn clone, lấy đủ submodule và cập nhật đúng nhánh: [HUONG_DAN_CLONE.md](HUONG_DAN_CLONE.md).
 
 | Lệnh | Mô tả |
 |---|---|
@@ -103,16 +105,13 @@ Luu y:
 
 ## Git Submodule
 
-```bash
-# Cập nhật submodule lên commit mới nhất
-cd backend && git pull origin main && cd ..
-cd frontend && git pull origin main && cd ..
-git add backend frontend
-git commit -m "update submodules"
+Chạy từ repo chính trên nhánh `codex/customer-booking-intake`, sau khi lưu các thay đổi local:
 
-# Push code trong submodule
-cd backend
-git add -A && git commit -m "fix: ..." && git push origin main
-cd ..
-git add backend && git commit -m "update backend ref" && git push
+```bash
+git pull --ff-only origin codex/customer-booking-intake
+git submodule sync --recursive
+git submodule update --init --recursive
+git submodule status --recursive
 ```
+
+Các lệnh trên lấy đúng commit frontend/backend đã được repo chính chốt. `detached HEAD` trong submodule là bình thường khi checkout commit cụ thể. Xem [HUONG_DAN_CLONE.md](HUONG_DAN_CLONE.md) để chuyển nhánh, kiểm tra phiên bản và chuẩn bị môi trường trên máy mới.
