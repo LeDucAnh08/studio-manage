@@ -1,23 +1,23 @@
 # Clone Studio Management kèm frontend và backend
 
-Hướng dẫn cho bản code đã đẩy ngày 23/10/2026. Chạy các lệnh trong PowerShell hoặc terminal tại nơi bạn muốn lưu dự án.
+Hướng dẫn cho nhánh phát triển thống nhất từ ngày 24/10/2026. Chạy các lệnh trong PowerShell hoặc terminal tại nơi bạn muốn lưu dự án.
 
 ## 1. Repo và nhánh cần lấy
 
 | Thành phần | Repository                                                                    | Nhánh hiện tại                  |
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------- |
-| Repo chính | [LeDucAnh08/studio-manage](https://github.com/LeDucAnh08/studio-manage)       | `codex/customer-booking-intake` |
-| Frontend   | [LeDucAnh08/studio-manage-fe](https://github.com/LeDucAnh08/studio-manage-fe) | `codex/recover-work`            |
-| Backend    | [LeDucAnh08/studio-manage-be](https://github.com/LeDucAnh08/studio-manage-be) | `codex/recover-work`            |
+| Repo chính | [LeDucAnh08/studio-manage](https://github.com/LeDucAnh08/studio-manage)       | `develop` |
+| Frontend   | [LeDucAnh08/studio-manage-fe](https://github.com/LeDucAnh08/studio-manage-fe) | `develop` |
+| Backend    | [LeDucAnh08/studio-manage-be](https://github.com/LeDucAnh08/studio-manage-be) | `develop` |
 
-Repo chính ghi lại chính xác commit của frontend/backend bằng Git submodule. Code mới hiện ở nhánh `codex/customer-booking-intake`, chưa gộp vào `main`.
+Repo chính ghi lại chính xác commit của frontend/backend bằng Git submodule. Cả ba repo tiếp tục làm việc trên `develop`: repo chính kế thừa `codex/customer-booking-intake`, frontend/backend kế thừa `codex/recover-work`, kèm các chỉnh sửa điều hướng khách hàng đã hoàn tất.
 
 ## 2. Clone mới từ đầu
 
 Cài Git trước. Nếu repo yêu cầu đăng nhập, tài khoản GitHub cần quyền đọc cả ba repository.
 
 ```powershell
-git clone --branch codex/customer-booking-intake --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
+git clone --branch develop --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
 cd studio-manage
 git submodule status --recursive
 ```
@@ -70,19 +70,19 @@ Lấy thông tin nhánh và chuyển sang nhánh chứa code mới:
 
 ```powershell
 git fetch origin
-git switch codex/customer-booking-intake
+git switch develop
 ```
 
 Git thường tự tạo nhánh local theo nhánh remote khi switch lần đầu. Nếu Git báo chưa có nhánh local, dùng:
 
 ```powershell
-git switch --track origin/codex/customer-booking-intake
+git switch --track origin/develop
 ```
 
 Sau khi ở đúng nhánh:
 
 ```powershell
-git pull --ff-only origin codex/customer-booking-intake
+git pull --ff-only origin develop
 git submodule sync --recursive
 git submodule update --init --recursive
 ```
@@ -92,15 +92,24 @@ git submodule update --init --recursive
 Từ repo chính, sau khi lưu các thay đổi local:
 
 ```powershell
-git switch codex/customer-booking-intake
-git pull --ff-only origin codex/customer-booking-intake
+git switch develop
+git pull --ff-only origin develop
 git submodule sync --recursive
 git submodule update --init --recursive
 ```
 
 Nếu `--ff-only` báo không thể fast-forward, lịch sử local và remote đã khác nhau; giữ các commit local và kiểm tra trước khi đồng bộ tiếp.
 
-Lệnh `git submodule update --init --recursive` lấy đúng commit đã ghi trong repo chính. Dùng `--remote` hoặc tự kéo `main` trong từng submodule có thể chuyển sang bộ phiên bản khác.
+Lệnh `git submodule update --init --recursive` lấy đúng commit đã ghi trong repo chính. `.gitmodules` cấu hình submodule theo dõi `develop`; dùng `--remote` lấy đầu nhánh đó và có thể chuyển sang bộ phiên bản khác với con trỏ đã chốt.
+
+Để tiếp tục sửa code, chuyển cả hai submodule về nhánh làm việc:
+
+```powershell
+git -C frontend switch develop
+git -C backend switch develop
+```
+
+Khi có commit mới trong submodule, đẩy frontend/backend lên `origin/develop` trước. Sau đó commit các con trỏ `frontend`, `backend` ở repo chính và đẩy repo chính lên `origin/develop`.
 
 ## 6. Kiểm tra đã lấy đủ code
 
@@ -112,13 +121,13 @@ git -C backend rev-parse HEAD
 git submodule status --recursive
 ```
 
-- Repo chính phải ở `codex/customer-booking-intake`.
+- Repo chính phải ở `develop`; khi sửa code, frontend/backend cũng dùng `develop`.
 - SHA của từng submodule phải trùng SHA tương ứng trong `git ls-tree`.
 - Dấu `-` trước SHA ở `git submodule status`: submodule chưa khởi tạo; chạy mục 3.
 - Dấu `+`: submodule đang ở commit khác với con trỏ repo chính.
 - `detached HEAD` trong frontend/backend sau clone là bình thường, vì Git checkout commit cụ thể đã được ghi lại. Để chạy dự án, không cần chuyển nhánh bên trong từng submodule.
 
-Tại bản đẩy ngày 23/10/2026: repo chính `b35e396`, frontend `4263a5d`, backend `e82d235`. Các mã này sẽ thay đổi khi cập nhật; luôn đối chiếu với `git ls-tree HEAD` của bản đang dùng.
+Các SHA sẽ thay đổi khi cập nhật; luôn đối chiếu với `git ls-tree HEAD` của bản đang dùng.
 
 ## 7. Cài dependencies và chạy demo
 

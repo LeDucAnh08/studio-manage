@@ -1,6 +1,8 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/LeDucAnh08/studio-manage-be.git
+	branch = develop
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/LeDucAnh08/studio-manage-fe.git
+	branch = develop

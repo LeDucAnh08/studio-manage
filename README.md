@@ -10,11 +10,17 @@ node ops/demo.cjs start
 
 Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằng `node ops/demo.cjs stop`; dữ liệu được giữ khi chạy lại. Hướng dẫn tài khoản, dữ liệu mẫu và nghiệm thu: [DEMO_LOCAL.md](DEMO_LOCAL.md).
 
+## Điều hướng khách hàng
+
+Khách chưa đăng nhập xem giới thiệu tại `/portfolio` và các trang riêng `/services`, `/concepts`, `/costumes`, `/pricing`. Khi bắt đầu đặt dịch vụ hoặc thuê trang phục, khách đăng nhập rồi tiếp tục với lựa chọn đã giữ.
+
+Sau đăng nhập, mục Concept được ẩn và đường dẫn `/concepts` chuyển về Đơn của tôi. Màn đặt dịch vụ dùng navbar chung, không có cụm liên kết phụ Dịch vụ/Concept/Bảng giá. `/account/orders` là màn mặc định, có tab `bookings` (chụp ảnh) và `rentals` (thuê trang phục). Tab thuê chỉ hiện khi tính năng thuê bật. Hai URL danh sách cũ `/account/bookings` và `/account/rentals` chuyển sang tab tương ứng; URL tạo đơn và chi tiết đơn được giữ nguyên. Portfolio không còn là màn thao tác của khách đã đăng nhập. Các nút tư vấn được tạm ẩn trong khi chờ chatbot.
+
 ## Cài đặt
 
 ```bash
 # Clone repo kèm submodule
-git clone --branch codex/customer-booking-intake --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
+git clone --branch develop --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
 cd studio-manage
 
 # Cài tất cả dependencies
@@ -105,13 +111,24 @@ Luu y:
 
 ## Git Submodule
 
-Chạy từ repo chính trên nhánh `codex/customer-booking-intake`, sau khi lưu các thay đổi local:
+Cả ba repo dùng nhánh `develop` để tiếp tục phát triển. Repo chính đã nhận code từ `codex/customer-booking-intake`; frontend và backend đã nhận code từ `codex/recover-work`.
+
+Chạy từ repo chính trên nhánh `develop`, sau khi lưu các thay đổi local:
 
 ```bash
-git pull --ff-only origin codex/customer-booking-intake
+git pull --ff-only origin develop
 git submodule sync --recursive
 git submodule update --init --recursive
 git submodule status --recursive
 ```
 
 Các lệnh trên lấy đúng commit frontend/backend đã được repo chính chốt. `detached HEAD` trong submodule là bình thường khi checkout commit cụ thể. Xem [HUONG_DAN_CLONE.md](HUONG_DAN_CLONE.md) để chuyển nhánh, kiểm tra phiên bản và chuẩn bị môi trường trên máy mới.
+
+Trước khi sửa code frontend/backend sau clone hoặc cập nhật submodule, chuyển chúng sang `develop`:
+
+```bash
+git -C frontend switch develop
+git -C backend switch develop
+```
+
+Đẩy commit của frontend/backend lên `origin/develop` trước, rồi commit và đẩy các con trỏ submodule ở repo chính lên `origin/develop`. `.gitmodules` cấu hình cả hai submodule theo dõi `develop`; cập nhật bằng `--remote` sẽ lấy đầu nhánh đó thay vì commit đã chốt trong repo chính.
