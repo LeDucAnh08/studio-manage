@@ -8,6 +8,11 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "db:start": "node ops/mongodb-windows.cjs start",
+    "db:status": "node ops/mongodb-windows.cjs status",
+    "db:stop": "node ops/mongodb-windows.cjs stop",
+    "db:seed": "node ops/seed-realistic.cjs --windows",
+    "db:seed:check": "node ops/seed-realistic.cjs --windows --validate",
     "demo": "node ops/demo.cjs start",
     "demo:stop": "node ops/demo.cjs stop",
     "demo:status": "node ops/demo.cjs status",

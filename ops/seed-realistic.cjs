@@ -7,6 +7,7 @@ const backendRequire = require('node:module').createRequire(
   path.resolve(__dirname, '../backend/package.json'),
 );
 const { DEMO_URI, PROJECT, validateDemoUri } = require('./seed-demo.cjs');
+const { validateNativeUri } = require('./mongodb-windows.cjs');
 const { seedCatalog } = require('./fixtures/realistic-catalog.cjs');
 const { seedServices } = require('./fixtures/realistic-services.cjs');
 const { audit } = require('./audit-studio-readiness.cjs');
@@ -327,8 +328,10 @@ async function verifyPreserved(db, before) {
   return preserved;
 }
 
-async function seedRealistic(uri = DEMO_URI, { validateOnly = false } = {}) {
-  const safeUri = validateDemoUri(uri);
+async function seedRealistic(uri = DEMO_URI, { validateOnly = false, target = 'demo' } = {}) {
+  if (!['demo', 'windows'].includes(target)) throw new Error('Unsupported seed target.');
+  const native = target === 'windows';
+  const safeUri = native ? validateNativeUri(uri) : validateDemoUri(uri);
   const mongoose = backendRequire('mongoose');
   const { models, withResourceTransaction } = loadModels();
   if (!models.Costume.schema.path('rentalDailyPrice'))
@@ -379,10 +382,20 @@ async function seedRealistic(uri = DEMO_URI, { validateOnly = false } = {}) {
   try {
     const db = mongoose.connection.db;
     if (
-      mongoose.connection.name !== 'studio_project_demo' ||
-      (await db.admin().command({ hello: 1 })).setName !== 'rs0'
+      mongoose.connection.name !== (native ? 'studio_db' : 'studio_project_demo') ||
+      (await db.admin().command({ hello: 1 })).setName !== (native ? 'studio-rs0' : 'rs0')
     )
       throw new Error('Unexpected database or replica set.');
+    if (native) {
+      const options = (await db.admin().command({ getCmdLineOpts: 1 })).parsed;
+      if (
+        !process.env.LOCALAPPDATA ||
+        path.resolve(options.storage.dbPath).toLowerCase() !==
+          path.resolve(process.env.LOCALAPPDATA, 'StudioManage/MongoDB/data').toLowerCase() ||
+        options.security?.authorization !== 'enabled'
+      )
+        throw new Error('Seed target is not the installed Windows MongoDB.');
+    }
     const metadata = db.collection('projectmetadata');
     const previous = await metadata.findOne({ _id: NAMESPACE });
     if (previous?.status === 'completed')
@@ -496,12 +509,19 @@ async function seedRealistic(uri = DEMO_URI, { validateOnly = false } = {}) {
 }
 
 module.exports = { seedRealistic, NAMESPACE };
-if (require.main === module)
-  seedRealistic(process.env.MONGO_DEMO_URI || DEMO_URI, {
+if (require.main === module) {
+  const native = process.argv.includes('--windows');
+  const uri = native
+    ? backendRequire('dotenv').parse(fs.readFileSync(path.resolve(__dirname, '../backend/.env')))
+        .MONGO_URI
+    : process.env.MONGO_DEMO_URI || DEMO_URI;
+  seedRealistic(uri, {
     validateOnly: process.argv.includes('--validate'),
+    target: native ? 'windows' : 'demo',
   })
     .then((result) => console.log(JSON.stringify(result, null, 2)))
     .catch((error) => {
       console.error(error.message);
       process.exitCode = 1;
     });
+}

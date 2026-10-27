@@ -94,6 +94,28 @@ directory or remove the marker as an application rollback mechanism.
 
 ## Verification
 
+### Customer orders workspace (26/10/2026)
+
+`/account/orders` uses the selected list-and-progress layout. Photography orders
+load paginated summaries from `GET /api/workflows`; optional `view` accepts
+`active`, `completed`, `cancelled`, or `rejected`. Filtering runs before pagination
+and combines with the existing ownership/role scope. Invalid views return 400.
+Summaries also include the school and proposed start time. The selected preview
+reads the existing booking workflow DTO and prefers confirmed schedule details.
+
+The `order`, `view`, and `page` query parameters preserve the list context;
+the full-record link carries an internal return path. Rental tabs remain gated by
+the existing feature flag. Notifications open on demand and are marked read only
+when the customer clicks the action. No workflow, inventory or payment is changed
+by selecting an order. Current visual evidence is in `frontend/design-qa.md`.
+
+Run `node --test backend/tests/customer-order-views.cjs` from the repository root
+with dependencies resolvable, or the backend integration script. This test uses
+only `studio_customer_order_views_test` on a local MongoDB host and cleans that
+test database. It verifies owner isolation, filtering across pages, legacy intake,
+and invalid filter rejection. The frontend tests cover selection, stale responses,
+retry, terminal states, tabs and notification controls.
+
 Use only a dedicated local database for automated tests. Existing integration and
 browser test harnesses enforce a local host and replace the database name with their
 isolated test database. The workflow transaction tests also require a replica set.

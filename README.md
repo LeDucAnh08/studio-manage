@@ -1,5 +1,19 @@
 # Studio Management - Monorepo - YUME
 
+## MongoDB Windows đang sử dụng
+
+Database hiện tại chạy trực tiếp trên Windows tại `127.0.0.1:27020`, database `studio_db`, có xác thực và replica set. Dữ liệu lưu ngoài Docker/source và MongoDB tự chạy khi đăng nhập Windows. Xem [MONGODB_WINDOWS.md](MONGODB_WINDOWS.md) để kết nối, sao lưu và quản lý.
+
+```powershell
+npm run db:status
+npm run db:start
+npm run dev
+```
+
+Mở ứng dụng tại http://localhost:4001. Các lệnh demo bên dưới dùng một database mẫu riêng.
+
+Nạp dữ liệu mẫu vào MongoDB Windows hiện tại bằng `npm run db:seed` (kiểm tra trước với `npm run db:seed:check`). Lệnh giữ dữ liệu cũ và không nạp trùng khi chạy lại; tài khoản mẫu được ghi trong [MONGODB_WINDOWS.md](MONGODB_WINDOWS.md).
+
 ## Demo local của đồ án
 
 Đồ án dùng môi trường local để triển khai và nghiệm thu, không cần staging hoặc production. Sau khi cài dependencies, chạy từ root:
@@ -15,6 +29,8 @@ Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằ
 Khách chưa đăng nhập xem giới thiệu tại `/portfolio` và các trang riêng `/services`, `/concepts`, `/costumes`, `/pricing`. Khi bắt đầu đặt dịch vụ hoặc thuê trang phục, khách đăng nhập rồi tiếp tục với lựa chọn đã giữ.
 
 Sau đăng nhập, mục Concept được ẩn và đường dẫn `/concepts` chuyển về Đơn của tôi. Màn đặt dịch vụ dùng navbar chung, không có cụm liên kết phụ Dịch vụ/Concept/Bảng giá. `/account/orders` là màn mặc định, có tab `bookings` (chụp ảnh) và `rentals` (thuê trang phục). Tab thuê chỉ hiện khi tính năng thuê bật. Hai URL danh sách cũ `/account/bookings` và `/account/rentals` chuyển sang tab tương ứng; URL tạo đơn và chi tiết đơn được giữ nguyên. Portfolio không còn là màn thao tác của khách đã đăng nhập. Các nút tư vấn được tạm ẩn trong khi chờ chatbot.
+
+Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra yêu cầu. Trang phục đi kèm được hiển thị trong thông tin gói và đã gồm trong giá; studio tư vấn mẫu và size khi chốt lịch. Xem [ADR-002](docs/decisions/002-package-included-costumes.md).
 
 ## Cài đặt
 
