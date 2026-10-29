@@ -10,7 +10,6 @@ const r = require('node:module').createRequire(
 process.env.TS_NODE_PROJECT = path.resolve(__dirname, '../../backend/tsconfig.json');
 process.env.JWT_SECRET = 'rental-daily-audit-local';
 process.env.CLIENT_PORTAL_ENABLED = 'true';
-process.env.CLIENT_RENTAL_ENABLED = 'true';
 process.env.CLIENT_WORKFLOW_ENABLED = 'true';
 process.env.GAS_WEBHOOK_URL = '';
 process.env.TELEGRAM_BOT_TOKEN = '';

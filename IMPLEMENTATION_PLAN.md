@@ -76,7 +76,7 @@ Các bước còn lại theo kế hoạch:
 
 Đã triển khai đơn thuê độc lập, wizard có bản nháp qua đăng nhập, danh sách và chi tiết theo vai trò; báo giá chốt kỳ/giá/cọc; xác nhận giữ hàng; giao và nhận trả tốt/hỏng/mất; gia hạn có kiểm tra lại, rút yêu cầu/hủy trước giao; phụ phí cần đồng ý; đối soát thu/hoàn cọc và đánh giá. Kho dùng chung với lịch chụp bằng cùng transaction/resource lock. Hàng quá hạn chưa trả vẫn giữ kho; trước giao hàng và trước bắt đầu chụp đều kiểm tra lại khả dụng.
 
-Đơn thuê bật bằng CLIENT_RENTAL_ENABLED và VITE_CLIENT_RENTAL_ENABLED, mặc định tắt. Đặc tả: `SPEC-rental-orders.md`; cách bật và vận hành: `RENTAL_RELEASE.md`; kiểm chứng: `audit/rental-2026-10-05.md`. Chưa thay đổi database hoặc triển khai production.
+Đơn thuê mặc định mở cùng cổng khách hàng, không có cờ bật/tắt riêng. Đặc tả: `SPEC-rental-orders.md`; vận hành: `RENTAL_RELEASE.md`; kiểm chứng: `audit/rental-2026-10-05.md`.
 
 Bước còn lại là báo cáo doanh thu theo dịch vụ/hiệu quả kho, nghiệm thu với studio và rollout theo các điều kiện hạ tầng đã ghi. Không đánh dấu toàn bộ dự án hoàn tất.
 

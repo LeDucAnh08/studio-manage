@@ -12,8 +12,8 @@ Chạy `node ops/demo.cjs start` từ root, mở **http://localhost:4001** và d
 
 1. MongoDB phải là replica set/mongos hỗ trợ transaction. Nếu nâng cấp/reset database đã có dữ liệu cần giữ, backup và kiểm tra restore local riêng trước. Với Docker, dùng quy trình hạ tầng trong WORKFLOW_RELEASE.md; không tạo lại volume dữ liệu.
 2. Chạy `node ops/audit-studio-readiness.cjs` với MONGO_URI có tên database rõ, đối soát lịch cũ và khai báo tồn theo mẫu–size–tình trạng. Đánh dấu isRentalItem cho những mẫu studio thực sự cho thuê. Giá catalog chỉ để tham khảo.
-3. Local không dùng Compose: CLIENT_PORTAL_ENABLED=true và CLIENT_RENTAL_ENABLED=true trong backend/.env. VITE_CLIENT_PORTAL_ENABLED=true và VITE_CLIENT_RENTAL_ENABLED=true trong frontend/.env, khởi động lại backend/Vite.
-4. Với Docker Compose replica overlay, CLIENT_WORKFLOW_ENABLED và CLIENT_RENTAL_ENABLED lấy từ **root .env**, ghi đè backend/.env và mặc định false. CLIENT_PORTAL_ENABLED tiếp tục cấu hình trong backend/.env. Frontend VITE_CLIENT_PORTAL_ENABLED từ root .env mặc định true như phiên bản hiện tại; VITE_CLIENT_RENTAL_ENABLED mặc định false. Bật rental trên database demo đã chuẩn bị rồi build lại frontend. Cấu hình mẫu .env.rollout.example; không ghi đè .env chứa secret. Launcher local không dùng overlay này; tài liệu này không xác nhận đã chạy/deploy Docker.
+3. Thuê trang phục mặc định mở cùng cổng khách hàng; không cần cờ riêng. Hai biến cũ `CLIENT_RENTAL_ENABLED` và `VITE_CLIENT_RENTAL_ENABLED` không còn tác dụng. Quyền đăng nhập, vai trò và kiểm tra dữ liệu vẫn được áp dụng.
+4. Docker Compose giữ cờ chung CLIENT_PORTAL_ENABLED và VITE_CLIENT_PORTAL_ENABLED; CLIENT_WORKFLOW_ENABLED vẫn dành riêng cho quy trình chụp. Sau cập nhật code, khởi động lại backend/Vite hoặc build lại frontend triển khai. Không thay `.env` chứa secret.
 5. Chạy kịch bản nhận hàng, trả tốt/hỏng/mất, gia hạn xung đột, hủy, thanh toán lặp, đối soát và hoàn cọc bằng tài khoản kiểm thử riêng trước khi đưa vào dùng.
 
 ## Luồng và quy tắc
@@ -31,7 +31,7 @@ Chạy `node ops/demo.cjs start` từ root, mở **http://localhost:4001** và d
 - Khách rút yêu cầu chưa đồng ý báo giá bằng nút Rút yêu cầu thuê. Sau đồng ý, yêu cầu hủy được gửi ngay cả khi chưa giữ hàng/đã nhận cọc; đề xuất đang mở chặn giữ hàng và giao. Tiền đã nhận được đối soát và hoàn theo phương án khách đồng ý.
 - Admin 0/1 giao–nhận và đối soát; Sale 2 tư vấn/báo giá; cộng tác viên sale 4 xem giao nhận; kế toán 5 ghi tiền; khách 6 chỉ đơn của mình.
 
-Tắt CLIENT_RENTAL_ENABLED chỉ đóng API/tính năng mới. Các đơn confirmed/checked_out vẫn được bảo vệ trước API lịch/kho cũ; không tự giải phóng hàng. Bật lại để tiếp tục xử lý trả/hoàn tiền. Các khoản tiền liên kết không sửa/xóa qua API thu chi cũ; mẫu có lịch sử thuê không bị xóa cứng.
+Không còn thao tác bật/tắt riêng tính năng thuê. Các khoản tiền liên kết không sửa/xóa qua API thu chi cũ; mẫu có lịch sử thuê không bị xóa cứng. Kiểm tra và bảo vệ tồn kho tiếp tục dùng transaction/khóa chung.
 
 ## Kiểm thử local
 

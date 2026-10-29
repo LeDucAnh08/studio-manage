@@ -93,11 +93,9 @@ Ghi ID hồ sơ/transaction và ảnh vào cột evidence, dùng dữ liệu m�
 |---|---|---|
 | CLIENT_PORTAL_ENABLED | backend/.env hoặc env của launcher | backend/.env |
 | CLIENT_WORKFLOW_ENABLED | backend/.env hoặc env của launcher | root .env; ghi đè backend/.env; mặc định false |
-| CLIENT_RENTAL_ENABLED | backend/.env hoặc env của launcher | root .env; ghi đè backend/.env; mặc định false |
 | VITE_CLIENT_PORTAL_ENABLED | frontend/.env hoặc env của launcher | root .env → Docker build arg; mặc định true |
-| VITE_CLIENT_RENTAL_ENABLED | frontend/.env hoặc env của launcher | root .env → Docker build arg; mặc định false |
 
-Launcher demo mở portal, chụp và thuê bằng env cho process local; không cần ghi đè secret trong `.env` đang có. Restart backend khi đổi backend flags; frontend Vite cần restart và bản build cần build lại khi đổi VITE flags. CORS_ORIGIN phải khớp frontend local; API URL/port phải khớp backend đang chạy.
+Thuê trang phục mặc định mở cùng cổng khách hàng, không cần cờ riêng. Launcher demo mở portal và quy trình chụp bằng env cho process local; không cần ghi đè secret trong `.env` đang có. Restart backend khi đổi backend flags; frontend Vite cần restart và bản build cần build lại khi đổi VITE flags. CORS_ORIGIN phải khớp frontend local; API URL/port phải khớp backend đang chạy.
 
 Nếu chọn Docker/VPS sau này, áp dụng cả hai Compose files theo [WORKFLOW_RELEASE.md](WORKFLOW_RELEASE.md), giữ data/keyfile volumes và xác nhận primary. `.env.rollout.example` là cấu hình mặc định đóng workflow mới khi nâng cấp một database đang dùng; không thay toàn bộ `.env` bằng file mẫu. Marker `.workflow-replica-enabled` chỉ phục vụ workflow deploy VPS, không phải điều kiện chạy launcher local.
 
@@ -110,7 +108,7 @@ node ops/demo.cjs start
 
 Dừng và khởi động lại giữ dữ liệu trong `.workflow-tools/demo-mongo-data`. Kiểm chứng bằng ID một hồ sơ trước/sau restart. Chỉ reset database demo khi chủ động muốn tạo lại dữ liệu mẫu, sau khi đã giữ bằng chứng/backup cần thiết. Không dùng test harness hoặc seed xóa dữ liệu trên database demo.
 
-Nếu cần tạm đóng ghi nghiệp vụ, tắt CLIENT_WORKFLOW_ENABLED/CLIENT_RENTAL_ENABLED trong nguồn cấu hình của process và restart backend; tắt entry tương ứng ở frontend bằng flags nếu cần. Bật lại để xử lý nhận trả/hoàn tiền đang mở. API cũ vẫn bảo vệ nguồn lực đã giữ cả chụp lẫn thuê. Không đổi replica set về standalone, xóa data/keyfile volume, xóa hồ sơ hay payment để rollback ứng dụng.
+Nếu cần tạm đóng ghi nghiệp vụ, tắt CLIENT_WORKFLOW_ENABLED cho quy trình chụp hoặc CLIENT_PORTAL_ENABLED cho toàn bộ cổng khách hàng trong nguồn cấu hình của process và restart backend; tắt entry tương ứng ở frontend bằng flags nếu cần. Bật lại để xử lý nhận trả/hoàn tiền đang mở. API cũ vẫn bảo vệ nguồn lực đã giữ cả chụp lẫn thuê. Không đổi replica set về standalone, xóa data/keyfile volume, xóa hồ sơ hay payment để rollback ứng dụng.
 
 Theo dõi 409/503/5xx, đơn chờ hành động, chưa hoàn tiền, quá hạn và thiếu hàng. Lỗi Drive/notification được xử lý riêng khỏi transaction đã commit; retry không được tạo thêm payment hoặc Schedule. Khi rollback code, dùng phiên bản đã ghi và kiểm tra tương thích dữ liệu.
 

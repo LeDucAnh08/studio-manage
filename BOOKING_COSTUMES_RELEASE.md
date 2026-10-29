@@ -27,6 +27,8 @@ Các đường dẫn dưới đây có tiền tố `/api` và dùng envelope hi�
 
 `costumeHold.status` trả về `temporary`, `expired`, `approved`, `released` hoặc `transferred`; kèm `receiveDate`, `returnDate`, `expiresAt?`, `releaseReason?`. `expired` được tính khi đọc, không cần worker. Không có TTL index xóa Booking.
 
+`POST /bookings` bắt buộc `phone` là chuỗi tối đa 25 ký tự. Định dạng nhận: 10 chữ số bắt đầu bằng `0` (chữ số tiếp theo khác `0`) hoặc thay `0` đầu bằng `+84`; cho phép dấu cách, chấm, gạch nối và ngoặc để trình bày. Số sai trả `400` kèm thông báo cụ thể, không tạo Booking. Wizard kiểm tra khi rời ô nhập, trước khi xem lại và trước khi gửi; giữ nguyên định dạng người dùng đã nhập sau khi cắt khoảng trắng hai đầu.
+
 Với API có lựa chọn trang phục, thiếu kho trả 409, `data.costumeConflicts: [{ costumeId, name, size, available }]`. Validation khác trả 400. MongoDB không hỗ trợ transaction trả 503 cho thao tác giữ, không tạo yêu cầu dở dang. Wizard hiện tại không gửi lựa chọn và không phụ thuộc endpoint khả dụng này.
 
 ## Triển khai và kiểm tra

@@ -885,10 +885,8 @@ test('independent workflow audit against isolated replica set', async (t) => {
           },
         ],
       });
-      const previousWorkflow = process.env.CLIENT_WORKFLOW_ENABLED,
-        previousRental = process.env.CLIENT_RENTAL_ENABLED;
+      const previousWorkflow = process.env.CLIENT_WORKFLOW_ENABLED;
       process.env.CLIENT_WORKFLOW_ENABLED = 'false';
-      process.env.CLIENT_RENTAL_ENABLED = 'false';
       try {
         const helper = fromBackend('services/workflowTransactions');
         assert.equal(await helper.resourceTransactionsRequired(), true);
@@ -910,8 +908,6 @@ test('independent workflow audit against isolated replica set', async (t) => {
       } finally {
         if (previousWorkflow === undefined) delete process.env.CLIENT_WORKFLOW_ENABLED;
         else process.env.CLIENT_WORKFLOW_ENABLED = previousWorkflow;
-        if (previousRental === undefined) delete process.env.CLIENT_RENTAL_ENABLED;
-        else process.env.CLIENT_RENTAL_ENABLED = previousRental;
       }
     },
   );

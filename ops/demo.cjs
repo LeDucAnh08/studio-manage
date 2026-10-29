@@ -256,7 +256,6 @@ async function serve() {
       env: {
         ...process.env,
         VITE_CLIENT_PORTAL_ENABLED: 'true',
-        VITE_CLIENT_RENTAL_ENABLED: 'true',
         VITE_API_URL: '/api',
       },
     });
@@ -273,7 +272,6 @@ async function serve() {
         CORS_ORIGIN: 'http://localhost:4001,http://127.0.0.1:4001',
         CLIENT_PORTAL_ENABLED: 'true',
         CLIENT_WORKFLOW_ENABLED: 'true',
-        CLIENT_RENTAL_ENABLED: 'true',
         TELEGRAM_BOT_TOKEN: '',
         GAS_WEBHOOK_URL: '',
         GAS_WEBHOOK_SECRET: '',

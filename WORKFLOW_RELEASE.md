@@ -54,14 +54,12 @@ Use this procedure only when choosing to deploy an existing database with Compos
    wider use. Use a dedicated test customer; do not run a destructive seed on an
    existing target database.
 
-The replica overlay reads `CLIENT_WORKFLOW_ENABLED` and `CLIENT_RENTAL_ENABLED`
-from the root .env, defaults them to false, and overrides backend/.env.
-`CLIENT_PORTAL_ENABLED` remains in backend/.env. Local runs without Compose still use
-backend/.env. Frontend portal/rental flags are explicit Docker build arguments from
-root .env; portal preserves the existing true default, rental defaults false.
-Rebuild when changing them. Merge .env.rollout.example
-into the existing configuration without replacing secrets. Use STUDIO_ACCEPTANCE.md
-for the combined local two-service/data/report checklist.
+The replica overlay reads `CLIENT_WORKFLOW_ENABLED` from the root .env, defaults it to false, and overrides backend/.env.
+`CLIENT_PORTAL_ENABLED` remains in backend/.env. Local runs without Compose still use backend/.env.
+Rental is always available within the customer portal and has no separate feature flag.
+The frontend portal flag remains an explicit Docker build argument with the existing true default.
+Merge .env.rollout.example into the existing configuration without replacing secrets.
+Use STUDIO_ACCEPTANCE.md for the combined local two-service/data/report checklist.
 
 The base Compose file is deliberately not switched automatically. After verifying
 the replica-set rollout, create an empty `.workflow-replica-enabled` file in the VPS

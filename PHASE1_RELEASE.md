@@ -21,9 +21,7 @@ Nếu tự chạy các workspace thay cho launcher, cấu hình:
 |---|---|
 | CLIENT_PORTAL_ENABLED | true |
 | CLIENT_WORKFLOW_ENABLED | true |
-| CLIENT_RENTAL_ENABLED | true |
 | VITE_CLIENT_PORTAL_ENABLED | true |
-| VITE_CLIENT_RENTAL_ENABLED | true |
 | VITE_API_URL | URL API local khớp backend đang chạy |
 | CORS_ORIGIN | Origin frontend local khớp trình duyệt |
 | MONGO_URI | URI replica set local gồm tên database demo rõ ràng |

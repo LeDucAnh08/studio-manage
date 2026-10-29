@@ -9,7 +9,6 @@ const r = require('node:module').createRequire(
 process.env.TS_NODE_PROJECT = path.resolve(__dirname, '../../backend/tsconfig.json');
 process.env.JWT_SECRET = 'rental-audit-local';
 process.env.CLIENT_PORTAL_ENABLED = 'true';
-process.env.CLIENT_RENTAL_ENABLED = 'true';
 process.env.CLIENT_WORKFLOW_ENABLED = 'true';
 process.env.GAS_WEBHOOK_URL = '';
 process.env.TELEGRAM_BOT_TOKEN = '';
@@ -347,46 +346,47 @@ test('rental workflow uses the same real resource lock as photography', async (t
       JSON.stringify(responses),
     );
   });
-  await t.test('legacy writes cannot bypass holds even after flags are disabled', async () => {
-    const costume = await item(),
-      id = await prepare(costume);
-    await act(id, users.admin, 'resources.confirm');
-    process.env.CLIENT_RENTAL_ENABLED = 'false';
-    process.env.CLIENT_WORKFLOW_ENABLED = 'false';
-    try {
-      assert.equal((await call('/rentals', users.admin)).status, 404);
-      const schedule = await call('/schedules', users.admin, {
-        customer: String(customer._id),
-        shootDate: day(1),
-        status: 'confirmed',
-        costumes: [String(costume._id)],
-        costumeReservations: [
-          {
-            costume: String(costume._id),
-            size: 'M',
-            quantity: 1,
-            receiveDate: day(1),
-            returnDate: day(1),
-          },
-        ],
-      });
-      assert.equal(schedule.status, 409, JSON.stringify(schedule.body));
-      const reduction = await call(
-        `/costumes/${costume._id}`,
-        users.admin,
-        { inventory: [{ size: 'M', condition: 'good', quantity: 0 }] },
-        'PUT',
-      );
-      assert.equal(reduction.status, 409);
-      assert.equal(
-        (await call(`/costumes/${costume._id}`, users.admin, undefined, 'DELETE')).status,
-        409,
-      );
-    } finally {
-      process.env.CLIENT_RENTAL_ENABLED = 'true';
-      process.env.CLIENT_WORKFLOW_ENABLED = 'true';
-    }
-  });
+  await t.test(
+    'rentals stay available and holds stay protected when photography workflow is disabled',
+    async () => {
+      const costume = await item(),
+        id = await prepare(costume);
+      await act(id, users.admin, 'resources.confirm');
+      process.env.CLIENT_WORKFLOW_ENABLED = 'false';
+      try {
+        assert.equal((await call('/rentals', users.admin)).status, 200);
+        const schedule = await call('/schedules', users.admin, {
+          customer: String(customer._id),
+          shootDate: day(1),
+          status: 'confirmed',
+          costumes: [String(costume._id)],
+          costumeReservations: [
+            {
+              costume: String(costume._id),
+              size: 'M',
+              quantity: 1,
+              receiveDate: day(1),
+              returnDate: day(1),
+            },
+          ],
+        });
+        assert.equal(schedule.status, 409, JSON.stringify(schedule.body));
+        const reduction = await call(
+          `/costumes/${costume._id}`,
+          users.admin,
+          { inventory: [{ size: 'M', condition: 'good', quantity: 0 }] },
+          'PUT',
+        );
+        assert.equal(reduction.status, 409);
+        assert.equal(
+          (await call(`/costumes/${costume._id}`, users.admin, undefined, 'DELETE')).status,
+          409,
+        );
+      } finally {
+        process.env.CLIENT_WORKFLOW_ENABLED = 'true';
+      }
+    },
+  );
   await t.test(
     'money is exactly once, returns alter condition, settlement needs consent before refund',
     async () => {
