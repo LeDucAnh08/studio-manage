@@ -6,6 +6,9 @@
     "backend",
     "frontend"
   ],
+  "resolutions": {
+    "**/@types/express": "^4.17.21"
+  },
   "scripts": {
     "dev": "turbo run dev",
     "db:start": "node ops/mongodb-windows.cjs start",

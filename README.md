@@ -32,6 +32,18 @@ Sau đăng nhập, mục Concept được ẩn và đường dẫn `/concepts` c
 
 Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra yêu cầu. Trang phục đi kèm được hiển thị trong thông tin gói và đã gồm trong giá; studio tư vấn mẫu và size khi chốt lịch. Xem [ADR-002](docs/decisions/002-package-included-costumes.md).
 
+## Chi tiết gói dịch vụ
+
+Tại `/pricing`, chọn **Xem chi tiết** để mở `/pricing/:id`. Khách chưa đăng nhập vẫn xem được quyền lợi, ảnh demo, lịch trình mẫu, quy trình, chi phí và điều kiện do studio nhập. **Đặt gói này** giữ đúng gói qua trang đăng nhập chung và chuyển sang form đặt lịch.
+
+Admin mở **Cài đặt → Gói chụp → Nội dung chi tiết** để nhập nội dung, tải và sắp thứ tự ảnh. Ảnh đầu tiên là ảnh bìa; tối đa 10 ảnh/gói, 5 MB/ảnh (JPEG/PNG/WebP). Nội dung và ảnh chỉ thay đổi công khai sau khi lưu thành công. Giá/người và thông tin cơ bản tiếp tục sửa trong danh sách gói. Gói cũ không cần nhập thêm để tiếp tục hoạt động.
+
+Ảnh được kiểm tra, chuyển sang WebP và lưu ngoài `src`/`dist`, mặc định ở `.data/package-media` tại root. Có thể đặt `UPLOAD_DIR` trong `backend/.env` thành thư mục tuyệt đối trên ổ lưu trữ bền vững. Khi sao lưu/khôi phục, giữ **cả database và thư mục ảnh**. Docker Compose dùng volume `package_media`; Nginx cho phép multipart đến 55 MB. Không xóa volume này khi dựng lại ứng dụng.
+
+Kiểm thử riêng: `yarn workspace studio-management-backend test:package-content` và `yarn workspace studio-management-frontend test:e2e e2e/package-content.spec.cjs`. E2E chỉ ghi vào database `studio_phase1_e2e` và thư mục `.data/e2e-package-media` riêng.
+
+Nạp ảnh demo từ portfolio có sẵn: chạy `node ops/seed-package-images.cjs` để kiểm tra, thêm `--apply` để nạp 3 ảnh cho mỗi gói chưa có ảnh. Script dùng MongoDB Windows local đã cấu hình, giữ nguyên gói đã có ảnh, giá và nội dung khác.
+
 ## Cài đặt
 
 ```bash

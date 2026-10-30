@@ -7,3 +7,5 @@ dist/
 .omc
 .workflow-tools/
 .workflow-replica-enabled
+.data/package-media/
+.data/e2e-package-media/
