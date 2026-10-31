@@ -1,0 +1,19 @@
+✔ package agreement validates consent, immutable pricing, contact-only and same-day bookings (100.4669ms)
+▶ package checkout, temporary crew holds, automatic confirmation, roster and expiry refunds
+  ✔ approval snapshots the accepted price, holds crew and blocks conflicting bookings/private blocks (3080.029ms)
+  ✔ partial and duplicate payments preserve one transaction; sufficient deposit creates one schedule without a roster (3288.2874ms)
+  ✔ admin prepares included costumes after automatic confirmation with stock and role checks (2378.4863ms)
+  ✔ roster and public member intake work after confirmation and synchronize students without duplicates (1492.0041ms)
+  ✔ expired holds release immediately and preserve partial money as refundable (2692.048ms)
+  ✔ two approvals with the same preassigned team cannot both reserve the slot (1028.7927ms)
+  ✔ accepted price changes confirm a held package when the partial deposit is now sufficient (2235.9629ms)
+  ✔ package crew capacity is enforced on approval and subsequent reassignment (3242.4394ms)
+✔ package checkout, temporary crew holds, automatic confirmation, roster and expiry refunds (27398.4123ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33585.6882

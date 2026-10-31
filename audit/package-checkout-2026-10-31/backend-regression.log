@@ -1,0 +1,43 @@
+✔ selection input rejects malformed rows and canonicalizes ordering (25.3509ms)
+▶ booking costume holds share stock and transfer atomically on a real replica set
+  ✔ public package catalog includes internal clothing, excludes accessories and keeps private stock data hidden (840.1238ms)
+  ✔ booking stores snapshots, limits by type and validates size, quantity and membership (968.5928ms)
+  ✔ same key concurrently creates one hold, canonical retries preserve expiry and changed contents conflict (549.5185ms)
+  ✔ only one competing booking can reserve the final stock; failures leave no partial booking (364.0299ms)
+  ✔ expiry takes effect on reads without a worker; approval reacquires or fails without changing status (495.5542ms)
+  ✔ approval preserves its own hold; rejection and admin release free stock with retained snapshots (329.361ms)
+  ✔ booking holds block rental confirmation, and confirmed rentals block bookings (344.7467ms)
+  ✔ a booking and a rental racing for the last stock have exactly one winner (151.8966ms)
+  ✔ existing schedules block bookings and booking holds protect stock, type and deletion even with photography workflow off (294.5365ms)
+  ✔ inclusive Vietnam days reserve both endpoints and leave neighboring days free (222.4122ms)
+  ✔ workflow transfer excludes its own hold, persists one schedule hold, and cancellation releases stock (1812.5114ms)
+  ✔ legacy booking without clothing creates no hold and follows existing review (148.5191ms)
+  ✔ the first booking hold races safely with stock edits while workflow and rental flags are disabled (151.5286ms)
+  ✔ missing transaction support returns 503 without creating a booking, while skipping costumes still works (99.2904ms)
+  ✔ cancellation before schedule confirmation releases an approved booking hold (1515.9824ms)
+✔ booking costume holds share stock and transfer atomically on a real replica set (15888.97ms)
+✔ customer order views filter all pages, retain legacy intake and isolate each owner (3879.0924ms)
+✔ package agreement validates consent, immutable pricing, contact-only and same-day bookings (35.2001ms)
+▶ package checkout, temporary crew holds, automatic confirmation, roster and expiry refunds
+  ✔ approval snapshots the accepted price, holds crew and blocks conflicting bookings/private blocks (663.5746ms)
+  ✔ partial and duplicate payments preserve one transaction; sufficient deposit creates one schedule without a roster (482.059ms)
+  ✔ admin prepares included costumes after automatic confirmation with stock and role checks (183.1577ms)
+  ✔ roster and public member intake work after confirmation and synchronize students without duplicates (219.4698ms)
+  ✔ expired holds release immediately and preserve partial money as refundable (1046.1759ms)
+  ✔ two approvals with the same preassigned team cannot both reserve the slot (489.5159ms)
+  ✔ accepted price changes confirm a held package when the partial deposit is now sufficient (762.3587ms)
+✔ package checkout, temporary crew holds, automatic confirmation, roster and expiry refunds (8120.4579ms)
+▶ Phase 1 persists idempotent bookings and single-winner approvals in MongoDB
+  ✔ concurrent retries create one booking with a package snapshot (329.3299ms)
+  ✔ a different client cannot read the booking (100.3108ms)
+  ✔ only one concurrent booking review wins (126.9455ms)
+  ✔ only one concurrent staff-account approval creates a user (59.6164ms)
+✔ Phase 1 persists idempotent bookings and single-winner approvals in MongoDB (4160.9463ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43100.0861

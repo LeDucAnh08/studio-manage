@@ -1,0 +1,69 @@
+yarn run v1.22.22
+$ vitest run src/pages/BookingWorkflowListPage.test.tsx src/pages/AdminTables.test.tsx src/pages/CustomerOrders.test.tsx src/pages/CustomerOrdersPage.test.tsx src/pages/DailyRentalPricing.test.tsx src/pages/PackageContentPage.test.tsx --maxWorkers=2 --minWorkers=1
+
+ RUN  v2.1.9 C:/Users/Admin/studio-manage/frontend
+
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+stderr | src/pages/DailyRentalPricing.test.tsx > date-first daily rental form > consumes an add-item selection once, including another size of an existing model
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/CustomerOrders.test.tsx > Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/CustomerOrders.test.tsx (23 tests) 4702ms
+   ✓ Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form 820ms
+   ✓ Customer order presentation preserves workflow contracts > keeps new rental drafts through a guest login redirect and reuses a failed submission key 399ms
+ ✓ src/pages/DailyRentalPricing.test.tsx (24 tests) 8304ms
+   ✓ date-first daily rental form > consumes an add-item selection once, including another size of an existing model 957ms
+   ✓ date-first daily rental form > adds a catalog model to an existing draft once, preserves prior quantities, and does not re-add a removed model after repricing 1156ms
+   ✓ date-first daily rental form > allows submission by default and preserves guest login drafts (authenticated=true) 419ms
+   ✓ date-first daily rental form > allows submission by default and preserves guest login drafts (authenticated=false) 370ms
+   ✓ date-first daily rental form > uses daily rate times quantity times inclusive days and preserves dates in preview payload 401ms
+   ✓ date-first daily rental form > edits the rental period inline, restores the new period and rechecks inventory without reducing quantities 619ms
+   ✓ date-first daily rental form > keeps item totals, quantity bounds and the submitted request in sync while editing multiple items 1679ms
+   ✓ date-first daily rental form > does not substitute the old period price when daily rate is not configured 317ms
+   ✓ date-first daily rental form > preserves chosen rows and disables preview if a new range has insufficient stock 498ms
+   ✓ separate daily rate in staff inventory > saves a separate daily price while preserving the old period price 415ms
+stderr | src/pages/CustomerOrdersPage.test.tsx > Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/CustomerOrdersPage.test.tsx (13 tests) 2993ms
+   ✓ Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back 659ms
+   ✓ Unified orders tabs > uses the same list and progress layout for rentals, selects an order and preserves its return context 547ms
+   ✓ Unified orders tabs > filters and paginates rentals on the server, clears selection and retries errors 388ms
+   ✓ Unified orders tabs > retries the selected progress independently and resets page when changing the filter 318ms
+   ✓ Unified orders tabs > opens notifications on demand and marks only the latest displayed timestamp read 358ms
+stderr | src/pages/PackageContentPage.test.tsx > Package content editing > saves structured content, trims empty benefit lines and keeps the version
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/PackageContentPage.test.tsx (6 tests) 3391ms
+   ✓ Package content editing > saves structured content, trims empty benefit lines and keeps the version 1733ms
+   ✓ Package content editing > loads saved package information and lets the admin clear it 384ms
+   ✓ Package content editing > keeps changes after a conflict and can retry saving 370ms
+   ✓ Package content editing > orders and deletes itinerary rows without losing their values 505ms
+stderr | src/pages/BookingWorkflowListPage.test.tsx > unified photography workspace > shows new requests, progress and admin notifications in one workspace
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/BookingWorkflowListPage.test.tsx (6 tests) 1667ms
+   ✓ unified photography workspace > shows new requests, progress and admin notifications in one workspace 945ms
+stderr | src/pages/AdminTables.test.tsx > shared admin tables > keeps rental server pagination, status and money in one table and retains the return URL
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/AdminTables.test.tsx (4 tests) 3755ms
+   ✓ shared admin tables > keeps rental server pagination, status and money in one table and retains the return URL 2298ms
+   ✓ shared admin tables > preserves full feedback details, read actions and server filter pagination 1009ms
+
+ Test Files  6 passed (6)
+      Tests  76 passed (76)
+   Start at  15:11:24
+   Duration  81.07s (transform 6.36s, setup 6.03s, collect 68.67s, tests 24.81s, environment 19.60s, prepare 1.76s)
+
+Done in 84.55s.

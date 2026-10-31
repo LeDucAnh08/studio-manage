@@ -26,6 +26,10 @@ Bảng giá chỉ có thông tin tóm tắt. Khách cần một đường dẫn 
 - Khi xung đột phiên bản, trả 409 và giữ nội dung đang sửa để admin chủ động tải lại. Lỗi tải nội dung cho phép thử lại; gói không tồn tại trả 404.
 - Nếu kết nối đứt sau khi MongoDB đã nhận lệnh ghi, kiểm tra lại tham chiếu trước khi dọn ảnh mới. Nếu không đọc lại được DB, giữ file để tránh xóa ảnh đã commit; có thể còn file không được tham chiếu sau sự cố.
 
+## Bổ sung ngày 31/10/2026
+
+`details.deliverables` (sản phẩm bàn giao), `details.shootScope` (phạm vi buổi chụp) và `details.pricingConditions` (điều kiện áp dụng giá) là văn bản nhiều dòng tùy chọn, tối đa 4.000 ký tự/mục. Admin nhập tại màn nội dung chi tiết; khách chỉ thấy mục có nội dung. Dùng văn bản vì đây là thông tin tư vấn theo từng gói, chưa phải quy tắc tính tiền hay giới hạn đặt lịch tự động. Các trường giá, thời lượng, hậu kỳ và ngày bàn giao cơ bản vẫn là nguồn dữ liệu hiện có; không cần migration hoặc tự điền cam kết thương mại cho gói cũ.
+
 ## Kiểm chứng
 
 Backend có `tests/package-content.cjs` (HTTP và filesystem cô lập), frontend có component tests cho trang khách và trang quản lý, E2E có `frontend/e2e/package-content.spec.cjs`. E2E dùng database và thư mục ảnh test riêng; không sửa dữ liệu demo của ứng dụng.

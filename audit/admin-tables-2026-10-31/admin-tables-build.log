@@ -1,0 +1,49 @@
+yarn run v1.22.22
+$ tsc && vite build
+vite v5.4.21 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 4044 modules transformed.
+Circular chunk: vendor-charts -> vendor-react -> vendor-charts. Please adjust the manual chunk logic for these chunks.
+rendering chunks...
+computing gzip size...
+dist/index.html                                           0.89 kB │ gzip:   0.40 kB
+dist/assets/tnv05927-640-C1MkMlkx.webp                   14.94 kB
+dist/assets/tnv00451-640-CmlvbD7l.webp                   19.41 kB
+dist/assets/pbi00061-640-yuLXBP4W.webp                   20.54 kB
+dist/assets/tnv06242-640-CmOt56__.webp                   21.71 kB
+dist/assets/tnv00817-640-tOobF2Ez.webp                   24.71 kB
+dist/assets/tnv03816-640-DqZD-CUS.webp                   25.24 kB
+dist/assets/pbi01583-640-DphgOsUY.webp                   29.52 kB
+dist/assets/tnv00048-640-C32ZANOF.webp                   30.02 kB
+dist/assets/hdz07441-640-CdmwoheU.webp                   31.00 kB
+dist/assets/pbi01850-640-p2PFvuzd.webp                   31.61 kB
+dist/assets/may01381-640-r15Opzq5.webp                   40.55 kB
+dist/assets/tnv06047-640-7nqavucm.webp                   61.59 kB
+dist/assets/logo-BI6TviZk.webp                           61.98 kB
+dist/assets/tnv07899-640-kRycqbZP.webp                  102.49 kB
+dist/assets/PBI01583-jND4lzdB.webp                      351.60 kB
+dist/assets/inter-vietnamese-variable-DiVDrmQJ.woff2    352.24 kB
+dist/assets/PBI00061-BuOJodT-.webp                      449.89 kB
+dist/assets/TNV05927-CMQ-bDr2.webp                      547.15 kB
+dist/assets/PBI01850-DpRWdIMt.webp                      555.84 kB
+dist/assets/TNV06242-S8eA49yK.webp                      561.60 kB
+dist/assets/TNV03816-7zPLV3Q-.webp                      595.15 kB
+dist/assets/TNV06047-DPmJgY_8.webp                      866.34 kB
+dist/assets/TNV00048-C-Nc1NaB.webp                    1,102.55 kB
+dist/assets/TNV00451-BVCq3iQT.webp                    1,190.60 kB
+dist/assets/TNV00817-wkzNUtSg.webp                    1,454.94 kB
+dist/assets/MAY01381-qaQQdted.webp                    1,821.08 kB
+dist/assets/HDZ07441-COIxDBmB.webp                    1,895.14 kB
+dist/assets/TNV07899-B1E2lu57.webp                    4,066.74 kB
+dist/assets/index-DQB3JyZc.css                          203.40 kB │ gzip:  32.98 kB
+dist/assets/vendor-redux-DmdQ45Pg.js                     40.75 kB │ gzip:  15.18 kB
+dist/assets/vendor-utils-BXqbC14j.js                    123.72 kB │ gzip:  42.38 kB
+dist/assets/vendor-react-HlxZZdz8.js                    157.46 kB │ gzip:  51.60 kB
+dist/assets/vendor-charts-l7h-eU0E.js                   346.93 kB │ gzip:  99.92 kB
+dist/assets/index-_C0PhEeH.js                           792.14 kB │ gzip: 220.02 kB
+dist/assets/vendor-exceljs-BD_USxvw.js                  938.18 kB │ gzip: 270.84 kB
+✓ built in 28.98s
+Done in 48.63s.

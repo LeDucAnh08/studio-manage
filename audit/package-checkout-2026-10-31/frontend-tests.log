@@ -1,0 +1,51 @@
+yarn run v1.22.22
+$ vitest run src/pages/NewBookingPage.test.tsx src/pages/CustomerOrders.test.tsx src/pages/CustomerOrdersPage.test.tsx --maxWorkers=2 --minWorkers=1
+
+ RUN  v2.1.9 C:/Users/Admin/studio-manage/frontend
+
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+stderr | src/pages/NewBookingPage.test.tsx > NewBookingPage > requires agreement to the published package price and deposit before submission
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/CustomerOrders.test.tsx > Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/CustomerOrders.test.tsx (23 tests) 5613ms
+   ✓ Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form 781ms
+   ✓ Customer order presentation preserves workflow contracts > blocks duplicate cancellation clicks while pending and keeps the key for unchanged retries 319ms
+   ✓ Customer order presentation preserves workflow contracts > shows a stale quote failure without optimistic consent, then reloads the current workflow version 433ms
+   ✓ Customer order presentation preserves workflow contracts > keeps new rental drafts through a guest login redirect and reuses a failed submission key 562ms
+ ✓ src/pages/NewBookingPage.test.tsx (16 tests) 10708ms
+   ✓ NewBookingPage > requires agreement to the published package price and deposit before submission 1526ms
+   ✓ NewBookingPage > rejects a package shoot spanning different calendar days before submission 473ms
+   ✓ NewBookingPage > keeps discovery context and package comparison while collecting class and VN schedule details 1196ms
+   ✓ NewBookingPage > keeps the guest review draft and return target through sign-in before submitting 834ms
+   ✓ NewBookingPage > allows a booking 30 days ahead, sends class details, and reuses the key only for an unchanged retry 988ms
+   ✓ NewBookingPage > rejects a requested time range longer than seven days 530ms
+   ✓ NewBookingPage > validates phone on blur and blocks review for blank, malformed or incorrectly sized numbers 1142ms
+   ✓ NewBookingPage > accepts and submits the valid phone format 0901234567 441ms
+   ✓ NewBookingPage > accepts and submits the valid phone format +84901234567 486ms
+   ✓ NewBookingPage > accepts and submits the valid phone format 090 123 4567 461ms
+   ✓ NewBookingPage > accepts and submits the valid phone format (+84) 90.123.4567 523ms
+   ✓ NewBookingPage > allows clearing and restoring member text, validates whole numbers and submits a numeric member count 876ms
+   ✓ NewBookingPage > shows included clothing in the package, comparison and review without a selection step or catalog request 500ms
+stderr | src/pages/CustomerOrdersPage.test.tsx > Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/CustomerOrdersPage.test.tsx (13 tests) 2821ms
+   ✓ Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back 803ms
+   ✓ Unified orders tabs > uses the same list and progress layout for rentals, selects an order and preserves its return context 326ms
+   ✓ Unified orders tabs > selects orders, uses confirmed schedule details, links to the full record and discards a late response 343ms
+   ✓ Unified orders tabs > opens notifications on demand and marks only the latest displayed timestamp read 303ms
+
+ Test Files  3 passed (3)
+      Tests  52 passed (52)
+   Start at  14:49:48
+   Duration  51.62s (transform 8.27s, setup 3.50s, collect 41.87s, tests 19.14s, environment 13.95s, prepare 1.03s)
+
+Done in 61.17s.

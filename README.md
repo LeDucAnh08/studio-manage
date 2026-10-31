@@ -30,7 +30,11 @@ Khách chưa đăng nhập xem giới thiệu tại `/portfolio` và các trang 
 
 Sau đăng nhập, mục Concept được ẩn và đường dẫn `/concepts` chuyển về Đơn của tôi. Màn đặt dịch vụ dùng navbar chung, không có cụm liên kết phụ Dịch vụ/Concept/Bảng giá. `/account/orders` là màn mặc định, có tab `bookings` (chụp ảnh) và `rentals` (thuê trang phục). Tab thuê chỉ hiện khi tính năng thuê bật. Hai URL danh sách cũ `/account/bookings` và `/account/rentals` chuyển sang tab tương ứng; URL tạo đơn và chi tiết đơn được giữ nguyên. Portfolio không còn là màn thao tác của khách đã đăng nhập. Các nút tư vấn được tạm ẩn trong khi chờ chatbot.
 
-Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra yêu cầu. Trang phục đi kèm được hiển thị trong thông tin gói và đã gồm trong giá; studio tư vấn mẫu và size khi chốt lịch. Xem [ADR-002](docs/decisions/002-package-included-costumes.md).
+Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra, đồng ý giá và điều kiện gói. Với đơn gói mới, admin phân công đủ ekip và duyệt giữ tạm đúng lịch khách chọn, không lập báo giá riêng. Mặc định cọc 30%, giữ 24 giờ từ lúc duyệt (tối đa đến giờ chụp); chỉnh được tại **Cài đặt → Gói chụp**. Khi admin/kế toán ghi nhận đủ cọc trong hạn, hệ thống tự tạo lịch chính thức đúng một lần. Hết hạn chưa đủ cọc, đơn tự hủy và trả ekip; khoản đã nhận vẫn được giữ để đối soát hoàn. Danh sách thành viên nhập sau chốt lịch, trước buổi chụp. Trang phục đã gồm trong giá; admin dùng **Chuẩn bị trang phục cho buổi chụp** sau chốt để phân bổ mẫu, size, số lượng và ngày nhận/trả, có kiểm tra tồn kho. Hồ sơ tư vấn cũ giữ nguyên quy trình và lịch sử. Xem [ADR-008 và kiểm chứng](docs/decisions/008-package-booking-checkout.md), [ADR-002](docs/decisions/002-package-included-costumes.md).
+
+## Bảng quản trị
+
+Các màn danh sách admin dùng chung dạng bảng trên desktop và mobile, có khung cuộn ngang riêng. Đơn chụp, đơn thuê, phản hồi và danh mục thu/chi dùng cùng `DataTable`; các bản card mobile trùng đã được bỏ. Dashboard vẫn giữ biểu đồ và lịch có chế độ calendar; form/trang chi tiết giữ đúng chức năng. Xem [ADR-009](docs/decisions/009-admin-tables.md).
 
 ## Chi tiết gói dịch vụ
 
@@ -43,6 +47,12 @@ Admin mở **Cài đặt → Gói chụp → Nội dung chi tiết** để nhậ
 Kiểm thử riêng: `yarn workspace studio-management-backend test:package-content` và `yarn workspace studio-management-frontend test:e2e e2e/package-content.spec.cjs`. E2E chỉ ghi vào database `studio_phase1_e2e` và thư mục `.data/e2e-package-media` riêng.
 
 Nạp ảnh demo từ portfolio có sẵn: chạy `node ops/seed-package-images.cjs` để kiểm tra, thêm `--apply` để nạp 3 ảnh cho mỗi gói chưa có ảnh. Script dùng MongoDB Windows local đã cấu hình, giữ nguyên gói đã có ảnh, giá và nội dung khác.
+
+Nạp nội dung mẫu cho sản phẩm bàn giao, phạm vi buổi chụp và điều kiện áp dụng giá: chạy `node ops/seed-package-content.cjs` để kiểm tra, thêm `--apply` để nạp vào 5 gói demo đã biết. Chỉ điền từng mục đang trống, giữ nguyên mục đã nhập và các dữ liệu khác; chạy lại không ghi đè. Nội dung là mẫu để kiểm tra giao diện, có thể chỉnh sửa trong admin trước khi dùng thực tế.
+
+Bổ sung danh mục trang phục cho tháng 11/2026: `node ops/seed-november-costumes.cjs` kiểm tra dữ liệu; thêm `--apply` để gắn ảnh cho 18 mẫu hiện có và thêm 8 mẫu cùng tồn kho S/M/L/XL hoặc FREE. Ảnh minh họa AI ở `frontend/public/costume-demo/`, trường `Costume.imageUrl` tùy chọn được trả qua danh mục công khai và hiển thị ở khách hàng/admin. Chỉ điền ảnh trống; giữ nguyên giá, tồn kho cũ, lịch chụp, đơn thuê và giao dịch. Tồn kho dùng chung giữa các ngày, không tự đặt lại theo tháng và không tạo đơn thuê. Xem [nguồn ảnh và prompt](docs/demo-costume-images.md).
+
+Trong yêu cầu thuê, nút **Thêm món thuê** mở `/costumes?receiveDate=...&returnDate=...&add=1`. Khoảng ngày được giữ và khóa trên màn chọn thêm; lọc danh mục không làm mất chế độ này. Chọn mẫu sẽ quay về bản nháp hiện tại để chọn size/số lượng; có thể chọn lại một mẫu cho size khác. Tham số chọn thêm được tiêu thụ sau khi áp dụng để tải lại không thêm trùng. Nút **Quay lại yêu cầu thuê** giữ nguyên các món và thông tin liên hệ nếu không chọn thêm; vào danh mục thông thường vẫn sửa ngày được.
 
 ## Cài đặt
 
