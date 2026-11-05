@@ -16,6 +16,7 @@
     "db:stop": "node ops/mongodb-windows.cjs stop",
     "db:seed": "node ops/seed-realistic.cjs --windows",
     "db:seed:check": "node ops/seed-realistic.cjs --windows --validate",
+    "sepay:sandbox": "node ops/sepay-sandbox.cjs serve",
     "demo": "node ops/demo.cjs start",
     "demo:stop": "node ops/demo.cjs stop",
     "demo:status": "node ops/demo.cjs status",
