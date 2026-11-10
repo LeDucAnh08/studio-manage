@@ -54,7 +54,7 @@ Kiểm thử riêng: `yarn workspace studio-management-backend test:package-cont
 
 Nạp ảnh demo từ portfolio có sẵn: chạy `node ops/seed-package-images.cjs` để kiểm tra, thêm `--apply` để nạp 3 ảnh cho mỗi gói chưa có ảnh. Script dùng MongoDB Windows local đã cấu hình, giữ nguyên gói đã có ảnh, giá và nội dung khác.
 
-Nạp nội dung mẫu cho sản phẩm bàn giao, phạm vi buổi chụp và điều kiện áp dụng giá: chạy `node ops/seed-package-content.cjs` để kiểm tra, thêm `--apply` để nạp vào 5 gói demo đã biết. Chỉ điền từng mục đang trống, giữ nguyên mục đã nhập và các dữ liệu khác; chạy lại không ghi đè. Nội dung là mẫu để kiểm tra giao diện, có thể chỉnh sửa trong admin trước khi dùng thực tế.
+Nạp nội dung mẫu đầy đủ cho màn chi tiết gói (đối tượng, quyền lợi, sản phẩm bàn giao, phạm vi, lịch trình, quy trình, chi phí và chính sách): chạy `node ops/seed-package-content.cjs` để kiểm tra, thêm `--apply` để nạp vào 5 gói demo đã biết. Chỉ điền từng mục đang trống, giữ nguyên mục đã nhập và các dữ liệu khác; chạy lại không ghi đè. Nội dung là mẫu để kiểm tra giao diện, có thể chỉnh sửa trong admin trước khi dùng thực tế. Nạp ảnh bằng `node ops/seed-package-images.cjs --apply`.
 
 Bổ sung danh mục trang phục cho tháng 11/2026: `node ops/seed-november-costumes.cjs` kiểm tra dữ liệu; thêm `--apply` để gắn ảnh cho 18 mẫu hiện có và thêm 8 mẫu cùng tồn kho S/M/L/XL hoặc FREE. Ảnh minh họa AI ở `frontend/public/costume-demo/`, trường `Costume.imageUrl` tùy chọn được trả qua danh mục công khai và hiển thị ở khách hàng/admin. Chỉ điền ảnh trống; giữ nguyên giá, tồn kho cũ, lịch chụp, đơn thuê và giao dịch. Tồn kho dùng chung giữa các ngày, không tự đặt lại theo tháng và không tạo đơn thuê. Xem [nguồn ảnh và prompt](docs/demo-costume-images.md).
 

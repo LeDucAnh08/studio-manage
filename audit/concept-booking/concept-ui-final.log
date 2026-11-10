@@ -1,0 +1,16 @@
+
+ RUN  v2.1.9 C:/Users/APC/studio-manage/frontend
+
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+stderr | src/pages/ConceptBookingPage.test.tsx > concept booking contract > does not create an order while choosing a package, date, photographer and brief
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/ConceptBookingPage.test.tsx (6 tests) 538ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  22:20:12
+   Duration  4.99s (transform 245ms, setup 579ms, collect 569ms, tests 538ms, environment 1.95s, prepare 247ms)

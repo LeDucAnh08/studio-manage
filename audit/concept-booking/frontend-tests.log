@@ -1,0 +1,243 @@
+
+ RUN  v2.1.9 C:/Users/APC/studio-manage/frontend
+
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+stderr | src/pages/BookingAlbumPage.test.tsx > Drive album UI > opens guest link without an account and confirms before locking selection
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/RentalCatalogPage.test.tsx > date-first rental catalog > shows the seeded product image without changing selection or availability
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/BookingAlbumPage.test.tsx (6 tests) 7417ms
+   ✓ Drive album UI > opens guest link without an account and confirms before locking selection 2857ms
+   ✓ Drive album UI > keeps a note after version conflict and refresh, retrying against the fresh version 1703ms
+   ✓ Drive album UI > sets selection explicitly and shows controls read-only on historical deliveries 876ms
+   ✓ Drive album UI > staff configures folders and publishes delivery through the workflow action 1056ms
+   ✓ Drive album UI > keeps text typed while an earlier note is saving and can discard an unsavable draft 789ms
+stderr | src/components/customer/CustomerHeader.test.tsx > Customer shared navigation > keeps notifications next to the account control for a signed-in customer at /portfolio
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/CustomerOrdersPage.test.tsx > Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/customer/CustomerHeader.test.tsx (27 tests) 8322ms
+   ✓ Customer shared navigation > keeps notifications next to the account control for a signed-in customer at /portfolio 3044ms
+   ✓ Customer shared navigation > keeps notifications next to the account control for a signed-in customer at /costumes 637ms
+   ✓ Customer shared navigation > keeps notifications next to the account control for a signed-in customer at /account/bookings/new 337ms
+   ✓ Customer shared navigation > keeps the same primary link order in the public layout 589ms
+   ✓ Customer shared navigation > keeps the same primary link order in the account layout 585ms
+   ✓ Customer shared navigation > retains all primary links and updates the active item when moving between services and discovery 324ms
+   ✓ Customer shared navigation > uses consultation without unavailable account routes when the portal is disabled 438ms
+   ✓ Customer shared navigation > closes the mobile menu after signing out while already on the portfolio 371ms
+ ✓ src/pages/RentalCatalogPage.test.tsx (15 tests) 13542ms
+   ✓ date-first rental catalog > shows the seeded product image without changing selection or availability 3699ms
+   ✓ date-first rental catalog > does not fetch or show products before both dates are valid, and keeps dates outside optional filters 1347ms
+   ✓ date-first rental catalog > groups returned items by kind and normalized category without merging categories across kinds 3806ms
+   ✓ date-first rental catalog > filters categories locally with canonical URL values and resets the category when changing kinds 2203ms
+   ✓ date-first rental catalog > restores a category URL and keeps an unavailable category in its requested kind until reset 440ms
+   ✓ date-first rental catalog > shows daily pricing, the inclusive estimate and available sizes; preserves dates through filters, clear and CTA 746ms
+   ✓ date-first rental catalog > applies the price sliders through the period action and rejects inverted numeric bounds without fetching 584ms
+ ✓ src/pages/CustomerOrdersPage.test.tsx (44 tests) 7096ms
+   ✓ Unified orders tabs > loads only the active list, resets filters on switching and restores the previous view with Back 3576ms
+   ✓ Unified orders tabs > uses the same list and progress layout for rentals, selects an order and preserves its return context 300ms
+   ✓ Unified orders tabs > filters and paginates rentals on the server, clears selection and retries errors 321ms
+   ✓ Unified orders tabs > opens notifications on demand and marks only the latest displayed timestamp read 374ms
+stderr | src/pages/BookingDeliveryPage.test.tsx > Private delivery album and customer feedback > opens the latest photo album with a single feedback form and a profile back link
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/PackageContentPage.test.tsx > Package content editing > saves structured content, trims empty benefit lines and keeps the version
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/ui/staff-patterns.test.tsx (8 tests) 866ms
+   ✓ Staff form and table patterns > returns focus to the opener of a controlled modal without a Radix Trigger 526ms
+ ✓ src/pages/BookingDeliveryPage.test.tsx (10 tests) 1444ms
+   ✓ Private delivery album and customer feedback > opens the latest photo album with a single feedback form and a profile back link 638ms
+stderr | src/pages/CustomerForms.test.tsx > Customer form presentation keeps submission contracts > keeps intake validation, retry request ID and add-another reset
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/components/customer/CustomerScope.test.tsx > Customer route appearance > scopes the customer auth bootstrap while keeping the staff boundary and theme unchanged
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/NewBookingPage.test.tsx > NewBookingPage > automatically fills and submits the end time for full_day
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/PackageContentPage.test.tsx (6 tests) 1653ms
+   ✓ Package content editing > saves structured content, trims empty benefit lines and keeps the version 826ms
+stderr | src/pages/DailyRentalPricing.test.tsx > date-first daily rental form > blocks checkout when security deposit has not been configured
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/PhotographerAssignment.test.tsx (8 tests) 1669ms
+   ✓ photographer assignment > gives an early intake an accessible assignment action and disables unavailable people 587ms
+   ✓ photographer assignment > supports creating, editing and deleting personal blocks with Vietnam timestamps 315ms
+ ✓ src/components/customer/CustomerScope.test.tsx (13 tests) 864ms
+stderr | src/pages/StaffScheduleInventory.test.tsx > Schedule and inventory rollout > retains applied date filters, pagination, reset and linked-schedule guards
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/StaffFinanceDashboard.test.tsx > Dashboard, finance and reports rollout > keeps admin KPIs, month aggregation and cumulative values while respecting reduced motion
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/CustomerOrders.test.tsx > Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/App.test.tsx > Public discovery and customer workspace > redirects the old studio album URL to the shared delivery screen without losing history parameters
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/CustomerForms.test.tsx (8 tests) 2128ms
+   ✓ Customer form presentation keeps submission contracts > keeps intake validation, retry request ID and add-another reset 640ms
+   ✓ Customer form presentation keeps submission contracts > keeps student gender/costume selections and the public payload 452ms
+   ✓ Customer form presentation keeps submission contracts > submits feedback once through the form and disables pending duplicate clicks 350ms
+ ✓ src/pages/StaffFinanceDashboard.test.tsx (8 tests) 2296ms
+   ✓ Dashboard, finance and reports rollout > keeps admin KPIs, month aggregation and cumulative values while respecting reduced motion 884ms
+   ✓ Dashboard, finance and reports rollout > renders unchanged summary totals inside the table footer and validates the payment form 515ms
+ ✓ src/App.test.tsx (28 tests) 1585ms
+   ✓ Public discovery and customer workspace > has a single orders menu and an accessible account dropdown 349ms
+ ✓ src/pages/StaffScheduleInventory.test.tsx (6 tests) 3052ms
+   ✓ Schedule and inventory rollout > retains applied date filters, pagination, reset and linked-schedule guards 1359ms
+   ✓ Schedule and inventory rollout > exposes detail and contract fields without creating a document or changing a schedule 537ms
+   ✓ Schedule and inventory rollout > links required schedule controls to their errors and prevents an invalid write 532ms
+   ✓ Schedule and inventory rollout > preserves package price, linked costume type IDs and form defaults in the update payload 303ms
+ ✓ src/pages/CustomerOrders.test.tsx (29 tests) 4693ms
+   ✓ Customer order presentation preserves workflow contracts > lets admin approve a package hold without presenting a manual quote form 798ms
+   ✓ Customer order presentation preserves workflow contracts > lets the client complete the member roster after the package schedule is confirmed 1133ms
+   ✓ Customer order presentation preserves workflow contracts > keeps new rental drafts through a guest login redirect and reuses a failed submission key 384ms
+ ✓ src/pages/DailyRentalPricing.test.tsx (27 tests) 5948ms
+   ✓ date-first daily rental form > blocks checkout when security deposit has not been configured 948ms
+   ✓ date-first daily rental form > adds a catalog model to an existing draft once, preserves prior quantities, and does not re-add a removed model after repricing 318ms
+   ✓ date-first daily rental form > edits the rental period inline, restores the new period and rechecks inventory without reducing quantities 353ms
+   ✓ date-first daily rental form > keeps item totals, quantity bounds and the submitted request in sync while editing multiple items 1143ms
+   ✓ separate daily rate in staff inventory > saves a separate daily price while preserving the old period price 382ms
+stderr | src/pages/LoginPage.test.tsx > Login appearance preserves authentication and return contracts > uses the shared customer login form with customer appearance true
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/ConceptBookingPage.test.tsx > concept booking contract > does not create an order while choosing a package, date, photographer and brief
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/LoginPage.test.tsx (13 tests) 1360ms
+   ✓ Login appearance preserves authentication and return contracts > uses the shared customer login form with customer appearance true 494ms
+ ✓ src/pages/ConceptBookingPage.test.tsx (6 tests) 1227ms
+   ✓ concept booking contract > does not create an order while choosing a package, date, photographer and brief 675ms
+stderr | src/components/customer/CustomerControls.test.tsx > Customer controls > blocks a disabled link before its own handler and permits navigation when enabled
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/customer/CustomerControls.test.tsx (3 tests) 387ms
+ ✓ src/pages/NewBookingPage.test.tsx (27 tests) 11677ms
+   ✓ NewBookingPage > automatically fills and submits the end time for full_day 947ms
+   ✓ NewBookingPage > automatically fills and submits the end time for half_day 490ms
+   ✓ NewBookingPage > automatically fills and submits the end time for two_thirds_day 333ms
+   ✓ NewBookingPage > accepts a date at a month boundary without carrying over the current time 404ms
+   ✓ NewBookingPage > sets the earliest shooting date correctly at 06:00 Vietnam time 373ms
+   ✓ NewBookingPage > sets the earliest shooting date correctly at 22:27 Vietnam time 334ms
+   ✓ NewBookingPage > numbers 25 student rows without a notes column and preserves details through reload and resizing 894ms
+   ✓ NewBookingPage > validates entered student details and prevents reducing the count over populated rows 332ms
+   ✓ NewBookingPage > requires agreement to the published package price and deposit before submission 466ms
+   ✓ NewBookingPage > keeps discovery context and package comparison while collecting class and VN schedule details 590ms
+   ✓ NewBookingPage > keeps the guest review draft and return target through sign-in before submitting 584ms
+   ✓ NewBookingPage > allows a booking 30 days ahead, sends class details, and reuses the key only for an unchanged retry 815ms
+   ✓ NewBookingPage > validates phone on blur and blocks review for blank, malformed or incorrectly sized numbers 689ms
+   ✓ NewBookingPage > accepts and submits the valid phone format 0901234567 349ms
+   ✓ NewBookingPage > accepts and submits the valid phone format +84901234567 313ms
+   ✓ NewBookingPage > accepts and submits the valid phone format 090 123 4567 378ms
+   ✓ NewBookingPage > accepts and submits the valid phone format (+84) 90.123.4567 352ms
+   ✓ NewBookingPage > allows clearing and restoring member text, validates whole numbers and submits a numeric member count 571ms
+   ✓ NewBookingPage > shows included clothing in the package, comparison and review without a selection step or catalog request 400ms
+   ✓ NewBookingPage > migrates version 2 step 3 to student intake, preserving entered details and dropping obsolete costume choices 315ms
+   ✓ NewBookingPage > migrates version 2 step 4 to student intake, preserving entered details and dropping obsolete costume choices 307ms
+   ✓ NewBookingPage > migrates version 3 step 3 to student intake, preserving entered details and dropping obsolete costume choices 310ms
+stderr | src/pages/PublicPackageDetailPage.test.tsx > Public package details > shows configured content and uses the existing package price and booking path
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/ClientRegisterPage.test.tsx > ClientRegisterPage > normalizes the username and never sends client-supplied roles
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/pages/VerifyEmailPage.test.tsx > Email verification > waits for explicit confirmation, updates account state and removes the token after success
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/ClientRegisterPage.test.tsx (3 tests) 666ms
+   ✓ ClientRegisterPage > normalizes the username and never sends client-supplied roles 406ms
+ ✓ src/pages/PublicPackageDetailPage.test.tsx (6 tests) 1214ms
+   ✓ Public package details > shows configured content and uses the existing package price and booking path 629ms
+ ✓ src/pages/VerifyEmailPage.test.tsx (3 tests) 644ms
+   ✓ Email verification > waits for explicit confirmation, updates account state and removes the token after success 452ms
+ ✓ src/services/api.test.ts (8 tests) 53ms
+ ✓ src/components/customer/CustomerMedia.test.tsx (3 tests) 645ms
+   ✓ CustomerImage > reserves the image dimensions, loads the hero first, and keeps a neutral frame on failure 344ms
+stderr | src/pages/BookingWorkflowListPage.test.tsx > unified photography workspace > shows new requests, progress and admin notifications in one workspace
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/BookingWorkflowListPage.test.tsx (7 tests) 1112ms
+   ✓ unified photography workspace > shows new requests, progress and admin notifications in one workspace 542ms
+stderr | src/pages/PublicDiscoveryPage.test.tsx > Independent discovery pages > keeps services and process on their own screen without loading pricing
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/PublicDiscoveryPage.test.tsx (5 tests) 718ms
+   ✓ Independent discovery pages > keeps services and process on their own screen without loading pricing 415ms
+stderr | src/pages/AdminTables.test.tsx > shared admin tables > keeps rental server pagination, status and money in one table and retains the return URL
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/customer/DepositPaymentPanel.test.tsx (8 tests) 527ms
+   ✓ deposit QR presentation > offers local simulation only with explicit sandbox capability and prevents double clicks 311ms
+ ✓ src/pages/AdminTables.test.tsx (4 tests) 1022ms
+   ✓ shared admin tables > keeps rental server pagination, status and money in one table and retains the return URL 552ms
+   ✓ shared admin tables > preserves full feedback details, read actions and server filter pagination 323ms
+stderr | src/pages/CustomersPage.test.tsx > Class list pilot > searches on Enter, clears search and retains server pagination and season
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+stderr | src/components/Layout/StaffScope.test.tsx > Staff theme route boundary > scopes portals at the root, cleans up on customer navigation and reapplies on return
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/Layout/StaffScope.test.tsx (1 test) 292ms
+ ✓ src/utils/rentalPeriod.test.ts (2 tests) 27ms
+ ✓ src/pages/CustomersPage.test.tsx (4 tests) 1845ms
+   ✓ Class list pilot > searches on Enter, clears search and retains server pagination and season 717ms
+   ✓ Class list pilot > retains defaults, connects validation and does not submit an invalid form 501ms
+   ✓ Class list pilot > keeps edit values and the update payload contract while showing a busy state 436ms
+ ✓ src/utils/returnTo.test.ts (3 tests) 7ms
+ ✓ src/components/customer/DeliveryPhotoGallery.test.tsx (2 tests) 502ms
+   ✓ Private gallery image lifecycle > discards a response from the previous account and releases every created object URL 302ms
+stderr | src/components/Layout/Sidebar.test.tsx > Sidebar navigation > logs the admin out and opens the shared customer login
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/organisms/ScheduleCalendar.test.tsx (2 tests) 681ms
+   ✓ Staff schedule calendar > exposes real day buttons, complete details and contextual actions without changing IDs 369ms
+   ✓ Staff schedule calendar > navigates month/year boundaries and keeps an explicit empty-day state 311ms
+ ✓ src/components/Layout/Sidebar.test.tsx (8 tests) 1278ms
+   ✓ Sidebar navigation > logs the admin out and opens the shared customer login 311ms
+stderr | src/components/Layout/Breadcrumbs.test.tsx > layout breadcrumbs > renders a customer detail breadcrumb above the admin page content
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/components/Layout/Breadcrumbs.test.tsx (2 tests) 113ms
+ ✓ src/config/navigation.test.ts (4 tests) 7ms
+
+ Test Files  37 passed (37)
+      Tests  367 passed (367)
+   Start at  22:13:48
+   Duration  78.03s (transform 37.28s, setup 138.18s, collect 426.98s, tests 88.58s, environment 328.42s, prepare 12.82s)

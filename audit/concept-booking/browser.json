@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "desktop": [
+    1440,
+    1000
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "pageErrors": [],
+  "checks": [
+    "real checkout",
+    "sandbox payment",
+    "confirmed schedule",
+    "mobile overflow",
+    "versioned Drive album",
+    "zoom/Escape",
+    "admin catalog"
+  ]
+}

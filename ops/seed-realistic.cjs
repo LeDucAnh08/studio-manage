@@ -7,7 +7,7 @@ const backendRequire = require('node:module').createRequire(
   path.resolve(__dirname, '../backend/package.json'),
 );
 const { DEMO_URI, PROJECT, validateDemoUri } = require('./seed-demo.cjs');
-const { validateNativeUri } = require('./mongodb-windows.cjs');
+const { validateNativeUri, nativeHome } = require('./mongodb-windows.cjs');
 const { seedCatalog } = require('./fixtures/realistic-catalog.cjs');
 const { seedServices } = require('./fixtures/realistic-services.cjs');
 const { audit } = require('./audit-studio-readiness.cjs');
@@ -391,7 +391,7 @@ async function seedRealistic(uri = DEMO_URI, { validateOnly = false, target = 'd
       if (
         !process.env.LOCALAPPDATA ||
         path.resolve(options.storage.dbPath).toLowerCase() !==
-          path.resolve(process.env.LOCALAPPDATA, 'StudioManage/MongoDB/data').toLowerCase() ||
+          path.resolve(nativeHome, 'data').toLowerCase() ||
         options.security?.authorization !== 'enabled'
       )
         throw new Error('Seed target is not the installed Windows MongoDB.');

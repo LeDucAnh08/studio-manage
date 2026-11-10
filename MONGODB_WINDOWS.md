@@ -1,6 +1,6 @@
-# MongoDB native trên Windows
+# MongoDB local trên Windows
 
-Máy hiện tại dùng MongoDB Community 7.0.45 chạy trực tiếp trên Windows theo tài khoản `Admin`. Database có xác thực, chỉ lắng nghe `127.0.0.1:27020`, replica set `studio-rs0`, database ứng dụng `studio_db`.
+Dự án dùng MongoDB Community 7.0.45 chạy trực tiếp trên Windows tại `127.0.0.1:27020`, database `studio_db`, có xác thực và replica set `studio-rs0`. Backend lấy kết nối từ `backend/.env`; không cần Docker để chạy ứng dụng.
 
 ## Vận hành
 
@@ -12,52 +12,38 @@ npm run db:start
 npm run dev
 ```
 
-MongoDB tự chạy ẩn khi đăng nhập Windows nhờ shortcut `StudioManage MongoDB` trong Startup của tài khoản. Đây là cài đặt theo tài khoản, không phải Windows Service. Dừng ứng dụng không dừng database. Có thể dừng riêng MongoDB bằng `npm run db:stop`; dữ liệu vẫn được giữ và `npm run db:start` khởi động lại.
+Mở ứng dụng tại http://localhost:4001. Dừng riêng database bằng `npm run db:stop`; dữ liệu vẫn được giữ. Tác vụ Windows **StudioManage MongoDB** khởi động database ẩn khi tài khoản đăng nhập. Đây là cài đặt theo tài khoản, không phải Windows Service.
 
-| Thành phần           | Đường dẫn                                                     |
-| -------------------- | ------------------------------------------------------------- |
-| MongoDB Server       | `%LOCALAPPDATA%\Programs\StudioMongoDB\7.0.45\bin\mongod.exe` |
-| Công cụ dump/restore | `%LOCALAPPDATA%\Programs\StudioMongoDB\tools\bin`             |
-| Dữ liệu              | `%LOCALAPPDATA%\StudioManage\MongoDB\data`                    |
-| Cấu hình MongoDB     | `%LOCALAPPDATA%\StudioManage\MongoDB\mongod.cfg`              |
-| Log MongoDB          | `%LOCALAPPDATA%\StudioManage\MongoDB\logs\mongod.log`         |
-| Backup               | `%LOCALAPPDATA%\StudioManage\MongoDB\backups`                 |
+| Thành phần           | Đường dẫn                                                  |
+| -------------------- | ---------------------------------------------------------- |
+| MongoDB Server       | `%USERPROFILE%\StudioManage\MongoDB\7.0.45\bin\mongod.exe` |
+| Công cụ dump/restore | `%USERPROFILE%\StudioManage\MongoDB\tools\bin`             |
+| Dữ liệu              | `%USERPROFILE%\StudioManage\MongoDB\data`                  |
+| Cấu hình             | `%USERPROFILE%\StudioManage\MongoDB\mongod.cfg`            |
+| Log                  | `%USERPROFILE%\StudioManage\MongoDB\logs\mongod.log`       |
+| Backup               | `%USERPROFILE%\StudioManage\MongoDB\backups`               |
+| Khởi động ẩn         | `%USERPROFILE%\StudioManage\MongoDB\Start-MongoDB.ps1`     |
 
-Các thư mục này độc lập với source và Docker volume. Cài trên máy khác cần cài MongoDB và chuyển dữ liệu bằng dump/restore; clone Git không mang theo database, mật khẩu hoặc cấu hình riêng của máy này.
+Thư mục dữ liệu nằm ngoài source và AppData để tránh lỗi đổi tên tệp WiredTiger trong môi trường Windows có ảo hóa AppData. Các lệnh quản lý và seed kiểm tra đúng thư mục này trước khi thao tác. Clone Git không mang theo MongoDB, dữ liệu, mật khẩu hoặc tác vụ khởi động của máy.
 
 ## Kết nối ứng dụng và Compass
 
-Kết nối thực nằm trong `backend/.env`, không commit Git. Cấu trúc URI:
+URI thực nằm trong `backend/.env`, được Git bỏ qua. Dùng username/password hiện có trong tệp này; cấu trúc kết nối:
 
 ```text
 mongodb://<user>:<password>@127.0.0.1:27020/studio_db?authSource=admin&replicaSet=studio-rs0&directConnection=true
 ```
 
-Trong MongoDB Compass, chọn địa chỉ `127.0.0.1:27020`, xác thực bằng username/password trong `backend/.env`, Authentication Database `admin`, Replica Set `studio-rs0`, Direct Connection bật. Tài khoản ứng dụng và mật khẩu người dùng trong database được giữ nguyên khi chuyển.
+Trong Compass, dùng Authentication Database `admin`, Replica Set `studio-rs0` và bật Direct Connection. Database chỉ lắng nghe trên loopback. Các cờ tính năng, tài khoản ứng dụng và mật khẩu đăng nhập được giữ theo cấu hình/dữ liệu cũ.
 
-`CLIENT_PORTAL_ENABLED=true` và `CLIENT_WORKFLOW_ENABLED=true` đã được cấu hình trong backend để dùng luồng đặt chụp và transaction. Cờ thuê trang phục được giữ theo cấu hình riêng của ứng dụng.
+## Chuyển dữ liệu ngày 31/10/2026
 
-`npm run dev` dùng database Windows này. Các lệnh `demo:*` vẫn là môi trường riêng với database `studio_project_demo`; `docker compose` vẫn có cấu hình database Docker riêng.
+Đã chuyển `studio_db` từ container `studio-mongodb` (MongoDB 7.0.43) sang MongoDB local bằng `mongodump`/`mongorestore`. Bản sao gồm **17 collection / 83 bản ghi**; đã đối chiếu số lượng, SHA-256 nội dung từng collection, options và toàn bộ indexes. Đã kiểm tra transaction commit, từ chối đọc dữ liệu khi không xác thực và dữ liệu sau khi khởi động lại.
 
-## Chuyển dữ liệu ngày 26/10/2026
+Archive gzip và bản `backend.env.before-native` nằm trong thư mục backup `from-docker-*`. Bằng chứng riêng của máy được ghi tại `.workflow-tools/mongodb-windows.json` (Git bỏ qua). Container và volume Docker cũ được giữ lại để dự phòng; container MongoDB đã dừng. Chỉ `MONGO_URI` trong cấu hình backend được thay đổi.
 
-Nguồn là `studio_db` trong container `studio-mongodb` (MongoDB 7.0.40). Đã dùng `mongodump`/`mongorestore` chính thức, lưu archive gzip và bản cấu hình backend trước chuyển trong thư mục backup. Không ghi đè volume Docker.
+Nếu cần quay lại bản Docker, dừng ứng dụng, khởi động container cũ và khôi phục cấu hình từ bản backup. Những dữ liệu phát sinh trên MongoDB local sau khi chuyển phải được sao lưu/chuyển riêng trước khi quay lại.
 
-Đã đối chiếu số lượng, hash nội dung và định nghĩa indexes của toàn bộ 15 collection / 10 bản ghi: 4 tài khoản ứng dụng, 6 danh mục, các collection còn lại rỗng. Có kiểm tra transaction commit, dữ liệu tồn tại sau khi khởi động lại, và từ chối truy cập khi thiếu xác thực. Cả 17 kiểm thử giữ trang phục đã qua trên server Windows, dùng database kiểm thử riêng. Backend và frontend trả HTTP 200 sau khi dừng container MongoDB cũ; container và volume nguồn vẫn được giữ. Bằng chứng riêng của máy ở `.workflow-tools/mongodb-windows.json` (git-ignore).
+Lệnh `npm run db:seed:check` kiểm tra dữ liệu mẫu trên database local; `npm run db:seed` bổ sung dữ liệu mẫu khi cần. Việc chuyển database không tự nạp seed. Các lệnh `demo:*` vẫn dùng database mẫu riêng `studio_project_demo`; cấu hình Docker Compose vẫn dành cho môi trường Docker tùy chọn.
 
-Quay lại database cũ bằng bản `backend.env.before-native` trong thư mục backup sau khi dừng ứng dụng và khởi động lại container `studio-mongodb`. Những thay đổi phát sinh trên database Windows sau thời điểm chuyển cần được sao lưu/chuyển riêng trước khi quay lại.
-
-## Dữ liệu mẫu trên MongoDB Windows
-
-Theo yêu cầu ngày 26/10/2026, `studio_db` đã được bổ sung bộ dữ liệu mẫu mùa kỷ yếu: 5 gói chụp, 18 mẫu trang phục/phụ kiện theo size, 3 mùa, 20 lớp/802 thành viên, 20 yêu cầu chụp, 17 lịch, 24 đơn thuê và 120 giao dịch. Giữ nguyên 10 bản ghi cũ; có archive backup riêng `before-seed-*` trước khi nạp. Đây là dữ liệu giả lập để sử dụng và thử ứng dụng; công nợ/hoàn cọc còn mở là tình huống mẫu.
-
-```powershell
-npm run db:seed:check  # Kiểm tra dữ liệu, không ghi database
-npm run db:seed        # Bổ sung một lần vào MongoDB Windows trong backend/.env
-```
-
-Seed có kiểm tra đúng database/replica set/thư mục Windows, chỉ tạo bản ghi còn thiếu và giữ marker hoàn tất. Chạy lại không tạo trùng hoặc ghi đè dữ liệu đã chỉnh sửa. Không dùng lệnh `demo:seed` cho database Windows.
-
-Tài khoản mẫu mới: quản trị `quanly.ha` / `Staff@1234`, khách hàng `khach.maianh` / `Client@1234`, kế toán `ketoan.maianh` / `Staff@1234`, thợ chụp `nhiepanh.minhquan` / `Staff@1234`. Tài khoản cũ giữ mật khẩu hiện có.
-
-Tài liệu chính thức: [MongoDB Community trên Windows](https://www.mongodb.com/docs/v7.0/tutorial/install-mongodb-on-windows/).
+Tham khảo: [MongoDB Community trên Windows](https://www.mongodb.com/docs/v7.0/tutorial/install-mongodb-on-windows-zip/), [mongodump](https://www.mongodb.com/docs/database-tools/mongodump/), [mongorestore](https://www.mongodb.com/docs/database-tools/mongorestore/).

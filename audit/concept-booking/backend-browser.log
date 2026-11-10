@@ -1,0 +1,21 @@
+✔ concept cancellation boundaries, original-date protection and one reschedule (3.0433ms)
+▶ concept HTTP, shared resources, SePay, operations and Drive album
+  ✔ catalog management, public profiles, verified email and empty days (1423.575ms)
+  ✔ checkout idempotency, last studio race and shared inventory hold (492.3463ms)
+  ✔ signed partial deposits, duplicate receipt, overpayment and exactly one schedule (370.5634ms)
+  ✔ ownership, legacy schedule/ledger protection and atomic reschedule (291.2299ms)
+  ✔ expiry ignores late money and cancellation records actual refunds (365.1339ms)
+  ✔ shoot completion and remaining payment gate album and sharing (495.3395ms)
+  ✔ server selections, stale writes, extra fee, reopen credit and immutable selection history (488.8107ms)
+  ✔ read-only expiring guest links, image permission and downloadable ZIP (646.3585ms)
+  ✔ two aggregate feedback rounds and third paid request cannot start before payment (1284.4498ms)
+  ✔ real browser checkout, payment, mobile album and admin catalog (17390.5276ms)
+✔ concept HTTP, shared resources, SePay, operations and Drive album (30363.9648ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37303.0597
