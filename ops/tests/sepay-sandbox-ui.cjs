@@ -139,7 +139,7 @@ async function main() {
     ).toBeVisible();
     await expect(
       page.getByText('Chế độ thử nghiệm — QR dùng tài khoản mô phỏng, không chuyển tiền thật.'),
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Tải QR về điện thoại' })).toBeVisible();
     assert.ok(
       (await page.getByRole('img', { name: 'Mã QR thanh toán tiền cọc' }).count()) ||

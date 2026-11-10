@@ -24,6 +24,12 @@ node ops/demo.cjs start
 
 Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằng `node ops/demo.cjs stop`; dữ liệu được giữ khi chạy lại. Hướng dẫn tài khoản, dữ liệu mẫu và nghiệm thu: [DEMO_LOCAL.md](DEMO_LOCAL.md).
 
+## Album chọn ảnh Google Drive
+
+Trong hồ sơ đơn, chọn **Bàn giao ảnh → Xem ảnh bàn giao**. Tab **Ảnh chọn** dùng để kết nối Drive, mở chọn ảnh và gửi link riêng; tab **Ảnh đã chỉnh** dùng để chuẩn bị/giao ảnh từ Drive hoặc tải ảnh trực tiếp, xem phản hồi và nghiệm thu. Chủ đơn chọn ảnh ngay trong tài khoản, dùng chung kết quả với link album không cần đăng nhập. Đường dẫn quản lý album cũ tự chuyển về màn bàn giao chung.
+
+Backend cần `GOOGLE_DRIVE_API_KEY` (Google Drive API đã bật), workflow và MongoDB replica set. Thư mục Drive bật **Bất kỳ ai có đường liên kết**. Ảnh giữ trên Drive; cần giữ nguyên thư mục từng bản đã giao để xem lịch sử. Xem [cấu hình, cách dùng và giới hạn](docs/decisions/014-drive-photo-albums.md).
+
 ## Điều hướng khách hàng
 
 Khách chưa đăng nhập xem giới thiệu tại `/portfolio` và các trang riêng `/services`, `/concepts`, `/costumes`, `/pricing`. Khi bắt đầu đặt dịch vụ hoặc thuê trang phục, khách đăng nhập rồi tiếp tục với lựa chọn đã giữ.
@@ -56,6 +62,8 @@ Trong yêu cầu thuê, nút **Thêm món thuê** mở `/costumes?receiveDate=..
 
 ## Cài đặt
 
+Đơn thuê mới tự xác nhận giá/điều khoản và giữ hàng tạm để cọc, không cần studio gửi báo giá. Admin cần nhập **Giá thuê/ngày** và **Cọc bảo đảm/món** trong quản lý trang phục; mẫu thiếu cấu hình không đặt tự động được. Sau khi ghi nhận cọc, khách không được hủy/đổi đơn. Mặc định giữ 15 phút, tối đa 2 đơn chờ cọc, đặt trước 24 giờ và chừa 1 ngày chuẩn bị sau trả. Cấu hình, xử lý tiền về muộn/sai mã và ngoại lệ hoàn tiền: [ADR-016](docs/decisions/016-automatic-rental-checkout.md).
+
 ```bash
 # Clone repo kèm submodule
 git clone --branch develop --recurse-submodules https://github.com/LeDucAnh08/studio-manage.git
@@ -69,17 +77,18 @@ yarn install
 
 Hướng dẫn clone, lấy đủ submodule và cập nhật đúng nhánh: [HUONG_DAN_CLONE.md](HUONG_DAN_CLONE.md).
 
-| Lệnh | Mô tả |
-|---|---|
-| `yarn install` | Cài dependencies cho tất cả project |
-| `yarn dev` | Chạy dev backend + frontend song song |
-| `yarn build` | Build cả 2 project |
-| `yarn format` | Format code cả 2 project |
-| `yarn seed` | Chạy seed database (backend) |
+| Lệnh           | Mô tả                                 |
+| -------------- | ------------------------------------- |
+| `yarn install` | Cài dependencies cho tất cả project   |
+| `yarn dev`     | Chạy dev backend + frontend song song |
+| `yarn build`   | Build cả 2 project                    |
+| `yarn format`  | Format code cả 2 project              |
+| `yarn seed`    | Chạy seed database (backend)          |
 
 ## Cài thư viện cho từng project
 
 Tên workspace lấy từ `name` trong `package.json` của mỗi project:
+
 - Backend: `studio-management-backend`
 - Frontend: `studio-management-frontend`
 
@@ -130,6 +139,7 @@ Project da co san workflow GitHub Actions tai [.github/workflows/deploy.yml](.gi
 Workflow chạy quality gate khi push/PR vào `main`. Demo đồ án dùng launcher local ở trên. Job SSH/deploy VPS mặc định không chạy; chỉ bật khi đặt repository variable `ENABLE_VPS_DEPLOY=true` và cấu hình VPS thực tế. Khi được bật, job cập nhật root/submodule và build lại stack Docker sau khi quality gate đạt.
 
 Can khai bao cac GitHub Secrets sau:
+
 - `SSH_HOST`: IP/domain cua VPS
 - `SSH_USER`: user SSH tren VPS
 - `SSH_KEY`: private key dung de SSH
@@ -143,6 +153,7 @@ Vi du `DEPLOY_PATH`:
 ```
 
 Luu y:
+
 - VPS can cai san `git`, `docker`, va `docker compose` (hoac `docker-compose`).
 - Thu muc deploy tren VPS phai la repo root cua project nay, khong phai chi rieng `backend` hoac `frontend`.
 - Neu `backend` va `frontend` la private submodule, VPS can duoc cap quyen pull 2 repo do.

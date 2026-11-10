@@ -9,3 +9,5 @@ dist/
 .workflow-replica-enabled
 .data/package-media/
 .data/e2e-package-media/
+.data/private-delivery*/
+.data/drive-album-mongo/
