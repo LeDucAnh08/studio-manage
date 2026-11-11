@@ -1,0 +1,7 @@
+# Project UI preferences
+
+- All Back navigation controls (including “Quay lại”, “Trở lại” and links back to a list or order) must have no text underline in default, hover, focus or active states. Preserve keyboard focus outlines. Use the shared `app-back-link` class for new Back links/buttons; existing `customer-back-link`, `concept-back-link` and `concept-time-back` classes follow the same global rule. This is an explicit user preference recorded on 2026-11-11 and applies to future screens and mockups too.
+- Photographer portfolios are dedicated profile pages, never profile popups. Prioritize the photographer's identity, personal voice, signature style and working approach; work images are supporting evidence. Each profile stores its own editable content and images. Do not invent celebrity affiliations, awards, experience counts or reviews for seeded studio photographers.
+- Concept-booking Back controls go to the immediately preceding logical step, include a left-arrow icon and appear once per screen. Wardrobe information goes back to photographer selection, not package details.
+- The yearbook booking entry is labeled “Chụp kỉ yếu”, including desktop/mobile menus and page titles; keep its existing booking routes.
+- Customers provide size, height (cm) and weight (kg) for included concept wardrobe; studio prepares the outfits. Do not restore customer-facing catalog item/stock quantity selection in this step.
