@@ -1,5 +1,7 @@
 # ADR-010: QR cọc và ghi nhận giao dịch SePay
 
+Từ 12/11/2026, người dùng chọn chạy SePay provider Test mode ngay trên app chính `4001`/`5002`, giữ `studio_db`. Ngoại lệ có cấu hình rõ và cách vận hành được ghi trong [ADR-021](021-sepay-provider-test-main-db.md); quy tắc sandbox riêng bên dưới vẫn áp dụng khi không có lựa chọn này.
+
 ## Trạng thái
 
 Được chấp nhận — 05/11/2026. Áp dụng cho đơn chụp theo gói, tiếp nối ADR-008.
@@ -44,7 +46,19 @@ node ops/sepay-sandbox.cjs pay BOOKING_ID 100000
 
 Frontend sandbox: `http://127.0.0.1:4013`, backend `http://127.0.0.1:5013`. Tài khoản mango và staff được sao chép tối thiểu sang database sandbox, giữ hash mật khẩu để dùng cùng thông tin đăng nhập local. Không sao chép Telegram/profile. Script không sửa dữ liệu studio_db. Seed hai đơn có 25 học sinh: chờ duyệt và chờ cọc, giữ nguyên dữ liệu khi chạy lại. Secret/JWT sandbox nằm trong `.workflow-tools/.env.sepay-sandbox` đã được gitignore. Lệnh serve chạy đến khi Ctrl+C; không tự cài hoặc kết nối tài khoản ngân hàng thật.
 
+Mở frontend qua `http://localhost:4013` (Vite bind hostname `localhost`). Cổng 4001 là ứng dụng local thông thường và không tự nhận cấu hình SePay sandbox. Có thể đổi cổng demo bằng `SEPAY_FRONTEND_PORT`; API vẫn chạy ở 5013. Sandbox bật cả chụp concept, sao chép catalog/hồ sơ thợ công khai theo kiểu chỉ thêm dữ liệu chưa có, không sao chép đơn hay giao dịch. Tài khoản mango trong sandbox được bổ sung email `.test` đã xác thực nếu chưa có trạng thái xác thực; email vẫn ở chế độ test.
+
+Kiểm tra luồng cọc concept khi sandbox đang chạy: `node ops/tests/sepay-concept-demo.cjs`. Lệnh tạo một đơn thử trong `studio_sepay_sandbox`, kiểm tra checkout gửi lặp, webhook có chữ ký, webhook gửi lặp và đúng một lịch chụp sau khi nhận đủ cọc.
+
 Đây là **webhook ký HMAC mô phỏng nội bộ**, không phải giao dịch từ nền tảng SePay. Để thử dịch vụ thật: tạo tài khoản/VA Test mode trên SePay, thay cấu hình sandbox tương ứng, công khai backend qua HTTPS tunnel, cấu hình webhook JSON/HMAC và tiền tố YUME với 16 ký tự hex, rồi dùng mô phỏng giao dịch của SePay. QR sandbox không nhận tiền thật.
+
+Để nối trực tiếp SePay Test mode, điền các biến `PAYMENT_*`, `SEPAY_BANK_GATEWAY`, `SEPAY_WEBHOOK_SECRET` và `SEPAY_MODE=sandbox` ngay trong `backend/.env`. Secret phải trùng Secret Key của webhook HMAC-SHA256. Giữ `SEPAY_ENABLED=false` ở ứng dụng chính dùng `studio_db`; script `ops/sepay-sandbox.cjs serve` tự bật SePay cho tiến trình riêng khi có webhook secret đã lưu, giữ database sandbox và tắt nút mô phỏng nội bộ (`SEPAY_DEMO_UI=false`). Khi không có cấu hình provider, script dùng mô phỏng nội bộ. Không dùng API token hoặc Merchant Secret Key thay cho webhook secret; không cần file provider riêng.
+
+Backend thường luôn dùng database ghi trong `MONGO_URI`, không tự chuyển theo cờ SePay. Ứng dụng chính `4001`/`5002` tiếp tục dùng `studio_db` và nội dung gói cũ; bản test `4013`/`5013` dùng `studio_sepay_sandbox`. Đặt `EMAIL_ENABLED=false` nếu ứng dụng chính đang giữ cấu hình email test; runner riêng tự bật email test trong sandbox. `resend` vẫn bị chặn trong sandbox. Vite dùng loopback IPv4 cho API mặc định để khớp backend local.
+
+Webhook SePay: loại **Tiền vào**, định dạng **JSON**, tài khoản Test mode tương ứng, xác thực **HMAC-SHA256**. URL nhận là `https://<public-backend-or-tunnel>/api/payments/sepay/webhook`, trỏ về backend `http://127.0.0.1:5013`; không điền localhost trên dashboard SePay. Khi thử ban đầu, tắt bộ lọc **Chỉ gửi khi có mã thanh toán** để tránh cấu trúc mã mặc định cắt sai mã hex. Nội dung mô phỏng phải đúng toàn bộ reference lấy từ màn cọc: `CONC`, `YUME` hoặc `RENT` theo sau bởi 16 ký tự hex, trong thời hạn giữ chỗ. Có thể bật lại bộ lọc sau khi cấu hình mẫu nhận diện phù hợp cả ba tiền tố.
+
+Khởi động lại `node ops/sepay-sandbox.cjs serve` sau khi điền `.env`. Tạo đơn mới để QR và snapshot ngân hàng dùng cấu hình mới. Xác minh tại **Test mode → Giao dịch → Mô phỏng**, sau đó kiểm tra lịch sử webhook trả HTTP 200 cùng `{"success":true}` và trạng thái đơn được cập nhật. Lệnh `pay`/`pay-rental` nội bộ bị chặn khi đang dùng cấu hình SePay từ `.env`; hãy mô phỏng trên dashboard SePay. Kiểm thử cấu hình không cần database: `node ops/tests/sepay-sandbox-config.cjs`.
 
 Để bật live: dùng database vận hành, tài khoản ngân hàng và secret live riêng, `SEPAY_MODE=live`, webhook HTTPS công khai. Kiểm tra một giao dịch thực bằng đơn thử được cho phép; kiểm tra số tiền, đúng một Transaction và Schedule, notification, replay, đối soát. Việc nhận tiền thật cần cấu hình tài khoản SePay/ngân hàng từ chủ studio; mã nguồn không tự bật live hoặc chứa khóa truy cập thật.
 

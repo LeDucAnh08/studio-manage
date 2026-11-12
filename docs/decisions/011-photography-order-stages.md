@@ -4,6 +4,8 @@
 
 Accepted — 05/11/2026, Asia/Bangkok. Thay thế quy ước bộ lọc đơn chụp ảnh trong ADR-004 và ADR-007.
 
+Quy tắc `active` và tiến độ bên dưới được thay thế bởi [ADR-019](019-shoot-window-order-stage.md) từ 12/11/2026: “Đang thực hiện” chỉ trong khung giờ chụp đã chốt, hậu kỳ có trạng thái riêng.
+
 ## Bối cảnh
 
 Bộ lọc gom mọi đơn chưa kết thúc thành “Đang thực hiện”, trong khi danh sách và hồ sơ dùng nhiều nhãn workflow khác nhau. Khách và nhân viên không biết phải chọn bộ lọc nào để tìm một trạng thái đang thấy.

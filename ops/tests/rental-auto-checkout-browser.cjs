@@ -86,7 +86,7 @@ module.exports = async ({ apiOrigin, client, token, itemId, get }) => {
     const id = page.url().split('/').pop();
     const order = await get(id);
     expect(order.depositPayment.demoSimulation).toBe(true);
-    await page.getByRole('button', { name: 'Thanh toán thử', exact: true }).click();
+    await page.getByRole('button', { name: 'Thanh toán', exact: true }).click();
     await expect(
       page.getByText('Đã nhận cọc — trang phục đã được giữ.', { exact: true }),
     ).toBeVisible({ timeout: 20000 });

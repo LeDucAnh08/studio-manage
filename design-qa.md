@@ -1,3 +1,73 @@
+# Unified deposit checkout — 2026-11-12
+
+final result: passed
+
+Selected target: approved unified deposit mockup with the existing navbar. User approved implementation and explicitly removed the review toolbar. Implemented in the existing authenticated order pages through shared `DepositCheckout`.
+
+## Evidence and normalization
+
+- Source visual truth: `audit/unified-deposit-mockup-2026-11-12/desktop.png` (1434×1188) and `mobile.png` (384×2182).
+- Implementation: `implemented-desktop.png` (1434×1136), `implemented-mobile.png` (384×2095), in the same audit folder. Actual production component rendered in the development preview with static order data; authenticated order-route integration uses component tests.
+- Desktop viewport 1440×1000 CSS px; mobile 390×844. Six pixels occupied by the browser scrollbar; captured CSS width 1434/384, density 1, no screenshot scaling in comparison files.
+- Same waiting rental state: 690,000 VND rental, 207,000 VND deposit, 483,000 VND remaining, same mock QR and recipient fields. Timer differs by capture time. Strip the explicitly removed toolbar: 54 px desktop / 90 px mobile. No stretch applied; natural page heights retained.
+- Full comparisons opened together: `comparison-desktop.png` and `comparison-mobile.png`. Source left, implementation right. Focus comparison opened: `comparison-details.png`, corresponding 430×400 bank/amount regions at native density.
+
+## Findings and required fidelity surfaces
+
+- No actionable P0/P1/P2 mismatch in the initial comparison; no visual correction loop required.
+- Typography: existing Inter and 30px desktop / 27px mobile heading retained. Amount, bank fields, labels and button hierarchy match the source in native-density focus comparison; Vietnamese labels remain readable.
+- Spacing/layout: desktop retains two columns (payment and 348px order summary), QR and bank details side by side; mobile puts amount before QR, then bank details and summary. Navbar unchanged. Mobile uses the existing shell's 16px gutter rather than the standalone mock's 20px; this is an intentional integration difference. No horizontal overflow (390px viewport, 384px document content width).
+- Colors/tokens: white cards, neutral canvas, coral primary/amounts and rose countdown preserved; success/expired states retain green/neutral treatment. Same card borders, 14px radii, gray separators and focus outlines.
+- Images/assets: actual production QR uses the backend URL; development fixture reuses the supplied non-payment preview QR. No screenshot or image is substituted for live UI. Existing logo and icon library retained.
+- Copy/content: review toolbar and footer disclaimer omitted as requested. Back target now follows the real order context rather than a mock dialog. Snapshot deposit terms are explicit; copied bank/reference values and partial-payment amount use backend data. Missing-bank, expired, cancelled and review states never advertise a usable QR.
+
+## Functional and verification evidence
+
+- Browser: desktop/mobile waiting rental, concept partial payment, yearbook paid, rental expired; copy and help expansion. QR absent on paid/expired views. Back text-decoration is none; original navbar/mobile menu retained.
+- Fresh navigation after the preview HMR cleanup produced no new console errors. An earlier development-only duplicate-createRoot warning was resolved by disposing the preview root; production app root was unchanged.
+- 50 checkout/order tests passed; final targeted rerun: 23 passed / 27 skipped by name filter. Earlier unchanged regression groups: 85 passed. Production build passed. TypeScript, scoped lint and whitespace validation passed.
+- No booking or bank transaction created. Live authenticated browser payment E2E was not repeated: the seeded sample credentials were unavailable on studio_db. This does not block visual QA; owner route data loading, polling and confirmation were verified with service-mocked integration tests.
+
+Follow-up polish: none required. Existing bundle-size warning remains outside this layout change.
+
+---
+
+# Merged shoot preparation — 2026-11-12
+
+final result: passed
+
+The selected target is the first displayed mockup, saved at `audit/concept-preparation-2026-11-12/reference.png` (original ImageGen result `exec-b5f25f34-c264-4739-97e8-bef308eca511.png`). Implemented in the existing booking app, using existing logo, concept photography, Inter and Lucide assets.
+
+## Comparison evidence
+
+- Source: 1487×1058 raster, treated as 1487×1058 CSS px at density 1.
+- Chrome viewport: 1487×1058 CSS px, deviceScaleFactor 1. Full-page implementation: 1487×1094 px in `preparation-desktop.png`; the extra height is normal page/footer spacing below the reference frame.
+- Same state: one participant, Chân dung Tự nhiên, Saturday 14/11/2026 14:00–15:00 in studio time, Lê Minh Đức, 900.000 đ, contact Mai Anh and warm/natural-light brief. Decimal measurements 165.5/55.2 intentionally exercise existing validation instead of the reference's integer example.
+- Full comparison opened: `comparison.png`, source left / implementation right, native-scale images top-aligned on equal 1487×1094 white canvases; no stretching or density rescaling.
+- Focused comparison opened: `comparison-form.png`, identical 850×760 regions starting at (130,235), contact/wardrobe/brief/links side by side.
+- Mobile screenshot opened after the last run: `preparation-mobile.png`, 390×1730 px from 390×844 viewport. Additional captures at 834×1194 and 320×844. No horizontal overflow at any checked size.
+
+## Findings and iteration history
+
+- Initial P2: the form was taller than the selected reference; implementation capture `preparation-desktop-initial.png` was 1487×1179 and the footer sat too low. Reduced heading/top gaps, section gaps, textarea minimum heights and bottom padding. Final full/focused comparisons show the intended hierarchy and density; primary action remains clear.
+- Fonts: existing Inter retained, title 30px/26px mobile, body 15–16px, labels 14px, sections 20–21px. No oversized headings.
+- Layout: contact then wardrobe then ideas in left column; photo/package/date/time/photographer/price in right column with one vertical separator. On mobile the fields stack and booking summary follows the form. No nested cards, duplicate Back, or extra wizard step.
+- Colors: existing white/gray/coral tokens retained. Inputs have neutral borders, a rose keyboard focus outline, and 44px minimum target height. Source's AI-rendered button sheen is not recreated as a new visual token.
+- Imagery: original project portrait thumbnail reused with appropriate aspect ratio and focal point; supplied logo stays unchanged. All icons use the existing icon library.
+- Copy: selected Vietnamese headings reproduced. Free-text size remains available for custom studio sizes. The generated mock's fictitious 500-character counter is omitted; the existing 4,000-character brief and server limit of 10 HTTPS references remain authoritative. No changes to checkout pricing, policies or email requirements.
+- No actionable P0/P1/P2 findings remain. P3: minor native font/control rendering and whitespace differences from the generated image.
+
+## Functional verification
+
+- 26 frontend tests passed (23 booking tests + 3 safe-return tests), including two participants, measurement validation, contact validation, direct review guard, old brief URL, draft restoration, auth and checkout retry identity.
+- TypeScript and changed-file ESLint passed; Prettier and both repository diff checks passed.
+- Final Vite build passed. Existing circular vendor chunk and large bundle warnings remain.
+- Actual Chrome check `ops/tests/concept-wardrobe-browser.cjs` passed with native local API/database: contact + measurements + brief on one screen, one Continue directly to review, review Back to merged form, form Back to photographer and photographer Back to date, arrow/no underline, legacy brief redirect, reload with all fields preserved, and desktop/mobile yearbook menu unchanged.
+- Zero browser page errors, no costume catalog requests, and no native orders created. Results: `audit/concept-preparation-2026-11-12/browser.json`.
+- Backend API/schema unchanged; no new backend test run required for this frontend-only merge.
+
+---
+
 # Included wardrobe and booking navigation QA — 2026-11-11
 
 final result: passed

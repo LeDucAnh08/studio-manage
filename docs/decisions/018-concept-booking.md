@@ -2,6 +2,16 @@
 
 Accepted — 10/11/2026. Implementation checklist: `tasks/concept-booking/todo.md`.
 
+Update 12/11/2026: Tab Chụp concept trong Đơn của tôi dùng chung bố cục danh sách,
+chi tiết và tiến độ với chụp kỉ yếu/thuê trang phục. Bốn trạng thái khách hàng:
+`deposited` (Đã cọc) từ `confirmed`, `handing_over` (Đang bàn giao) từ `shot`,
+`completed` (Hoàn thành), `cancelled` (Hủy) từ `cancelled` hoặc `expired`.
+DTO trả `orderStage`; `GET /api/concept-orders?view=all|deposited|handing_over|completed|cancelled`
+lọc trước khi đếm và phân trang, giữ nguyên phạm vi quyền sở hữu. `status` cũ vẫn
+dùng cho màn nhân sự. Đơn `awaiting_deposit` có `orderStage=null`, hiển thị riêng
+với liên kết tiếp tục thanh toán; không được gắn nhãn Đã cọc. Trạng thái nghiệp vụ,
+webhook và quy trình album không đổi.
+
 ## Ranh giới và cấu hình
 
 Đơn concept độc lập với kỷ yếu, dùng chung User, Schedule, kho, resource transaction,
@@ -140,3 +150,14 @@ Luồng khách concept thay lựa chọn mẫu/size tồn kho bằng số đo th
 Draft giữ số đo khi đổi thời gian/thợ; bước kiểm tra và hồ sơ đơn hiển thị theo từng người. Bước sau bị đưa về form số đo nếu dữ liệu gói kèm đồ thiếu hoặc sai. Thông tin số người được nhập ở bước số đo cho gói kèm đồ; gói không kèm giữ ở brief. Không suy size bằng công thức hoặc tự cấp phát kho.
 
 Back trong wizard đi đúng một bước logic, dùng icon mũi tên trái và không gạch chân; bỏ Back lặp ở cuối màn. Nhãn dịch vụ chụp truyền thống đổi thành “Chụp kỉ yếu” trên menu/tiêu đề/thông báo, giữ nguyên route và API booking.
+
+### Gộp thông tin chuẩn bị buổi chụp — 12/11/2026
+
+Theo phương án 1 được chọn, trang phục và brief thành một màn ở `/book/costumes`:
+liên hệ, số người, số đo theo người, ý tưởng và link tham khảo. Cột bên phải tóm
+tắt gói/lịch/thợ; mobile xếp sau form. Back về chọn thợ và Continue đi thẳng review.
+Giữ `/book/brief` dưới dạng redirect replace để link và bản nháp cũ không bị mất.
+Số bước trong draft không quyết định màn hiện tại; URL quyết định, draft cũ bước 6
+vẫn đọc được. Review yêu cầu thông tin liên hệ/số người hợp lệ và đủ số đo nếu gói
+kèm trang phục. Không thay schema/API, quyền truy cập hay quy tắc checkout hiện có.
+Checklist và bằng chứng: `tasks/concept-booking/preparation-screen.md` và `design-qa.md`.

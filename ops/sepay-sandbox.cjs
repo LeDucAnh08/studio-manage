@@ -9,6 +9,9 @@ const r = require('node:module').createRequire(path.join(root, 'backend/package.
 const saved = r('dotenv').parse(fs.readFileSync(path.join(root, 'backend/.env')));
 require('./mongodb-windows.cjs').validateNativeUri(saved.MONGO_URI);
 const database = 'studio_sepay_sandbox';
+const frontendPort = Number(process.env.SEPAY_FRONTEND_PORT || 4013);
+assert.ok(Number.isInteger(frontendPort) && frontendPort >= 1024 && frontendPort <= 65535);
+const frontendUrl = `http://localhost:${frontendPort}`;
 const uri = new URL(saved.MONGO_URI);
 uri.pathname = `/${database}`;
 // Vite denies .env* files, including through /@fs workspace URLs.
@@ -25,6 +28,28 @@ if (!fs.existsSync(file))
     }),
   );
 const profile = JSON.parse(fs.readFileSync(file, 'utf8'));
+const provider =
+  saved.SEPAY_ENABLED === 'true' || saved.SEPAY_WEBHOOK_SECRET?.trim() ? saved : null;
+if (provider) {
+  assert.equal(
+    provider.SEPAY_MODE,
+    'sandbox',
+    'The demo requires SEPAY_MODE=sandbox in backend/.env',
+  );
+  for (const key of [
+    'PAYMENT_BANK_CODE',
+    'SEPAY_BANK_GATEWAY',
+    'PAYMENT_BANK_NAME',
+    'PAYMENT_ACCOUNT_NAME',
+    'PAYMENT_ACCOUNT_NUMBER',
+    'SEPAY_WEBHOOK_SECRET',
+  ])
+    assert.ok(provider[key]?.trim(), `Missing ${key} in backend/.env`);
+  assert.ok(
+    provider.SEPAY_WEBHOOK_SECRET.trim().length >= 32,
+    'Webhook secret needs 32+ characters',
+  );
+}
 const env = {
   ...process.env,
   MONGO_URI: uri.toString(),
@@ -32,27 +57,28 @@ const env = {
   TS_NODE_PROJECT: path.join(root, 'backend/tsconfig.json'),
   CLIENT_PORTAL_ENABLED: 'true',
   CLIENT_WORKFLOW_ENABLED: 'true',
+  CONCEPT_BOOKING_ENABLED: 'true',
   SEPAY_ENABLED: 'true',
   SEPAY_MODE: 'sandbox',
-  SEPAY_DEMO_UI: 'true',
+  SEPAY_DEMO_UI: provider ? 'false' : 'true',
   SEPAY_SANDBOX_DATABASE: database,
-  SEPAY_WEBHOOK_SECRET: profile.webhookSecret,
-  PAYMENT_BANK_CODE: 'MBBank',
-  SEPAY_BANK_GATEWAY: 'MBBank',
-  PAYMENT_BANK_NAME: 'MBBank',
-  PAYMENT_ACCOUNT_NAME: 'YUME STUDIO',
-  PAYMENT_ACCOUNT_NUMBER: 'SBSTUDIO001',
+  SEPAY_WEBHOOK_SECRET: provider?.SEPAY_WEBHOOK_SECRET || profile.webhookSecret,
+  PAYMENT_BANK_CODE: provider?.PAYMENT_BANK_CODE || 'MBBank',
+  SEPAY_BANK_GATEWAY: provider?.SEPAY_BANK_GATEWAY || 'MBBank',
+  PAYMENT_BANK_NAME: provider?.PAYMENT_BANK_NAME || 'MBBank',
+  PAYMENT_ACCOUNT_NAME: provider?.PAYMENT_ACCOUNT_NAME || 'YUME STUDIO',
+  PAYMENT_ACCOUNT_NUMBER: provider?.PAYMENT_ACCOUNT_NUMBER || 'SBSTUDIO001',
   PORT: '5013',
   NODE_ENV: 'development',
   RENTAL_HOLD_MINUTES: '120',
-  CORS_ORIGIN: 'http://localhost:4001',
+  CORS_ORIGIN: frontendUrl,
   GAS_WEBHOOK_URL: '',
   GAS_WEBHOOK_SECRET: '',
   TELEGRAM_BOT_TOKEN: '',
   EMAIL_ENABLED: 'true',
   EMAIL_MODE: 'test',
   EMAIL_FROM: 'Yume Sandbox <notifications@example.test>',
-  EMAIL_PUBLIC_URL: 'http://localhost:4001',
+  EMAIL_PUBLIC_URL: frontendUrl,
   RESEND_API_KEY: '',
 };
 Object.assign(process.env, env);
@@ -250,6 +276,25 @@ async function seed() {
   // separate sandbox. No profile, Telegram or other private account fields copied.
   for (const user of users)
     await User.collection.updateOne({ _id: user._id }, { $setOnInsert: user }, { upsert: true });
+  // The sandbox uses a reserved test address, never the customer's real email.
+  await User.collection.updateOne(
+    { _id: client._id, emailVerifiedAt: { $exists: false } },
+    { $set: { email: 'mango@example.test', emailVerifiedAt: new Date() } },
+  );
+  // Copy the public catalog only; never copy orders, receipts or reservations.
+  for (const name of [
+    'concepts',
+    'conceptpackages',
+    'conceptsettings',
+    'photographerprofiles',
+    'costumetypes',
+  ]) {
+    const records = await source.collection(name).find({}).toArray();
+    for (const record of records)
+      await mongoose.connection.db
+        .collection(name)
+        .updateOne({ _id: record._id }, { $setOnInsert: record }, { upsert: true });
+  }
   let pkg = await Package.findById(id('package'));
   if (!pkg)
     pkg = await Package.create({
@@ -423,14 +468,14 @@ async function seedPendingRentals() {
     assert.equal(response.status, 201, response.body.message);
     assert.equal(response.body.data.status, 'awaiting_deposit');
     assert.equal(response.body.data.depositPayment?.status, 'pending');
-    assert.equal(response.body.data.depositPayment?.demoSimulation, true);
+    assert.equal(response.body.data.depositPayment?.demoSimulation, !provider);
   }
   const rentals = await Rental.find(filter).select('+depositPayment').lean();
   return rentals.map((rental) => ({
     rentalId: String(rental._id),
     amount: rental.quote.deposit,
     expiresAt: rental.reservation.expiresAt,
-    url: `http://localhost:4001/account/rentals/${rental._id}`,
+    url: `${frontendUrl}/account/rentals/${rental._id}`,
   }));
 }
 
@@ -439,6 +484,10 @@ async function main() {
   if (!['seed', 'serve', 'pay', 'pay-rental', 'status'].includes(command))
     throw new Error(
       'Usage: node ops/sepay-sandbox.cjs seed | serve | status | pay BOOKING_ID [AMOUNT] | pay-rental RENTAL_ID [AMOUNT]',
+    );
+  if (provider && ['pay', 'pay-rental'].includes(command))
+    throw new Error(
+      'Use Mô phỏng giao dịch in SePay Test mode when SEPAY_ENABLED=true in backend/.env.',
     );
   await mongoose.connect(uri.toString(), { autoIndex: false });
   assert.equal(mongoose.connection.name, database);
@@ -518,18 +567,27 @@ async function main() {
         });
       }
       console.log(
-        JSON.stringify({ simulation: 'local-only-not-provider-bank', database, orders }, null, 2),
+        JSON.stringify(
+          {
+            simulation: provider ? 'sepay-provider-test-mode' : 'local-only-not-provider-bank',
+            database,
+            orders,
+          },
+          null,
+          2,
+        ),
       );
     } else
       console.log(
         JSON.stringify(
           {
-            simulation: 'local-only-not-provider-bank',
+            simulation: provider ? 'sepay-provider-test-mode' : 'local-only-not-provider-bank',
             database,
             orders: await seed(),
             rentals: await seedPendingRentals(),
-            frontend: 'http://localhost:4001',
-            rentalCatalog: 'http://localhost:4001/costumes',
+            frontend: frontendUrl,
+            rentalCatalog: `${frontendUrl}/costumes`,
+            conceptCatalog: `${frontendUrl}/concept-booking`,
             sameLoginAsLocal: true,
           },
           null,
@@ -553,7 +611,7 @@ async function main() {
           '--host',
           'localhost',
           '--port',
-          '4001',
+          String(frontendPort),
           '--strictPort',
         ],
         {
@@ -563,6 +621,7 @@ async function main() {
             VITE_API_URL: '/api',
             DEV_API_PROXY_TARGET: 'http://127.0.0.1:5013',
             VITE_CLIENT_PORTAL_ENABLED: 'true',
+            VITE_CONCEPT_BOOKING_ENABLED: 'true',
           },
           stdio: 'inherit',
           windowsHide: true,

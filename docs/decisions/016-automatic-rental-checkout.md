@@ -1,5 +1,7 @@
 # ADR-016: Đặt thuê trang phục và cọc tự động
 
+Phần tính cọc bảo đảm và tổng tiền cho đơn mới được thay thế bởi [ADR-020](020-rental-advance-deposit.md) từ 12/11/2026: cọc trước 30% được trừ vào tiền thuê. Hồ sơ cũ giữ snapshot đã chốt.
+
 ## Trạng thái và ngày
 
 Accepted — 10/11/2026, Asia/Bangkok. Áp dụng cho đơn mới. Hồ sơ cũ vẫn dùng báo giá/đối soát hiện có, không tự chuyển trạng thái hoặc thay điều khoản đã thỏa thuận.
