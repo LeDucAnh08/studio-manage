@@ -1,3 +1,115 @@
+# Photographer portfolio — 2026-11-13
+
+**final result: passed**
+
+**Findings**
+- Fixed: publication action now has a solid violet surface and a contrasting label, distinct from draft/preview actions.
+- Fixed: full-page preview uses a native modal dialog; focus stays inside the customer surface and the staff sidebar is inert. Back and Escape return to the editor without losing unsaved edits.
+- Fixed: desktop compact preview shows the introduction and the first three permitted works; full preview/public pages retain the complete personal narrative and all permitted works.
+- No remaining P0/P1/P2 issue in the reviewed introduction, working-approach, gallery, full preview and public profile states.
+
+**Source and comparison**
+- Target: the first displayed ImageGen result selected by the user, copied to `audit/photographer-portfolio-2026-11-13/approved-reference.png` (1487×1058). Normalized to a 1440×1024 desktop canvas with aspect preserved.
+- Actual: in-app browser on the main application, authenticated as its existing photographer. Desktop capture 1440×1024 and mobile capture 390×844, no device/browser framing.
+- Reviewed `comparison-desktop.jpg` with source on the left/implementation on the right and `comparison-header.jpg` with source above/implementation below. Also inspected the full desktop, mobile, keyboard-focus and customer-page captures. Header close-up checks labels, hierarchy, tab separation and the primary action.
+- Intentional product differences: preserve the real 240px application sidebar, existing season picker, breadcrumbs and current account content instead of generated sample people/photos/text. Existing longer narrative and additional fields continue below the fold. The saved profile is already published, so its status is green; unsaved and unpublished changes use the warning status. These are state/data differences, not missing controls.
+
+**Required fidelity surfaces**
+- Typography: use the existing staff system sans typography, 14px/21px editor text, 26px title and 28px preview identity. Vietnamese text and input wrapping are legible; mockup's visual hierarchy is retained without replacing the app font system.
+- Spacing/layout: measured editor/preview columns 621.109px/496.875px with 28px gap and dividing rule at desktop. Mobile form/gallery become one 352px column, preview follows the form; document scrollWidth 384px ≤ viewport 390px. All three primary controls remain visible on mobile. Existing breadcrumbs intentionally add vertical space compared with the generated mock.
+- Colors/tokens: graphite surfaces, existing staff border/muted/status tokens and violet selected navigation/tabs. Dark primary background rgb(163,150,255) with rgb(23,20,31) label; readable keyboard outlines retained. No extra mockup-review banner.
+- Images: use persisted portrait, cover and works belonging to this actual profile, not generated stand-ins. Seven visible images in the desktop editor were loaded successfully. Cover uses a deliberate wide crop; complete works are preserved on the public gallery. Draft uploads use owner-authenticated blobs rather than public static paths.
+- Copy/content: exact action labels Lưu nháp/Xem trước/Công khai; concept-only scope; account name and studio-assigned concepts read-only. No invented achievements/reviews. Shared renderer and public snapshot connect the editor to the customer website; sample text from the mockup is not seeded into real profiles.
+
+**Interaction verification**
+- Changed the tagline in the actual editor, saw it update in the compact and full private preview, returned and restored the original value. No portfolio content was published or seeded in `studio_db` during UI verification.
+- Opened gallery and working-approach tabs, moved the second image first and restored its original position. Home key returned to the first tab with a visible focus outline.
+- Opened the independent public profile with the normal customer navbar, confirmed the persisted original tagline/narrative and concept works. Mobile public page has no horizontal overflow; Back textDecorationLine is none. No browser console errors on the public profile.
+- Screenshots: `implemented-desktop.jpg`, `implemented-focus.jpg`, `implemented-gallery.jpg`, `implemented-mobile.jpg`, `implemented-mobile-gallery.jpg`, `preview-draft.jpg`, `public-profile.jpg`, `public-profile-mobile.jpg` in the audit directory.
+- Backend HTTP integration (isolated local DB) covers draft/public isolation, owner/role restrictions, retained images, invalid/oversized files, unassigned concepts, atomic publication failure, public/booking snapshot consistency, stale writes and shared admin revision checks. Existing concept booking regression passed. Frontend tests cover editing, private preview, save/publish errors, reordering/removal/consent, sidebar roles and multipart file serialization; production build and scoped checks complete the validation.
+
+**Open questions**
+None.
+
+**Implementation checklist**
+- [x] Preserve existing published profiles and main database configuration.
+- [x] Share renderer and public data between customer entrypoints and editor previews.
+- [x] Enforce owner scope, media access and revision conflicts on the server.
+- [x] Check desktop/mobile and functional controls, restore temporary viewport and leave the editor available.
+
+**Follow-up polish**
+None required for acceptance. Preview deliberately abbreviates longer content; use the full-page action to inspect all sections.
+
+---
+
+# Photographer statistics dashboard — 2026-11-13
+
+final result: passed
+
+Selected visual truth: C:/Users/Admin/.codex/visualizations/2026/11/12/01a1cdd5-2ae6-7cf2-8de0-a8621be62dce/photographer-dashboard.html, approved after removing the nearest-shoots section. Implemented inside the existing staff shell; no changes to customer or manager dashboards.
+
+## Evidence and comparison
+
+- Folder: audit/photographer-dashboard-2026-11-13. Source capture: source-desktop.png. Production capture: implemented-desktop.png. Opened their combined comparison-desktop.png and the native-pixel comparison-focus.png (source above implementation) before this report. The focused crop covers headings, filters and all six KPI cards at native density.
+- Desktop: both browser viewports 1280×720, dark mode, same October 2026 / Concept / all-seasons empty state. Full-page heights remain natural; source uses the browser's default scrollbar, implementation the app's thin scrollbar. No screenshot stretch. Both views show zero in every metric and empty work queue, allowing comparison without synthetic data in studio_db.
+- Mobile: comparison-mobile.png contains both pages in 390×1100 browser iframes. Source left, production right. Both use the same period/service and empty state. Production clientWidth and scrollWidth are both 384 (six pixels for its vertical scrollbar): no horizontal overflow. The screenshot retains normal vertical scrolling; supplemental comparison-mobile-top.png shows the lower chart/queue during inspection. This is CSS viewport testing, not touch-device emulation.
+- Live default-state proof: implemented-live-desktop.png. Actual photographer data shows three November shoots, one upcoming shoot and two editing records. These match the three November assignments on the existing personal calendar. No synthetic records or transactions were added.
+
+## Findings and required fidelity surfaces
+
+- No remaining actionable P0/P1/P2 mismatch in the final stable-font comparisons. Initial font loading was allowed to settle before comparing labels; no layout change remains from that inspection.
+- Fonts/typography: existing Inter Vietnamese variable font, 24px desktop / 22px mobile title, 28px / 26px values, compact 11–12px labels and tabular numbers retained. Full labels remain readable and wrap naturally; zero counts are real empty values, not placeholders.
+- Spacing/layout: six cards in 3×2 desktop / 2×3 mobile arrangement, 12px card gaps, 20px section spacing, 8px surfaces and the chart/priority grid match the source. Mobile stacks chart and queue. The existing sidebar and mobile menu remain functional; source's simulated chrome differs slightly in breadcrumb weight, user-label location, scrollbar and icon-button geometry, intentionally preserving the real application.
+- Colors/tokens: neutral staff backgrounds/borders, indigo concept bars, blue yearbook bars and a red overdue value follow the approved roles. Actual light/dark staff tokens replace the mock's near-identical palette; slight dark-surface differences are intentional. Quantitative bars have no decorative border and start at zero.
+- Assets: supplied studio logo and existing Lucide icons retained. Source placeholders were rendered with that same icon package for screenshots. No custom drawing replaced an image or icon; no new raster asset/library was introduced.
+- Copy/content: approved metric names, hints and priority headings retained. Chart caption uses a concise period description. Production drilldowns open real order profiles and display saved deadlines, instead of the mock's illustrative profile panel. Removed nearest-shoots and personal-busy sections stay absent. Missing deadline reads “Chưa có hạn bàn giao”, without fabricating a date.
+
+## Functional and data verification
+
+- Browser: real photographer login; live KPI totals; shoots drilldown with three matching records; actual yearbook profile and Back returning to /?metric=shoots; return to overview; period/service/season controls; October concept empty state; responsive width. Fresh final dashboard tab has no console errors.
+- 23 frontend tests passed: personal dashboard rendering, controls, drilldown, stale response/error/retry and order return context, plus manager/finance/report and concept-payment regression checks. Three backend tests passed: metric/date/deadline/album semantics, caller/role/query protection, and existing unified-order pipeline regression. Fixtures include more than one list page and Vietnam month boundaries.
+- Frontend production build, frontend/backend TypeScript and scoped lint passed. Existing large/circular bundle warnings remain outside this change.
+- MongoDB had stopped during verification. Restarted the existing authenticated local instance with the project's management command and verified the final application against studio_db; no database switch or payment configuration change.
+- Practical data limits: concept currently has descriptive delivery terms rather than an absolute deadline, so it is not assigned a fabricated overdue date. Older completed records without a completion event are not assigned to a completion month using updatedAt. Both rules are documented in ADR-025.
+
+Implementation checklist: complete. Follow-up polish: none required. Exhaustive light-theme/touch-hardware testing was not repeated; existing staff tokens and native controls are reused.
+
+---
+
+# Personal photographer calendar — 2026-11-13
+
+final result: passed
+
+Selected target: approved personal monthly calendar at C:/Users/Admin/.codex/visualizations/2026/11/12/01a1cdd5-2ae6-7cf2-8de0-a8621be62dce/personal-shoot-calendar.html. The user approved implementation. This extends the existing application, retaining its real staff navigation.
+
+## Evidence and normalization
+
+- Evidence folder: audit/personal-calendar-2026-11-13. source-desktop.png is the approved source rendered at 1280 CSS px in an iframe; implemented-desktop.png is the authenticated production /schedules route on studio_db at a 1280×720 browser viewport, captured full-page (1274×966 after the existing thin scrollbar). Source capture 1280×1000 retains its native frame and scrollbar. There is no image stretch.
+- Both desktop views select 21 November 2026, an empty day, in dark mode. Live data has three assigned November shoots; the approved mock has eleven synthetic shoots. The different counts/titles/dates are expected data differences, not missing production data. Source uses a mock 176px sidebar; implementation preserves the existing 240px sidebar, season selector and real logo. This accounts for the narrower calendar and slightly different breadcrumb position.
+- Mobile comparison uses two real 390px-wide browser iframes in responsive.html, one containing the approved source and one the authenticated production route. This verifies CSS responsiveness, not touch-device emulation. Production HTML clientWidth and scrollWidth both equal 390. Selected day and theme match desktop. Existing mobile topbar and 16px app gutter intentionally replace the mock's simulated user bar and 12px gutter. Native screenshots are cropped at frame boundaries without scaling.
+- Opened combined comparison-desktop.png, comparison-mobile.png and native-pixel comparison-focus.png. The focus image puts the source above the production heading, toolbar and day-detail region so the small text is legible. Supplemental support-role screenshot documents a real assigned shoot.
+
+## Findings and fidelity surfaces
+
+- Resolved during browser verification: programmatic focus on a shoot detail could scroll the desktop heading out of view. Focus now preserves scroll on desktop and scrolls the detail into view only in the stacked layout. The empty-state icon also inherited the app's block-SVG rule; centered it explicitly. The stored comparisons were captured after these fixes.
+- No remaining actionable P0/P1/P2 issue in the final combined comparisons.
+- Typography: existing Inter Vietnamese variable font retained; same 24px desktop/22px mobile page title, 17px month/detail headings, compact 11–12px labels and tabular time. Event titles truncate and complete titles remain visible in the selected-day panel and accessible labels.
+- Spacing/layout: seven columns, six complete week rows, 108px desktop/67px mobile cells, 16px workspace gap, 224px details and 9px card radii retained. Detail stacks earlier (1100px viewport) to accommodate the real 240px sidebar. Small screens replace event chips with dots/count and keep every day selectable; no horizontal overflow on the production screen.
+- Colors/tokens: concept indigo, yearbook blue, cancelled gray and selected-day outline match the design roles. Neutral backgrounds, borders, accent and success colors use existing staff light/dark tokens; darker production panels/selection are an intentional design-system integration difference.
+- Images/assets: actual supplied studio logo remains in the existing sidebar/topbar; all icons use the existing Lucide library. Source capture substitutes the host-provided icon placeholders with the same library's generated markup. No hand-drawn image substitute or new raster asset was needed. Empty-state calendar glyph uses CalendarDays, a small accepted same-library variant of the mock's CalendarCheck2.
+- Copy/content: title, subtitle, month navigation, service legend, role and preparation disclosure preserved. Empty/loading/error wording is adapted to the actual data-loading states. No mock/review labels, fictitious schedules or management actions appear in the production personal calendar.
+
+## Verification
+
+- Backend HTTP test passed: authentication/role protection, immutable caller scope including multi-role users, lead/support assignments, 27 returned fixtures (no 20-record cap), inclusive Vietnam first/last-day instants, invalid dates/query shapes and 42-day bound. No DB connection or writes in that test.
+- Four personal-calendar UI tests and eight staff/role regression tests passed; two existing management calendar tests also passed. Covers full month/navigation/today, event/day selection, >2/day details, support/cancelled/notes, timezone grouping, stale/aborted responses, account switch, error/retry, role 3/5 and preserved admin tools.
+- Frontend/backend production builds passed. Scoped lint has zero errors and the existing unrelated buildFilterParams hook warning in the old management page. Existing production chunk-size/circular-chunk warnings remain outside this change.
+- Browser: real photographer login, November counts, real support-role details, next month empty view, today, selected empty day, 390px date selection/details. Existing main studio_db and payment settings untouched; no orders, reservations or bank transactions created.
+
+Implementation checklist: complete. Follow-up polish: none required. Actual touch-device and exhaustive light-theme interaction testing were not repeated; the screen inherits the existing theme tokens and native controls.
+
+---
+
 # Unified deposit checkout — 2026-11-12
 
 final result: passed

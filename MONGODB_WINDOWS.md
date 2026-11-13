@@ -12,19 +12,21 @@ npm run db:start
 npm run dev
 ```
 
-Mở ứng dụng tại http://localhost:4001. Dừng riêng database bằng `npm run db:stop`; dữ liệu vẫn được giữ. Tác vụ Windows **StudioManage MongoDB** khởi động database ẩn khi tài khoản đăng nhập. Đây là cài đặt theo tài khoản, không phải Windows Service.
+Mở ứng dụng tại http://localhost:4001. Dừng riêng database bằng `npm run db:stop`; dữ liệu vẫn được giữ. Chạy `npm run db:start` trước khi mở backend nếu database chưa chạy. Đây là cài đặt theo tài khoản, không phải Windows Service.
 
 | Thành phần           | Đường dẫn                                                  |
 | -------------------- | ---------------------------------------------------------- |
-| MongoDB Server       | `%USERPROFILE%\StudioManage\MongoDB\7.0.45\bin\mongod.exe` |
-| Công cụ dump/restore | `%USERPROFILE%\StudioManage\MongoDB\tools\bin`             |
-| Dữ liệu              | `%USERPROFILE%\StudioManage\MongoDB\data`                  |
-| Cấu hình             | `%USERPROFILE%\StudioManage\MongoDB\mongod.cfg`            |
-| Log                  | `%USERPROFILE%\StudioManage\MongoDB\logs\mongod.log`       |
-| Backup               | `%USERPROFILE%\StudioManage\MongoDB\backups`               |
-| Khởi động ẩn         | `%USERPROFILE%\StudioManage\MongoDB\Start-MongoDB.ps1`     |
+| MongoDB Server       | `%LOCALAPPDATA%\Programs\StudioMongoDB\7.0.45\bin\mongod.exe` |
+| Công cụ dump/restore | `%LOCALAPPDATA%\Programs\StudioMongoDB\tools\bin`             |
+| Dữ liệu              | `%LOCALAPPDATA%\StudioManage\MongoDB\data`                  |
+| Cấu hình             | `%LOCALAPPDATA%\StudioManage\MongoDB\mongod.cfg`            |
+| Log                  | `%LOCALAPPDATA%\StudioManage\MongoDB\logs\mongod.log`       |
+| Backup               | `%LOCALAPPDATA%\StudioManage\MongoDB\backups`               |
+| Khởi động ẩn         | `%LOCALAPPDATA%\Programs\StudioMongoDB\Start-MongoDB.ps1`     |
 
-Thư mục dữ liệu nằm ngoài source và AppData để tránh lỗi đổi tên tệp WiredTiger trong môi trường Windows có ảo hóa AppData. Các lệnh quản lý và seed kiểm tra đúng thư mục này trước khi thao tác. Clone Git không mang theo MongoDB, dữ liệu, mật khẩu hoặc tác vụ khởi động của máy.
+Thư mục dữ liệu nằm ngoài source. Các lệnh quản lý và seed kiểm tra đúng thư mục này trước khi thao tác; vẫn hỗ trợ cài đặt cũ trong `%USERPROFILE%\StudioManage\MongoDB` khi chưa có cấu hình AppData. Clone Git không mang theo MongoDB, dữ liệu, mật khẩu hoặc tác vụ khởi động của máy.
+
+Nếu backend báo `ECONNREFUSED 127.0.0.1:27020`, kiểm tra `npm run db:status` và dung lượng ổ chứa dữ liệu trước khi khởi động lại. Lỗi `No space left on device` / `There is not enough space on the disk` trong log có thể khiến MongoDB dừng. Giải phóng dung lượng rồi chạy `npm run db:start`; không xóa dữ liệu, journal hay lock file để xử lý lỗi này. Nếu nodemon đã báo `app crashed`, nhập `rs` trong terminal đang chạy backend hoặc chạy lại `npm run dev`.
 
 ## Kết nối ứng dụng và Compass
 

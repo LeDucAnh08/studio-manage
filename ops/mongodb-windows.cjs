@@ -8,7 +8,13 @@ const dotenv = require('dotenv');
 
 const root = path.resolve(__dirname, '..');
 const local = process.env.LOCALAPPDATA;
-const nativeHome = path.join(require('node:os').homedir(), 'StudioManage', 'MongoDB');
+const legacyHome = path.join(require('node:os').homedir(), 'StudioManage', 'MongoDB');
+const localHome = local ? path.join(local, 'StudioManage', 'MongoDB') : legacyHome;
+const nativeHome = fs.existsSync(path.join(localHome, 'mongod.cfg')) ? localHome : legacyHome;
+const nativeStartScript =
+  nativeHome === localHome && local && !fs.existsSync(path.join(nativeHome, 'Start-MongoDB.ps1'))
+    ? path.join(local, 'Programs', 'StudioMongoDB', 'Start-MongoDB.ps1')
+    : path.join(nativeHome, 'Start-MongoDB.ps1');
 const command = process.argv[2] || 'status';
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -67,7 +73,7 @@ async function main() {
   const env = dotenv.parse(fs.readFileSync(path.join(root, 'backend/.env')));
   validateNativeUri(env.MONGO_URI);
   if (command === 'start') {
-    const script = path.join(nativeHome, 'Start-MongoDB.ps1');
+    const script = nativeStartScript;
     if (!fs.existsSync(script))
       throw new Error('MongoDB Windows has not been installed for this account.');
     await promisify(execFile)(
@@ -101,7 +107,7 @@ async function main() {
   }
 }
 
-module.exports = { validateNativeUri, nativeHome };
+module.exports = { validateNativeUri, nativeHome, nativeStartScript };
 if (require.main === module)
   main().catch((error) => {
     // Driver errors can contain connection details; never print the URI/password.
