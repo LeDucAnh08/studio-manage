@@ -1,12 +1,14 @@
 # Project UI preferences
 
+- Staff photography orders share `/workflow-bookings` with a “Tất cả / Concept / Kỉ yếu” type filter and one server-paginated feed. Hide the separate “Chụp concept” order menu for all staff, retain concept catalog settings, redirect the old list route to the concept filter, and preserve list filters/page on detail Back links. Respect existing per-service permissions; sales do not gain yearbook access and personal photographers still see only assignments. Do not restore the busy-time management section. Requested on 2026-11-14.
+
 - Photographer portfolio editing follows approved option 1: form beside a compact preview, tabs for introduction/working approach/concept photos, draft/preview/publish actions. Use the same PhotographerProfile public snapshot and PhotographerPortfolio renderer as customer pages and booking profiles; saving a draft never changes public content or concept assignments. Only the owner edits their draft; admin shares revision checks. Public portfolios are concept-only. Approved on 2026-11-13.
 
 - The personal photographer Dashboard uses the approved statistics layout: six metrics (shoots, upcoming 7 days, editing, awaiting acceptance, completed, overdue), a service-split workload chart and a priority queue. Do not show “Lịch chụp gần nhất” or personal unavailability there. Filters include period, concept/yearbook and the existing season picker. Drilldowns and order Back links preserve dashboard context. Count only assigned work; use actual confirmed shoots, recorded completion events and explicit deadlines rather than inventing dates. Approved on 2026-11-13.
 
 - Do not show the personal “Lịch bận của tôi” section in the photographer's photography-order workspace. Requested on 2026-11-13.
 
-- In the personal photographer workspace, “Đơn chụp ảnh” lists assigned concept and yearbook orders together, with a “Tất cả / Concept / Kỉ yếu” service filter and shared server pagination. Hide the separate “Chụp concept” menu for these accounts; keep existing manager navigation. Preserve the service/status/page context when opening either order type and returning to the list. Requested on 2026-11-13.
+- In the personal photographer workspace, “Đơn chụp ảnh” lists assigned concept and yearbook orders together, with a “Tất cả / Concept / Kỉ yếu” service filter and shared server pagination. Hide the separate “Chụp concept” order menu for all staff; retain concept catalog settings. Preserve the service/status/page context when opening either order type and returning to the list. Requested on 2026-11-13.
 
 - Photographer-only accounts use “Lịch chụp của tôi” as a complete monthly calendar with day details. Include only shoots assigned to the authenticated photographer as lead or support; enforce this in the API. Keep the existing staff navigation and admin/sales management calendar. Month boundaries and today use Vietnam time; load all assignments in the 42-day grid rather than one paginated list page. Approved on 2026-11-13.
 
