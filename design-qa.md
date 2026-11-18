@@ -1,3 +1,41 @@
+# Admin dashboard — 2026-11-14
+
+**final result: passed**
+
+**Findings**
+- Fixed [P2]: the initial chart metadata heights and oversized vertical gaps pushed the schedule table beyond the selected screen density. Aligned metadata, compacted the header/KPI/row spacing and removed the redundant root breadcrumb only on the admin overview. At 1487×1058 the fourth sample schedule row ends at 1044px.
+- Fixed [P2]: chart resize/full-page capture could catch animation at zero-height bars. Admin bars now update without animation; the revised mobile capture shows every receipt/user bar correctly.
+- No remaining P0/P1/P2 finding in the reviewed dashboard filters, day/month switch, table/calendar switch and mobile layout.
+
+**Source and comparison**
+- Source: selected second image after the no-expense correction, refined for the user's requested button removal and user growth, saved as `frontend/docs/design/admin-dashboard-2026-11-14/approved-reference.png` (1487×1058).
+- Browser: in-app browser, 1487×1058 desktop and 390×844 mobile. Screenshot content excludes the browser scrollbar; the source is proportionally fitted to that content area for the comparison, without stretching.
+- Evidence in that directory: `comparison-before.jpg`, `comparison-final.jpg`, `desktop-final.jpg`, `mobile.jpg`. The final combined comparison was opened and reviewed after the spacing and animation fixes.
+- Browser rendering uses the actual Redux, layout, dashboard and Recharts components with an isolated mock API and administrator context on loopback 4014. No authentication bypass was added to the main app; no real account, booking, payment or email was created. “Dữ liệu minh họa” appears only in the QA harness; production uses real API totals.
+
+**Required fidelity surfaces**
+- Fonts/typography: retained the application's sans serif and readable Vietnamese, 30px title, 14–16px body hierarchy, tabular KPI values and distinct chart labels. Compact table type remains consistent with the existing staff UI.
+- Spacing/layout: four metrics in a divided row, two charts and schedules below; no top-right schedule action. Mobile stacks charts, retains two KPI columns and confines table scrolling to its own region. Browser measured no horizontal page overflow.
+- Colors/tokens: existing light/dark admin tokens, green receipts and indigo user counts, semantic positive/negative comparison ink. No expense-colored series, net/profit metric or decorative gradient.
+- Image/assets: reused the actual Yume logo and installed icon system. Charts are Recharts data visualizations, not replacement raster drawings. No additional raster assets are needed.
+- Copy/content: only recorded income, class/yearbook counts and account aggregates. User comparison is clearly same-period; zero previous count never yields Infinity/NaN. Accessible data tables accompany both charts.
+
+**Intentional product differences**
+- Existing sidebar grouping, season selector, theme/account controls and actual schedule status labels are preserved instead of replacing application navigation with the simplified mock sidebar.
+- New-user chart shows six months, including zeros, rather than three illustrative months. Its scope and date-creation basis are explicit; business filters do not silently alter user totals.
+- Retained the working Bảng/Lịch switch from the current dashboard. Screens beyond the overview continue to use their existing layouts and permissions.
+
+**Implementation checklist**
+- [x] Remove admin expense/net figures and the top-right action.
+- [x] Add admin-only user aggregate API and same-period boundaries.
+- [x] Verify request ordering, permissions, zero values, mobile layout and actual browser interactions.
+- [x] Compare the final screenshot against the selected visual target.
+
+**Follow-up polish**
+- [P3] Staff table labels and sidebar follow the existing shared components rather than the image generator's slightly larger type and simplified navigation. Dark tokens are reused; this pass visually verified the selected light theme.
+
+---
+
 # Photographer portfolio — 2026-11-13
 
 **final result: passed**
@@ -43,6 +81,40 @@ None required for acceptance. Preview deliberately abbreviates longer content; u
 ---
 
 # Photographer statistics dashboard — 2026-11-13
+
+final result: passed
+
+---
+
+# Production photographer selection — approved option 1, 2026-11-14
+
+## Scope and visual evidence
+
+- User approved implementation of the interactive option 1. Live route: `/concept-booking/packages/:packageId/book/photographer`.
+- Visual truth: `.workflow-tools/photographer-option-1-desktop-v2.png` (1481 × 1067), derived from the selected first generated image recorded above.
+- Production capture: `.workflow-tools/photographer-selection-live-desktop.png` (1481 × 1054), CSS viewport 1487 × 1058, density 1. Both captures exclude the browser scrollbar; different page height follows the existing production header.
+- Combined comparison: `.workflow-tools/photographer-selection-live-comparison.png`, both proportionally displayed at 750px wide. State matched: Lê Minh Đức selected, 17/11/2026, 09:00–10:00, 900.000đ.
+- Mobile evidence: `.workflow-tools/photographer-selection-live-mobile.png` and `.workflow-tools/photographer-selection-live-mobile-selected.png`, 390 × 844 CSS viewport. Rendered document width 384px is within the viewport; no horizontal overflow. The second capture verifies Nguyễn Gia Bảo selected with the sticky Continue bar visible.
+
+## Fidelity review
+
+- Typography: same installed Inter Customer font and approved title/name/body hierarchy. Dynamic name, biography and specialty content remain readable; long introductions are limited to four lines and full content remains available on the separate profile.
+- Spacing/layout: matching two-column portrait-led cards, horizontal session recap, selected outline/check and decision bar. Mobile stacks cards and retains Continue while scrolling.
+- Color/tokens: white surface, #222 ink, muted gray, pink #ff385c primary and selected border, matching control radii and thin dividers.
+- Assets: original public profile portrait URLs feed the shared CustomerImage renderer; no hardcoded user-to-image mapping in UI code. Missing portraits have an accessible neutral state. Only empty portrait/title/tagline fields of the two approved local seeded profiles were filled, with revision checks; existing content and concept assignments were retained.
+- Content: package name, price, date, duration, available photographer count and selected name use live catalog, draft and availability data. No default photographer, invented credentials, reviews or experience counts.
+- Focused review of portraits, name/quote blocks, selected badges and CTA is visible in both full-size captures and the combined comparison; no extra crop required.
+- Accepted P3 differences: the production header is intentionally retained, and the count is numeric and data-driven instead of the mock's fixed “Hai”. Original image crop varies slightly through CustomerImage. No actionable P0/P1/P2 differences remain.
+
+## Interaction and quality checks
+
+- Real API/browser flow: catalog → package → 17/11/2026 at 09:00 → photographer list → Lê Minh Đức profile → choose → list with selected state → Continue → existing preparation screen. Back retained the choice.
+- Changed to Nguyễn Gia Bảo on mobile and verified selected card, footer name and restored draft after reload. No order, reservation, payment or email was submitted.
+- Loading/error/unavailable selections disable Continue. API failures offer retry. Profile selection rechecks availability; the Next handler also rejects elapsed slots. Separate-profile navigation, draft ownership and checkout checks remain intact.
+- Five-axis self-review: correctness, readability, architecture, security and performance checked. Extracted the selection surface from the large wizard, removed unused old selection CSS, reused existing date/draft/image/profile helpers, and limited eager portrait loading to the first two cards. No dependency or backend API change.
+- Vitest: 43/43 across booking, concept order profile and payment; final booking rerun 29/29 after the last handler cleanup. Added a regression covering stale selections while loading, on API failure and after availability changes.
+- TypeScript, targeted ESLint, Prettier and frontend production build passed. Existing Browserslist, React Router future-flag and vendor chunk warnings remain unrelated to this change. No new runtime console errors observed.
+- Updated existing browser-script selectors and the explicit list confirmation step; syntax checked. Those standalone fixture scripts were not executed; actual browser verification used the running app.
 
 final result: passed
 
@@ -387,3 +459,65 @@ No remaining actionable P0/P1/P2 findings.
 ## Follow-up polish
 
 P3 only: illustrative mock uses a wider content gutter and larger rail headings. Current implementation intentionally inherits the existing website container/type scale. No unresolved core interaction gaps.
+
+---
+
+# Photographer selection — option 1 interactive prototype, 2026-11-14
+
+## Visual target and scope
+
+- Source visual truth: `C:/Users/APC/.codex/generated_images/01a1d8eb-ab97-7061-9d7b-d4f84fbe61cd/exec-a7a2222a-7715-4d11-a750-319d9c33cceb.png`, the first displayed option selected by the user.
+- Preview: `http://localhost:4001/photographer-selection-mockup.html`. Separate mockup entry; existing concept booking screens and backend are unchanged by this prototype.
+- Primary state: Lê Minh Đức selected, 17/11/2026, 09:00–10:00. The mockup's incorrect 90.000đ is corrected to the catalog's 900.000đ. The misleading generated step count is replaced with the step name.
+- Original supplied logo and photographer portraits are reused. Public profile previews use the shared `PhotographerPortfolio` renderer and open as separate pages, never modals.
+
+## Evidence and normalization
+
+- Source image: 1487 × 1058 pixels. Browser CSS viewport: 1487 × 1058 at density 1; rendered full-page capture: 1481 × 1067 (browser scrollbar excluded, 9px extra page height).
+- Implementation: `.workflow-tools/photographer-option-1-desktop-v2.png`.
+- Combined full-view comparison: `.workflow-tools/photographer-option-1-comparison.png`, both views proportionally scaled to 750px wide, without stretching.
+- Mobile: `.workflow-tools/photographer-option-1-mobile-viewport.png` and `.workflow-tools/photographer-option-1-mobile-lower.png`, 390 × 844 viewport captures. Document width equals viewport width; no horizontal overflow.
+- An initial full-page mobile capture was a browser capture artifact and was excluded; viewport captures and DOM geometry verify the actual responsive layout.
+- Focused review: name/quote/specialty/profile-action hierarchy, selected border/check, session recap and bottom CTA were inspected within the full-size source and rendered captures. No additional crop was needed.
+
+## Comparison history and findings
+
+- Initial [P2]: heading/name scale and card height were smaller than the chosen reference. Increased title/name scale and portrait/card height, tightened recap spacing, then captured and compared `desktop-v2` against the source in the combined evidence above.
+- Initial runtime issue: the scroll effect returned a value in the embedded browser. Changed to a block-bodied effect and verified page navigation. Enabled the supported React Router future flags for this isolated prototype to remove its router warnings.
+- Fonts: existing Inter Customer font; near-black headings, medium-weight body and muted supporting text preserve the reference hierarchy. Desktop quotes/profile links remain readable, and mobile uses a smaller type scale.
+- Layout: two side-by-side portrait-led cards, session recap above and decision bar below match the selected structure. At mobile width cards stack and the decision bar remains visible while scrolling.
+- Colors/tokens: white surface, #222 ink, muted gray, #ff385c primary and selected state, restrained borders and rounded source portraits.
+- Asset fidelity: original source portraits and logo are used rather than generated reinterpretations; crop differences from the generated mock are accepted. No invented reviews, awards or experience counts.
+- Copy: matches the chosen direction; the corrected price and removal of an inaccurate step count are intentional product-data corrections.
+- No actionable P0/P1/P2 findings remain. P3: exact portrait crop and glyph widths vary slightly from the generated image because the implementation uses original assets and the installed project font.
+
+## Interaction and validation
+
+- Opened Nguyễn Gia Bảo's separate profile, selected him, returned to the list and verified both the selected border and decision-bar name changed.
+- Continued to the preparation screen and verified the chosen photographer carried through; Back retained the selection.
+- Changed time from 09:00 to 10:00 and verified the recap changed to 10:00–11:00.
+- Verified desktop and mobile, loaded images, focusable native links/buttons, and no new console errors after the fixes. No real booking, payment or email was submitted.
+- Targeted ESLint, TypeScript `tsc --noEmit`, and Prettier checks passed. Public ngrok preview returned HTTP 200 with the correct mockup entry.
+
+final result: passed
+
+# Admin concept management — option 1 implementation (2026-11-14)
+
+- Target: the first image from the latest revised concept-only set, `C:/Users/APC/.codex/generated_images/01a1d8eb-ab97-7061-9d7b-d4f84fbe61cd/exec-3ab3210e-6776-4738-b5ff-82795ce17325.png`.
+- Implementation: `http://localhost:4001/settings/concepts`, authenticated admin, light staff theme, real `studio_db`, Chân dung cá nhân selected, general-information tab. No package, photographer-profile or studio-hour management in this page.
+- Source and live capture are both 1487 × 1058 pixels at CSS viewport 1487 × 1058. The screenshot contains the application shell, without browser chrome. Full comparison: `.workflow-tools/concept-manage-comparison.png`; readable editor detail: `.workflow-tools/concept-manage-comparison-detail.png`; live: `.workflow-tools/concept-manage-desktop.png`.
+- Both combined comparisons were generated proportionally and opened together for visual review. The editor detail aligns source rectangle (709,235,758,520) with live rectangle (703,235,758,520). Typography, labels, image placement, controls and borders are readable in this comparison.
+- Initial P2 fixes: increased heading/editor title sizes, list thumbnail dimensions, top spacing, editor height, tab text and footer button height to match the approved composition. The final combined captures above show the post-fix result. Replaced a narrow-layout badge offset with a two-row grid to keep names/statuses separate.
+- Typography: retained the established staff system font and UI controls; 36px page title, 28px editor title, 16px list names, 14px tabs/inputs. Small glyph/weight differences from the generated mock are P3 only.
+- Layout: searchable thumbnail list left, concept editor right, four content tabs, cover beside summary, visibility below, Save/Discard at bottom. Existing sidebar order, navigation groups and current season remain true to the application rather than the illustrative mock.
+- Tokens: existing staff slate background, white cards, indigo accent/selection, semantic green status, neutral borders. Dark-mode colors inherit the established staff variables.
+- Assets/content: real catalog cover URLs and full stored concept content are preserved. The mock's alternate crop/copy and hidden Áo dài are illustrative; the application correctly shows its actual images, wording and saved active status. No new image assets or invented content were added.
+- States: Save and Discard are disabled when unchanged, intentionally differing from the static mock. Tabs retain unsaved content; save applies all sections; hidden concepts have no public-page link. An accessible confirmation dialog guards switching/resetting dirty content.
+- Responsive evidence: `.workflow-tools/concept-manage-mobile-top.png` and `concept-manage-mobile-fields.png` at 390 × 844; document width 384px, with no horizontal page overflow. The list is bounded, editor stacks, tab strip scrolls, and footer actions stay visible without covering the editable fields. `.workflow-tools/concept-manage-tablet.png` at 1024 × 900; document width 1018px. Images loaded successfully at both sizes.
+- Browser interactions: searched for Gia đình, switched concept, opened introduction/gallery/preparation fields, navigated tabs with ArrowRight, observed the dirty-switch confirmation, and saved through the live API. The save test appended only a trailing space, which the API normalized; the saved description matches its original exactly. No new concept, booking, payment or email was created.
+- Validation: 9 new editor tests and 29 concept-wizard regression tests passed (38 total). Targeted ESLint and production frontend build passed; build retains the existing Browserslist/circular-chunk/large-chunk warnings. Prettier checked on all changed frontend files.
+- No remaining actionable P0/P1/P2 visual findings. P3: the established staff font, exact image crop, sidebar contents and actual catalog copy differ slightly from generated mock details by design.
+
+final result: passed
+
+Handoff evidence: `.workflow-tools/concept-manage-handoff.jpg`. Browser console error log was empty. The public-page link opened the catalog with Chân dung cá nhân selected and its two real packages. Temporary viewport override was reset and the admin tab retained for inspection.

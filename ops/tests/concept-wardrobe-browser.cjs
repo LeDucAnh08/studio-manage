@@ -72,6 +72,7 @@ async function main() {
     await page.getByRole('link', { name: 'Xem hồ sơ Lê Minh Đức', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Chọn Lê Minh Đức', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: 'Chọn Lê Minh Đức', exact: true }).click();
+    await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
     await expect(
       page.getByRole('heading', { name: 'Thông tin buổi chụp', exact: true }),
     ).toBeVisible();
@@ -160,7 +161,7 @@ async function main() {
     await page.screenshot({ path: path.join(out, 'yearbook-mobile-menu.png') });
     await page.keyboard.press('Escape');
     await page.getByRole('link', { name: 'Quay lại chọn thợ', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Chọn thợ chụp', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Chọn người kể câu chuyện của bạn', exact: true })).toBeVisible();
     const photographerBack = await checkBack('Quay lại chọn thời gian', 'date');
     await photographerBack.click();
     await expect(

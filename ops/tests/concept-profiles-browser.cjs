@@ -55,7 +55,7 @@ async function main() {
     await page.locator('[data-date="2026-11-14"]').click();
     await page.getByRole('button', { name: '14:00–15:00', exact: true }).click();
     await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Chọn thợ chụp', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Chọn người kể câu chuyện của bạn', exact: true })).toBeVisible();
     const listUrl = page.url();
     const names = ['Lê Minh Đức', 'Nguyễn Gia Bảo', 'Phạm Minh Quân', 'Trần Anh Khoa'];
     const people = await db
@@ -136,13 +136,16 @@ async function main() {
     await expect(page.getByRole('button', { name: 'Chọn Lê Minh Đức', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: 'Chọn Lê Minh Đức', exact: true }).focus();
     await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/\/book\/photographer$/);
+    await expect(page.locator('.cps-card[data-selected="true"]')).toContainText('Lê Minh Đức');
+    await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
     await expect(page).toHaveURL(/\/book\/costumes$/);
     await expect(
-      page.getByRole('heading', { name: 'Thông tin trang phục', exact: true }),
+      page.getByRole('heading', { name: 'Thông tin buổi chụp', exact: true }),
     ).toBeVisible();
     await page.getByRole('link', { name: 'Quay lại chọn thợ', exact: true }).click();
     await expect(page).toHaveURL(listUrl);
-    await expect(page.locator('.photographer-selection-card[data-selected="true"]')).toContainText(
+    await expect(page.locator('.cps-card[data-selected="true"]')).toContainText(
       'Lê Minh Đức',
     );
     await expect(page.getByRole('button', { name: 'Tiếp tục', exact: true })).toBeEnabled();

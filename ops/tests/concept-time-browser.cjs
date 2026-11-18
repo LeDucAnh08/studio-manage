@@ -99,7 +99,7 @@ async function main() {
     await expect(page.getByRole('button', { name: 'Tiếp tục', exact: true })).toBeDisabled();
     await chooseReference();
     await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Chọn thợ chụp', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Chọn người kể câu chuyện của bạn', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: /^Xem hồ sơ / }).first()).toBeVisible();
     await page.getByRole('link', { name: 'Quay lại chọn thời gian', exact: true }).click();
     await expect(page).toHaveURL(dateUrl);
