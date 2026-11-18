@@ -1,3 +1,39 @@
+# Hồ sơ đơn chụp của thợ ảnh — 18/11/2026
+
+**final result: passed**
+
+Đối chiếu mẫu 1 với màn kỉ yếu đang hậu kỳ ở 1487 × 1058, cùng giao diện tối và dữ liệu minh họa. Bản triển khai dùng phông chữ, màu chủ đạo, logo và thanh bên sẵn có của Yume Studio. Ngày, mã đơn, mùa đang chọn và nhật ký hiển thị theo dữ liệu hệ thống.
+
+- Sau lần đối chiếu đầu, tăng cỡ chữ nhãn tiến độ và nội dung, tăng khoảng đệm trong hai khối tổng quan và làm rõ màu nền của **Việc cần làm**. Ảnh so sánh mới xác nhận hệ thống phân cấp của mẫu. Thanh bên giữ kích thước dùng chung và hồ sơ vẫn có nút tải lại.
+- Ở 390 px, **Việc cần làm** đứng trước lịch và ekip. Trang không tràn ngang. Các tab đọc được và có trạng thái được chọn.
+- Chrome với API giả lập đã kiểm tra lịch, ekip, hạn bàn giao, lịch sử, giữ tab sau tải lại, điều hướng đến album kỉ yếu rồi quay lại đúng bộ lọc và trang, và mở đúng tab album ở đơn concept.
+- Ảnh chụp và ảnh so sánh lưu trong thư mục bằng chứng của phiên hiện tại. Tệp kiểm tra lặp lại là `ops/tests/photographer-order-detail-browser.cjs`.
+
+# Admin rental order details — 2026-11-18
+
+**final result: passed**
+
+Compared the selected first mockup to the implemented view at 1487 × 1058 in `audit/admin-rental-order-2026-11-18/comparison.jpg`. The layout follows the current staff navigation, typography, color tokens, and logo. The application shows the record’s actual short ID, dates, events, and payment amounts.
+
+- Tightened both overview cards after the first visual check. The final desktop capture shows the same split between the rental calendar and clothing table on the left and the next action, payment rows, and activity on the right.
+- Verified all five tabs, focus on the target tab after the main action, tab selection after reload, and Back styling. At 390 px the clothing table scrolls inside its region without widening the page.
+- Browser captures used the real route with an isolated order fixture. Verified that an outstanding balance keeps the handover control disabled. Automated tests cover old deposit pricing, advance payments, changes, and the action to record a refund when an order cannot be delivered.
+
+Evidence: `audit/admin-rental-order-2026-11-18/` contains the approved reference, the desktop and mobile captures, and their comparison.
+
+# Admin yearbook order details — 2026-11-18
+
+**final result: passed**
+
+The selected first mockup and the rendered order overview were inspected side by side in `audit/admin-yearbook-order-2026-11-18/comparison.jpg`. Both show the confirmed state with the same illustrative order at 1487 × 1058. The implementation uses the staff theme, sidebar logo and typography. The condensed order ID comes from the actual record and the date follows the existing Vietnamese formatter. The visible reload control is carried over from the order workspace.
+
+- The horizontal milestones, tab row, and two-column overview match the selected hierarchy. The left side groups the shoot schedule, crew names, and class details. The right side gives the next action priority, followed by order payments and recent activity.
+- Fixed two issues found in the first pass. The student table now scrolls within its section on mobile, and the progress bar uses the existing indigo accent in Chrome. The refreshed screenshots show the dark theme, readable type, consistent spacing, and project logo.
+- Browser checks used the real route and isolated API fixtures. At desktop and 390 px mobile widths, tabs opened the expected sections. The student action focused its tab, reloading preserved the active tab, and Back stayed free of underlines. The check exercised no live mutations.
+- Frontend verification covered 41 tests for the order detail and order list, including approval, resource allocation, student editing, and contextual Back navigation. TypeScript, ESLint, and whitespace checks passed.
+
+Evidence: `audit/admin-yearbook-order-2026-11-18/` contains the approved reference, desktop and mobile captures, and the comparison.
+
 # Admin dashboard — 2026-11-14
 
 **final result: passed**
