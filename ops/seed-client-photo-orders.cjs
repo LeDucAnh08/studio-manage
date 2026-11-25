@@ -79,7 +79,7 @@ async function main() {
     const today = localDay(now);
     const [
       admin,
-      accountant,
+      financeAdmin,
       photographers,
       pack,
       depositCategory,
@@ -90,7 +90,7 @@ async function main() {
       seasons,
     ] = await Promise.all([
       models.User.findOne({ isActive: true, roles: { $in: [0, 1] } }).lean(),
-      models.User.findOne({ isActive: true, roles: 5 }).lean(),
+      models.User.findOne({ isActive: true, roles: { $in: [0, 1] } }).lean(),
       models.User.find({ isActive: true, roles: 3 }).sort({ username: 1 }).limit(2).lean(),
       models.Package.findOne({ name: 'Kỷ yếu Sân trường', pricePerMember: { $gt: 0 } }).lean(),
       models.Category.findOne({ name: 'Đặt cọc', type: 'income' }).lean(),
@@ -108,7 +108,7 @@ async function main() {
     ]);
     assert.ok(
       admin &&
-        accountant &&
+        financeAdmin &&
         pack &&
         depositCategory &&
         balanceCategory &&
@@ -313,7 +313,7 @@ async function main() {
           categoryId: (kind === 'deposit' ? depositCategory : balanceCategory)._id,
           description: `[DỮ LIỆU MẪU mango] ${kind === 'deposit' ? 'Đặt cọc' : 'Thanh toán còn lại'} ${className}`,
           date: receivedAt,
-          createdBy: accountant._id,
+          createdBy: financeAdmin._id,
           workflowBooking: bookingId,
           workflowPayment: paymentId,
         });
@@ -324,7 +324,7 @@ async function main() {
           method: 'bank_transfer',
           reference: `MAU-MANGO-${index + 1}-${kind}`,
           receivedAt,
-          recordedBy: accountant._id,
+          recordedBy: financeAdmin._id,
           transaction: transaction._id,
         });
       };

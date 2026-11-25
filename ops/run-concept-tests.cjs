@@ -77,11 +77,17 @@ async function main() {
     const files = process.argv.includes('--all')
       ? JSON.parse(fs.readFileSync(path.join(root, 'backend/package.json'), 'utf8'))
           .scripts.test.split(' ')
-          .slice(2)
+          .filter((argument) => /^tests\/.*\.cjs$/.test(argument))
       : process.argv.slice(2);
     const child = spawn(
       process.execPath,
-      ['--test', ...(files.length ? files : ['tests/concept-booking.cjs'])],
+      [
+        '--require',
+        './tests/environment.cjs',
+        '--test',
+        '--test-concurrency=1',
+        ...(files.length ? files : ['tests/concept-booking.cjs']),
+      ],
       {
         cwd: path.join(root, 'backend'),
         windowsHide: true,
@@ -99,14 +105,21 @@ async function main() {
     process.exitCode = code || 0;
   } finally {
     // Graceful shutdown avoids replaying a forcibly interrupted journal on the next run.
-    try { await client.db('admin').command({ shutdown: 1 }); } catch { /* shutdown closes the socket */ }
+    try {
+      await client.db('admin').command({ shutdown: 1 });
+    } catch {
+      /* shutdown closes the socket */
+    }
     await client.close();
     if (mongo.exitCode === null)
       await Promise.race([new Promise((r) => mongo.once('exit', r)), pause(5000)]);
     if (mongo.exitCode === null) mongo.kill();
     if (mongo.exitCode !== null) {
       const resolved = fs.realpathSync(runDirectory);
-      if (path.dirname(resolved) !== fs.realpathSync(home) || !path.basename(resolved).startsWith('run-'))
+      if (
+        path.dirname(resolved) !== fs.realpathSync(home) ||
+        !path.basename(resolved).startsWith('run-')
+      )
         throw new Error('Refusing cleanup outside this test run');
       fs.rmSync(resolved, { recursive: true, force: true });
     }

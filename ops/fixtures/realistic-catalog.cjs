@@ -10,16 +10,12 @@ async function seedCatalog({ models, ensure, at, day, now }) {
   const staff = {};
   for (const [key, username, name, role] of [
     ['admin', 'quanly.ha', 'Nguyễn Thanh Hà', 1],
-    ['saleAn', 'sale.ngocan', 'Trần Ngọc An', 2],
-    ['saleLinh', 'sale.tuonglinh', 'Lê Tường Linh', 2],
     ['photoMinh', 'nhiepanh.minhquan', 'Phạm Minh Quân', 3],
     ['photoHuy', 'nhiepanh.quochuy', 'Vũ Quốc Huy', 3],
     ['photoBao', 'nhiepanh.giabao', 'Nguyễn Gia Bảo', 3],
     ['photoNam', 'nhiepanh.hoainam', 'Đỗ Hoài Nam', 3],
     ['photoKhoa', 'nhiepanh.anhkhoa', 'Trần Anh Khoa', 3],
     ['photoDuc', 'nhiepanh.minhduc', 'Lê Minh Đức', 3],
-    ['accountant', 'ketoan.maianh', 'Bùi Mai Anh', 5],
-    ['collaborator', 'ctv.khanhvy', 'Hoàng Khánh Vy', 4],
   ]) {
     staff[key] = await ensure(
       'User',
@@ -288,7 +284,7 @@ async function seedCatalog({ models, ensure, at, day, now }) {
         name,
         type,
         isDefault: true,
-        createdBy: staff.accountant._id,
+        createdBy: staff.admin._id,
         createdAt: at('2026-05-03', '08:00'),
       },
       { name, type },

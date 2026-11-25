@@ -18,7 +18,7 @@ Hướng dẫn đầy đủ và tài khoản mẫu nằm trong [DEMO_LOCAL.md](D
 | Mục | Thông tin cần ghi khi trình diễn |
 |---|---|
 | Phiên bản | Root/backend/frontend SHA và ghi chú nếu có thay đổi local |
-| Vai trò | Admin, sale, kế toán, photographer và client mẫu; tạo client thứ hai/CTV nếu cần thử quyền |
+| Vai trò | Admin, photographer và client mẫu; tạo client thứ hai nếu cần thử quyền |
 | Dữ liệu | Gói chụp, mẫu–size–tình trạng kho, hồ sơ chụp/thuê và giao dịch mẫu |
 | Thời điểm khởi động | Thời gian, Mongo primary, API health và frontend truy cập được |
 | Dữ liệu sau restart | ID một hồ sơ trước và sau khởi động lại; không mất dữ liệu |
@@ -51,7 +51,7 @@ Output phải là tên mới; công cụ từ chối ghi đè bằng chứng. `.
 | PAYMENT_*/TRANSACTION_* | Đối chiếu receipt/payment với sổ theo ID, số tiền, thu/hoàn và ngày VN |
 | INVALID_*_COMPLETION / INVALID_*_CANCELLATION | Thực hiện đúng đồng ý/nghiệm thu/nhận trả trước chuyển trạng thái |
 | OVERDUE_RENTAL / MISSED_RENTAL_HANDOVER | Giải thích hoặc xử lý đơn mẫu; đơn đã giao quá hạn tiếp tục chiếm hàng |
-| OUTSTANDING_PAYMENT / OUTSTANDING_REFUND / RENTAL_AWAITING_SETTLEMENT | Xử lý bằng vai trò kế toán/khách hoặc giữ làm ví dụ công nợ hợp lệ |
+| OUTSTANDING_PAYMENT / OUTSTANDING_REFUND / RENTAL_AWAITING_SETTLEMENT | Xử lý bằng vai trò quản trị viên/khách hoặc giữ làm ví dụ công nợ hợp lệ |
 | UNCLASSIFIED_TRANSACTION | Thu chi cũ không liên kết được giữ riêng; không tự gán dịch vụ |
 | INVALID_DATA_SHAPE / INVALID_DOCUMENT_ID | Đối soát collection/ID/field; công cụ không sửa dữ liệu cho qua gate |
 
@@ -64,24 +64,24 @@ Dùng các tài khoản mẫu theo vai trò, hai client khác nhau và nguồn l
 | ID | Vai trò / thao tác | Kết quả cần đạt | Kết quả, hồ sơ, evidence / issue |
 |---|---|---|---|
 | P01 | Guest chọn gói, so sánh, nhập lớp/concept, đăng nhập/refresh/gửi lại | Giữ bản nháp/context; chỉ một yêu cầu được tạo | Chưa chạy thủ công |
-| P02 | Sale gửi quote; client đồng ý đúng phiên bản | Snapshot/điều khoản không đổi khi sửa catalog; quote mới cần đồng ý mới | Chưa chạy thủ công |
+| P02 | Admin gửi quote; client đồng ý đúng phiên bản | Snapshot/điều khoản không đổi khi sửa catalog; quote mới cần đồng ý mới | Chưa chạy thủ công |
 | P03 | Client nhập thành viên/size trước có Schedule, mở/đóng link | Không trả roster qua link công khai; đủ dữ liệu trước chốt | Chưa chạy thủ công |
 | P04 | Chốt khi thiếu cọc, thiếu size/tồn, trùng photographer | Từ chối; không có lịch hoặc lớp mồ côi | Chưa chạy thủ công |
 | P05 | Hai admin đồng thời xác nhận cùng đơn vị kho/nhân sự cuối | Một thành công; một conflict; không chiếm quá tồn | Chưa chạy thủ công |
 | P06 | Đổi lịch/giá; phương án mới không đủ kho | Giữ phương án cũ đến khi đồng ý và transaction thành công | Chưa chạy thủ công |
 | P07 | Hủy sau nhận cọc | Có đề xuất/đồng ý; giải phóng đúng nguồn lực; còn thu/hoàn vẫn truy vết được | Chưa chạy thủ công |
 | P08 | Chụp/hậu kỳ/bàn giao V1 → sửa → V2 → nghiệm thu | URL/version/lịch sử đúng; nghiệm thu chưa trả đủ chưa hoàn tất | Chưa chạy thủ công |
-| P09 | Kế toán ghi khoản tiền hai lần do retry hoặc stale version | Không nhân đôi tiền; stale/new payload conflict đúng | Chưa chạy thủ công |
+| P09 | Quản trị viên ghi khoản tiền hai lần do retry hoặc stale version | Không nhân đôi tiền; stale/new payload conflict đúng | Chưa chạy thủ công |
 | R01 | Guest chọn mẫu/size/quantity/kỳ, đăng nhập/refresh | Bản nháp giữ nguyên; catalog không tự chốt giá/cọc | Chưa chạy thủ công |
-| R02 | Sale gửi quote fee/deposit; client đồng ý; kế toán ghi cọc | Cọc bảo đảm tách phí; chỉ giữ hàng khi đủ cọc/khả dụng | Chưa chạy thủ công |
+| R02 | Admin gửi quote fee/deposit; client đồng ý; quản trị viên ghi cọc | Cọc bảo đảm tách phí; chỉ giữ hàng khi đủ cọc/khả dụng | Chưa chạy thủ công |
 | R03 | Admin giao thiếu tiền, sai kỳ hoặc hàng bị chụp/thuê khác giữ | Từ chối; giao hợp lệ giữ đúng từng mẫu–size–quantity | Chưa chạy thủ công |
 | R04 | Gia hạn xung đột / gia hạn tăng phí sau giao | Xung đột giữ kỳ cũ; gia hạn hợp lệ tạo phần còn thu, không làm sai receipt trước giao | Chưa chạy thủ công |
 | R05 | Nhận trả tốt/hỏng/mất; trả cùng ngày hoặc trả muộn | Tổng nhận trả đúng số giao; tình trạng kho cập nhật; quá hạn chưa trả không tự tăng tồn | Chưa chạy thủ công |
 | R06 | Phụ phí chưa đồng ý → đồng ý đối soát → hoàn cọc dư | Chưa đồng ý không tăng giá; tổng thu/hoàn cuối đúng thì mới hoàn tất | Chưa chạy thủ công |
 | R07 | Rút yêu cầu chưa đồng ý / hủy sau đồng ý trước giao | Rút không phí; hủy qua đề xuất/đồng ý, không cho hủy đơn đã giao | Chưa chạy thủ công |
-| B01 | Kế toán đối chiếu kỳ thu/chi, nghiệm thu/đối soát, đổi kỳ | Cọc không tính vào giá trị dịch vụ; công nợ hiện tại độc lập bộ lọc kỳ | Chưa chạy thủ công |
+| B01 | Quản trị viên đối chiếu kỳ thu/chi, nghiệm thu/đối soát, đổi kỳ | Cọc không tính vào giá trị dịch vụ; công nợ hiện tại độc lập bộ lọc kỳ | Chưa chạy thủ công |
 | B02 | Đối chiếu Schedule/rental cùng mẫu–size trong kỳ | Không đếm bản sao workflow; ngày nhận/trả gồm hai đầu; cảnh báo legacy/thiếu dữ liệu | Chưa chạy thủ công |
-| A01 | Client B / photographer không được phân công / CTV / sale | Không đọc hoặc ghi ngoài vai trò; báo cáo chỉ admin/kế toán | Chưa chạy thủ công |
+| A01 | Client B / photographer không được phân công / tài khoản mang vai trò đã ngừng sử dụng | Không đọc hoặc ghi ngoài vai trò; báo cáo chỉ admin | Chưa chạy thủ công |
 | A02 | 360px, desktop, bàn phím, lỗi mạng/retry | Không tràn trang; có label/focus/loading/error/retry; retry không nhân đôi nghiệp vụ | Chưa chạy thủ công |
 | A03 | Tắt flag workflow/rental rồi thử API lịch/kho/thu chi cũ | Giữ nguồn lực và lịch sử liên kết; không tạo/sửa lịch làm vượt tồn/trùng nhân sự | Chưa chạy thủ công |
 

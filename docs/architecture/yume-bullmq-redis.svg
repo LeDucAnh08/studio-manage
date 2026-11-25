@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1460" viewBox="0 0 1600 1460">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 10 6 L 1 11" fill="none" stroke="black" stroke-width="2"/></marker></defs>
+<rect width="1600" height="1460" fill="white"/>
+<text x="800" y="44.0" text-anchor="middle" font-family="Times New Roman" font-size="40" font-weight="bold" fill="black">KIẾN TRÚC HỆ THỐNG BULLMQ VÀ REDIS</text>
+<rect x="450" y="95" width="700" height="145" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="800.0" y="139.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">ỨNG DỤNG WEB REACT</text>
+<text x="800" y="191.0" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="normal" fill="black">Khách hàng · Quản trị viên · Thợ chụp ảnh</text>
+<path d="M 800 240 L 800 295" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="450" y="295" width="700" height="110" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="800" y="340.0" text-anchor="middle" font-family="Times New Roman" font-size="34" font-weight="bold" fill="black">Vite khi chạy local</text>
+<text x="800" y="383.0" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="normal" fill="black">Nginx khi triển khai trên máy chủ</text>
+<path d="M 800 405 L 800 475" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="914" y="449.0" text-anchor="middle" font-family="Times New Roman" font-size="30" font-weight="normal" fill="black">HTTP /api</text>
+<rect x="450" y="475" width="700" height="200" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="800.0" y="519.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">API NODE.JS VÀ EXPRESS</text>
+<text x="800" y="569.6" text-anchor="middle" font-family="Times New Roman" font-size="34" font-weight="normal" fill="black">Xác thực, đơn hàng, lịch, kho và thanh toán</text>
+<text x="800" y="610.4" text-anchor="middle" font-family="Times New Roman" font-size="34" font-weight="normal" fill="black">Mongoose và giao dịch MongoDB</text>
+<rect x="40" y="475" width="340" height="145" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="210.0" y="519.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">SePay</text>
+<text x="210" y="575.0" text-anchor="middle" font-family="Times New Roman" font-size="30" font-weight="normal" fill="black">Provider Test · HMAC</text>
+<path d="M 380 548 L 450 548" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1200" y="475" width="360" height="145" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="1380.0" y="519.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">KHO TỆP MÁY CHỦ</text>
+<text x="1380" y="575.0" text-anchor="middle" font-family="Times New Roman" font-size="30" font-weight="normal" fill="black">Ảnh danh mục và bàn giao</text>
+<path d="M 1150 548 L 1200 548" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1200" y="660" width="360" height="125" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="1380.0" y="704.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">GOOGLE DRIVE</text>
+<text x="1380" y="750.0" text-anchor="middle" font-family="Times New Roman" font-size="30" font-weight="normal" fill="black">Nguồn ảnh album qua API</text>
+<path d="M 1150 625 L 1180 625 L 1180 722 L 1200 722" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<path d="M 600 675 L 600 745 L 255 745 L 255 820" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="265" y="693.2" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="normal" fill="black">Ghi nghiệp vụ và outbox</text>
+<text x="265" y="726.8000000000001" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="normal" fill="black">trong cùng transaction</text>
+<rect x="40" y="820" width="430" height="240" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="255.0" y="864.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">MONGODB</text>
+<text x="255" y="910.8" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">studio_db · Replica set</text>
+<text x="255" y="948.0" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">Dữ liệu nghiệp vụ</text>
+<text x="255" y="985.1999999999999" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">EmailOutbox và trạng thái tác vụ</text>
+<rect x="580" y="820" width="440" height="195" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="800.0" y="864.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">DISPATCHER</text>
+<text x="800" y="921.8" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="normal" fill="black">Đọc yêu cầu sau commit</text>
+<text x="800" y="960.1999999999999" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="normal" fill="black">Đối chiếu và khôi phục job</text>
+<path d="M 470 910 L 580 910" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="525" y="870.0" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="normal" fill="black">Đọc việc</text>
+<rect x="1140" y="820" width="420" height="240" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="1350.0" y="864.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">HÀNG ĐỢI BULLMQ</text>
+<text x="1350" y="916.8" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">Trạng thái lưu trên Redis</text>
+<text x="1350" y="954.0" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">email · maintenance</text>
+<text x="1350" y="991.1999999999999" text-anchor="middle" font-family="Times New Roman" font-size="31" font-weight="normal" fill="black">album-sync</text>
+<path d="M 1020 910 L 1140 910" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="1080" y="870.0" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="normal" fill="black">Đẩy job</text>
+<rect x="580" y="1190" width="980" height="205" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="1070.0" y="1234.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">WORKER NODE.JS VÀ BULLMQ</text>
+<text x="1070" y="1289.0" text-anchor="middle" font-family="Times New Roman" font-size="35" font-weight="normal" fill="black">Gửi email · Quét đơn hết hạn</text>
+<text x="1070" y="1331.0" text-anchor="middle" font-family="Times New Roman" font-size="35" font-weight="normal" fill="black">Đồng bộ album Google Drive</text>
+<path d="M 1350 1060 L 1350 1190" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="1450" y="1130.0" text-anchor="middle" font-family="Times New Roman" font-size="29" font-weight="normal" fill="black">Nhận job</text>
+<path d="M 800 1190 L 800 1110 L 255 1110 L 255 1060" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="595" y="1087.0" text-anchor="middle" font-family="Times New Roman" font-size="29" font-weight="normal" fill="black">Đọc dữ liệu, kiểm tra và ghi kết quả</text>
+<rect x="40" y="1190" width="430" height="145" fill="white" stroke="black" stroke-width="2.4"/>
+<text x="255.0" y="1234.0" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">RESEND</text>
+<text x="255" y="1290.0" text-anchor="middle" font-family="Times New Roman" font-size="30" font-weight="normal" fill="black">Gửi email có khóa chống trùng</text>
+<path d="M 580 1260 L 470 1260" fill="none" stroke="black" stroke-width="2.3" marker-end="url(#arrow)"/>
+<path d="M 1560 1338 L 1585 1338 L 1585 722 L 1560 722" fill="none" stroke="black" stroke-width="2.3" stroke-dasharray="11 8" marker-end="url(#arrow)"/>
+<text x="800" y="1440.0" text-anchor="middle" font-family="Times New Roman" font-size="29" font-weight="normal" fill="black">Nét đứt: đồng bộ Drive qua worker. Redis không lưu tiền hoặc tồn kho.</text></svg>

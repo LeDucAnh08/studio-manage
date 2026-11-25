@@ -76,13 +76,12 @@ Các tài khoản sau chỉ thuộc database demo:
 | ------------ | ----------------- | ---------------- |
 | Superadmin   | superadmin        | Admin@1234       |
 | Khách hàng   | demo.client       | Client@1234      |
-| Kế toán      | demo.accountant   | Staff@1234       |
 | Sale         | demo.sale         | Staff@1234       |
 | Photographer | demo.photographer | Staff@1234       |
 
 Seed chỉ bổ sung dữ liệu mẫu còn thiếu, không reset database hoặc ghi đè hồ sơ đang dùng. Các hồ sơ có nhãn demo và dữ liệu giả để thuyết trình; chúng không đại diện giao dịch studio thật. Kịch bản mẫu có hồ sơ chụp hoàn tất, đơn thuê hoàn tất có hoàn cọc và lịch chụp sắp tới. Sau khi kịch bản đã tạo xong, khởi động lại giữ nguyên các dữ liệu này và những thao tác người dùng thực hiện tiếp.
 
-Đăng nhập admin để xem Dashboard, Yêu cầu chụp, Đơn thuê, Lịch chụp, Kho và Quản lý → Báo cáo dịch vụ và kho. Đăng nhập client để theo dõi hồ sơ chụp/thuê và các khoản tiền. Dùng kế toán để xem thu chi, báo cáo và đối soát tiền; dùng photographer để kiểm tra công việc được phân công. Bộ kịch bản nghiệm thu chi tiết nằm trong [STUDIO_ACCEPTANCE.md](STUDIO_ACCEPTANCE.md).
+Đăng nhập admin để xem Dashboard, Yêu cầu chụp, Đơn thuê, Lịch chụp, Kho và Quản lý → Báo cáo dịch vụ và kho. Đăng nhập client để theo dõi hồ sơ chụp/thuê và các khoản tiền. Dùng admin để xem thu chi, báo cáo và đối soát tiền; dùng photographer để kiểm tra công việc được phân công. Bộ kịch bản nghiệm thu chi tiết nằm trong [STUDIO_ACCEPTANCE.md](STUDIO_ACCEPTANCE.md).
 
 ## Dữ liệu giả lập phong phú
 

@@ -1,5 +1,7 @@
 # Studio Management - Monorepo - YUME
 
+Vai trò hiện tại: Superadmin (0), Admin (1), Thợ chụp ảnh (3), Khách hàng (6). Sale (2), Cộng tác viên sale (4) và Kế toán (5) đã ngừng sử dụng; quản trị viên xử lý nghiệp vụ tài chính. Xem [ADR-036](docs/decisions/036-retire-accountant-role.md).
+
 ## MongoDB Windows đang sử dụng
 
 Database hiện tại chạy trực tiếp trên Windows tại `127.0.0.1:27020`, database `studio_db`, có xác thực và replica set. Dữ liệu lưu ngoài Docker/source và MongoDB tự chạy khi đăng nhập Windows. Xem [MONGODB_WINDOWS.md](MONGODB_WINDOWS.md) để kết nối, sao lưu và quản lý.
@@ -24,6 +26,12 @@ node ops/demo.cjs start
 
 Mở http://localhost:4001. Admin demo: `superadmin` / `Admin@1234`. Dừng bằng `node ops/demo.cjs stop`; dữ liệu được giữ khi chạy lại. Hướng dẫn tài khoản, dữ liệu mẫu và nghiệm thu: [DEMO_LOCAL.md](DEMO_LOCAL.md).
 
+## Tác vụ nền BullMQ và Redis
+
+Môi trường local đã bật BullMQ cho email, quét đơn hết hạn và đồng bộ album Drive. Redis chạy riêng trên WSL cổng 6385; MongoDB Windows và cấu hình Resend/SePay hiện tại được giữ nguyên. Khi mở lại máy, khởi động ứng dụng như trước rồi chạy `yarn jobs:redis`, `yarn jobs:start` và `yarn jobs:status`. Sau khi sửa backend, build lại trước khi khởi động lại worker.
+
+Xem [hướng dẫn vận hành, theo dõi và rollback](docs/background-jobs.md), [ADR-037](docs/decisions/037-background-jobs-bullmq.md). Compose Redis là phương án bổ sung; chưa chạy Docker trên máy này.
+
 ## Album chọn ảnh Google Drive
 
 Trong hồ sơ đơn, chọn **Bàn giao ảnh → Xem ảnh bàn giao**. Tab **Ảnh chọn** dùng để kết nối Drive, mở chọn ảnh và gửi link riêng; tab **Ảnh đã chỉnh** dùng để chuẩn bị/giao ảnh từ Drive hoặc tải ảnh trực tiếp, xem phản hồi và nghiệm thu. Chủ đơn chọn ảnh ngay trong tài khoản, dùng chung kết quả với link album không cần đăng nhập. Đường dẫn quản lý album cũ tự chuyển về màn bàn giao chung.
@@ -36,7 +44,7 @@ Khách chưa đăng nhập xem giới thiệu tại `/portfolio` và các trang 
 
 Sau đăng nhập, mục Concept được ẩn và đường dẫn `/concepts` chuyển về Đơn của tôi. Màn đặt dịch vụ dùng navbar chung, không có cụm liên kết phụ Dịch vụ/Concept/Bảng giá. `/account/orders` là màn mặc định, có tab `bookings` (chụp ảnh) và `rentals` (thuê trang phục). Tab thuê chỉ hiện khi tính năng thuê bật. Hai URL danh sách cũ `/account/bookings` và `/account/rentals` chuyển sang tab tương ứng; URL tạo đơn và chi tiết đơn được giữ nguyên. Portfolio không còn là màn thao tác của khách đã đăng nhập. Các nút tư vấn được tạm ẩn trong khi chờ chatbot.
 
-Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra, đồng ý giá và điều kiện gói. Với đơn gói mới, admin phân công đủ ekip và duyệt giữ tạm đúng lịch khách chọn, không lập báo giá riêng. Mặc định cọc 30%, giữ 24 giờ từ lúc duyệt (tối đa đến giờ chụp); chỉnh được tại **Cài đặt → Gói chụp**. Khi admin/kế toán ghi nhận đủ cọc trong hạn, hệ thống tự tạo lịch chính thức đúng một lần. Hết hạn chưa đủ cọc, đơn tự hủy và trả ekip; khoản đã nhận vẫn được giữ để đối soát hoàn. Danh sách thành viên nhập sau chốt lịch, trước buổi chụp. Trang phục đã gồm trong giá; admin dùng **Chuẩn bị trang phục cho buổi chụp** sau chốt để phân bổ mẫu, size, số lượng và ngày nhận/trả, có kiểm tra tồn kho. Hồ sơ tư vấn cũ giữ nguyên quy trình và lịch sử. Xem [ADR-008 và kiểm chứng](docs/decisions/008-package-booking-checkout.md), [ADR-002](docs/decisions/002-package-included-costumes.md).
+Đặt dịch vụ gồm ba bước: chọn dịch vụ → lớp và thời gian → kiểm tra, đồng ý giá và điều kiện gói. Với đơn gói mới, admin phân công đủ ekip và duyệt giữ tạm đúng lịch khách chọn, không lập báo giá riêng. Mặc định cọc 30%, giữ 24 giờ từ lúc duyệt (tối đa đến giờ chụp); chỉnh được tại **Cài đặt → Gói chụp**. Khi admin ghi nhận đủ cọc trong hạn, hệ thống tự tạo lịch chính thức đúng một lần. Hết hạn chưa đủ cọc, đơn tự hủy và trả ekip; khoản đã nhận vẫn được giữ để đối soát hoàn. Danh sách thành viên nhập sau chốt lịch, trước buổi chụp. Trang phục đã gồm trong giá; admin dùng **Chuẩn bị trang phục cho buổi chụp** sau chốt để phân bổ mẫu, size, số lượng và ngày nhận/trả, có kiểm tra tồn kho. Hồ sơ tư vấn cũ giữ nguyên quy trình và lịch sử. Xem [ADR-008 và kiểm chứng](docs/decisions/008-package-booking-checkout.md), [ADR-002](docs/decisions/002-package-included-costumes.md).
 
 ## Bảng quản trị
 

@@ -81,7 +81,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
   for (const [name, role] of Object.entries({
     admin: 0,
     sale: 2,
-    accountant: 5,
+    financeAdmin: 1,
     client: 6,
     stranger: 6,
   })) {
@@ -198,7 +198,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
   const pay = (id, amount = 100000, key = randomUUID()) =>
     act(
       id,
-      users.accountant,
+      users.financeAdmin,
       'payment.record',
       {
         kind: 'deposit',
@@ -319,7 +319,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       };
       const finalPayment = await call(
         `/rentals/${prepared._id}/actions`,
-        users.accountant,
+        users.financeAdmin,
         command,
         topUpKey,
       );
@@ -336,7 +336,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       const heldVersion = confirmed.version;
       const replay = await call(
         `/rentals/${prepared._id}/actions`,
-        users.accountant,
+        users.financeAdmin,
         command,
         topUpKey,
       );
@@ -438,7 +438,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       }));
       const responses = await Promise.all(
         pending.map((order, index) =>
-          call(`/rentals/${order._id}/actions`, users.accountant, commands[index], keys[index]),
+          call(`/rentals/${order._id}/actions`, users.financeAdmin, commands[index], keys[index]),
         ),
       );
       assert.deepEqual(
@@ -460,7 +460,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
           (
             await call(
               `/rentals/${pending[index]._id}/actions`,
-              users.accountant,
+              users.financeAdmin,
               commands[index],
               keys[index],
             )
@@ -483,7 +483,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       const retried = await act(loser._id, users.admin, 'resources.confirm');
       assert.equal(retried.status, 'confirmed');
       assert.equal(retried.reservationIssue, undefined);
-      await act(winner._id, users.accountant, 'payment.record', {
+      await act(winner._id, users.financeAdmin, 'payment.record', {
         kind: 'refund',
         amount: 100000,
         method: 'cash',
@@ -507,7 +507,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       assert.equal(conflict.status, 'ready_to_confirm');
       assert.ok(conflict.reservationIssue);
       await cancel(second._id);
-      await act(second._id, users.accountant, 'payment.record', {
+      await act(second._id, users.financeAdmin, 'payment.record', {
         kind: 'refund',
         amount: 100000,
         method: 'cash',
@@ -526,7 +526,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       const costume = await item();
       const rental = await prepare(costume, { receive: day(30), returned: day(31) });
       const [receipt, photograph] = await Promise.all([
-        call(`/rentals/${rental._id}/actions`, users.accountant, {
+        call(`/rentals/${rental._id}/actions`, users.financeAdmin, {
           action: 'payment.record',
           expectedVersion: rental.version,
           kind: 'deposit',

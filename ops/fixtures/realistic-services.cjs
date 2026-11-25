@@ -15,7 +15,7 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
   ])
     if (!models[name]) throw new Error(`Missing demo model: ${name}`);
   const admin = catalog.staffByKey.admin;
-  const accountant = catalog.staffByKey.accountant;
+  const financeAdmin = catalog.staffByKey.admin;
   const categories = catalog.categoriesByKey;
   const past = (value, latestOffset = -1) =>
     value < day(latestOffset) ? value : day(latestOffset);
@@ -73,7 +73,7 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
       categoryId: categories[categoryKey]._id,
       description: label,
       date,
-      createdBy: accountant._id,
+      createdBy: financeAdmin._id,
       accountantRefunded: kind === 'refund',
       ...(service === 'photo'
         ? { workflowBooking: owner, workflowPayment: paymentId }
@@ -91,8 +91,8 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
       transaction: transaction._id,
     };
     return service === 'photo'
-      ? { ...common, receivedAt: date, recordedBy: accountant._id }
-      : { ...common, at: date, actor: accountant._id };
+      ? { ...common, receivedAt: date, recordedBy: financeAdmin._id }
+      : { ...common, at: date, actor: financeAdmin._id };
   };
 
   for (const [index, group] of groups.entries()) {
@@ -376,7 +376,7 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
         _id: id('WorkflowEvent', `${key}:completed`),
         action: 'workflow.completed',
         message: 'Lớp đã nghiệm thu album và hoàn tất thanh toán.',
-        actor: accountant._id,
+        actor: financeAdmin._id,
         at: at(shift(deliveryDay, 2), '10:05'),
       });
     const workflow = await ensure(
@@ -596,7 +596,7 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
       events.push({
         _id: id('RentalEvent', `${stableKey}:completed`),
         action: 'completed',
-        actor: accountant._id,
+        actor: financeAdmin._id,
         at: at(returnDay, '17:00'),
         message: 'Khách đã đồng ý quyết toán, tiền cọc được hoàn vào tài khoản chuyển ban đầu.',
       });

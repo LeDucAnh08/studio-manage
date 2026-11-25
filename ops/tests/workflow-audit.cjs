@@ -77,7 +77,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
     admin: [0],
     client: [6],
     stranger: [6],
-    accountant: [5],
+    financeAdmin: [1],
     photographer: [3],
     otherPhotographer: [3],
   })) {
@@ -221,7 +221,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
       0,
       'Member collection must precede Schedule',
     );
-    const paid = await action(booking, users.accountant, {
+    const paid = await action(booking, users.financeAdmin, {
       action: 'payment.record',
       kind: 'deposit',
       amount: 200000,
@@ -265,9 +265,9 @@ test('independent workflow audit against isolated replica set', async (t) => {
     await action(booking, users.client, { action: 'quote.propose', quote: {} }, 403);
     assert.equal((await call(`/bookings/${booking._id}/workflow`, users.stranger)).status, 404);
     assert.equal(
-      (await call('/bookings/workflow', users.accountant)).status,
+      (await call('/bookings/workflow', users.financeAdmin)).status,
       200,
-      'Workflow discovery must support the accountant role',
+      'Workflow discovery must support the financeAdmin role',
     );
     const photographerList = await call('/bookings/workflow', users.otherPhotographer);
     assert.equal(photographerList.status, 200);
@@ -347,7 +347,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
       };
     const first = await call(
       `/workflow/${fixture.booking._id}`,
-      users.accountant,
+      users.financeAdmin,
       payload,
       'POST',
       key,
@@ -355,7 +355,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
     assert.equal(first.status, 200, JSON.stringify(first.body));
     const retry = await call(
       `/workflow/${fixture.booking._id}`,
-      users.accountant,
+      users.financeAdmin,
       payload,
       'POST',
       key,
@@ -379,12 +379,12 @@ test('independent workflow audit against isolated replica set', async (t) => {
     assert.equal(stale.status, 409);
     const transaction = await models.Transaction.findOne({ workflowBooking: fixture.booking._id });
     assert.equal(
-      (await call(`/transactions/${transaction._id}`, users.accountant, { amount: 1 }, 'PUT'))
+      (await call(`/transactions/${transaction._id}`, users.financeAdmin, { amount: 1 }, 'PUT'))
         .status,
       409,
     );
     assert.equal(
-      (await call(`/transactions/${transaction._id}`, users.accountant, undefined, 'DELETE'))
+      (await call(`/transactions/${transaction._id}`, users.financeAdmin, undefined, 'DELETE'))
         .status,
       409,
     );
@@ -423,7 +423,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
         delivered.workflow.progress.deliveryUrl,
         'Assigned photographers must see their own current delivery',
       );
-      const accountingView = await read(fixture.booking, users.accountant);
+      const accountingView = await read(fixture.booking, users.financeAdmin);
       assert.deepEqual(
         accountingView.workflow.members,
         [],
@@ -444,7 +444,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
         'accepted',
         'Receiving photos is independent of financial settlement',
       );
-      const completed = await action(fixture.booking, users.accountant, {
+      const completed = await action(fixture.booking, users.financeAdmin, {
         action: 'payment.record',
         kind: 'balance',
         amount: 800000,
@@ -493,7 +493,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
       assert.equal(accepted.workflow.payments.refundDue, 150000);
       await action(
         fixture.booking,
-        users.accountant,
+        users.financeAdmin,
         { action: 'payment.record', kind: 'refund', amount: 150001, method: 'bank_transfer' },
         409,
       );
@@ -507,12 +507,12 @@ test('independent workflow audit against isolated replica set', async (t) => {
           method: 'bank_transfer',
         };
       assert.equal(
-        (await call(`/workflow/${fixture.booking._id}`, users.accountant, payload, 'POST', key))
+        (await call(`/workflow/${fixture.booking._id}`, users.financeAdmin, payload, 'POST', key))
           .status,
         200,
       );
       assert.equal(
-        (await call(`/workflow/${fixture.booking._id}`, users.accountant, payload, 'POST', key))
+        (await call(`/workflow/${fixture.booking._id}`, users.financeAdmin, payload, 'POST', key))
           .status,
         200,
       );
@@ -648,11 +648,11 @@ test('independent workflow audit against isolated replica set', async (t) => {
       assert.equal(accepted.workflow.payments.refundDue, 100000);
       await action(
         fixture.booking,
-        users.accountant,
+        users.financeAdmin,
         { action: 'payment.record', kind: 'refund', amount: 100001, method: 'cash' },
         409,
       );
-      const settled = await action(fixture.booking, users.accountant, {
+      const settled = await action(fixture.booking, users.financeAdmin, {
         action: 'payment.record',
         kind: 'refund',
         amount: 100000,

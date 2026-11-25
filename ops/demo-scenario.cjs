@@ -75,9 +75,8 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
     }
     const admin = 'superadmin';
     const customer = 'demo.client';
-    const accountant = 'demo.accountant';
+    const financeAdmin = 'superadmin';
     const photographer = 'demo.photographer';
-    const sale = 'demo.sale';
     const day = (offset) =>
       new Date(Date.now() + offset * 86400000 + 7 * 3600000).toISOString().slice(0, 10);
     await metadata.updateOne(
@@ -211,7 +210,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
           })),
         },
       }));
-      await photoAction(`${label}.deposit`, bookingId, accountant, {
+      await photoAction(`${label}.deposit`, bookingId, financeAdmin, {
         action: 'payment.record',
         kind: 'deposit',
         amount: deposit,
@@ -252,7 +251,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
       action: 'delivery.accept',
       deliveryVersion: 1,
     });
-    await photoAction('photo.complete.balance', completedPhoto, accountant, {
+    await photoAction('photo.complete.balance', completedPhoto, financeAdmin, {
       action: 'payment.record',
       kind: 'balance',
       amount: 500000,
@@ -278,7 +277,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
         note: 'Đơn mẫu nhận và trả trong ngày để trình diễn đối soát hoàn cọc.',
       },
     }));
-    await rentalAction('rental.complete.quote', completedRental, sale, {
+    await rentalAction('rental.complete.quote', completedRental, admin, {
       action: 'quote.propose',
       lines: lines.map((line) => ({ ...line, unitPrice: 150000 })),
       receiveDate: plan.today,
@@ -290,7 +289,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
       action: 'quote.accept',
       quoteVersion: 1,
     });
-    await rentalAction('rental.complete.deposit', completedRental, accountant, {
+    await rentalAction('rental.complete.deposit', completedRental, financeAdmin, {
       action: 'payment.record',
       kind: 'deposit',
       amount: 600000,
@@ -299,7 +298,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
     await rentalAction('rental.complete.confirm', completedRental, admin, {
       action: 'resources.confirm',
     });
-    await rentalAction('rental.complete.balance', completedRental, accountant, {
+    await rentalAction('rental.complete.balance', completedRental, financeAdmin, {
       action: 'payment.record',
       kind: 'balance',
       amount: 300000,
@@ -319,7 +318,7 @@ async function runDemoScenario(baseUrl = 'http://127.0.0.1:5002', uri = DEMO_URI
       action: 'settlement.accept',
       settlementVersion: 1,
     });
-    await rentalAction('rental.complete.refund', completedRental, accountant, {
+    await rentalAction('rental.complete.refund', completedRental, financeAdmin, {
       action: 'payment.record',
       kind: 'refund',
       amount: 600000,

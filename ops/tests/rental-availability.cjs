@@ -35,18 +35,11 @@ const context = () => ({
     roles: [6],
     isActive: true,
   },
-  sale: {
+  coordinator: {
     _id: new ObjectId(),
-    username: 'demo.sale',
+    username: 'superadmin',
     name: 'Tư vấn',
-    roles: [2],
-    isActive: true,
-  },
-  accountant: {
-    _id: new ObjectId(),
-    username: 'demo.accountant',
-    name: 'Kế toán',
-    roles: [5],
+    roles: [0],
     isActive: true,
   },
   depositCategory: { _id: new ObjectId(), name: 'Cọc thuê', type: 'income' },
@@ -126,7 +119,7 @@ test('new availability fixtures preserve daily pricing, inclusive periods and li
       assert.equal(String(transaction.rentalOrder), String(order._id));
       assert.equal(String(transaction.rentalPayment), String(payment._id));
       assert.equal(String(transaction.categoryId), String(refs.depositCategory._id));
-      assert.equal(String(transaction.createdBy), String(refs.accountant._id));
+      assert.equal(String(transaction.createdBy), String(refs.coordinator._id));
       assert.equal(transaction.type, 'income');
       assert.equal(transaction.amount, payment.amount);
       assert.equal(+transaction.date, +payment.at);
@@ -207,7 +200,7 @@ test('availability seed is create-only, atomic and safe to replay in its isolate
     await dropTestDatabase();
     const refs = context();
     await db.collection('projectmetadata').insertOne({ _id: 'seed:v1', project: PROJECT });
-    await db.collection('users').insertMany([refs.client, refs.sale, refs.accountant]);
+    await db.collection('users').insertMany([refs.client, refs.coordinator]);
     await db.collection('categories').insertOne(refs.depositCategory);
     await db
       .collection('costumetypes')

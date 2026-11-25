@@ -2,7 +2,7 @@
 
 ## Phạm vi đã được cho phép trong kế hoạch
 
-Bổ sung trang đọc `/manage/reports` cho admin (0/1), kế toán (5); API `/api/reports/finance` và `/api/reports/inventory`. Không phụ thuộc cờ bật hành trình tạo đơn: báo cáo vẫn đọc hồ sơ đã tồn tại khi tắt cờ. Không sửa giao dịch hay dữ liệu nghiệp vụ.
+Bổ sung trang đọc `/manage/reports` cho admin (0/1); API `/api/reports/finance` và `/api/reports/inventory`. Không phụ thuộc cờ bật hành trình tạo đơn: báo cáo vẫn đọc hồ sơ đã tồn tại khi tắt cờ. Không sửa giao dịch hay dữ liệu nghiệp vụ.
 
 ## Định nghĩa
 

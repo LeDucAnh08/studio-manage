@@ -77,7 +77,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
     sale: 2,
     client: 6,
     stranger: 6,
-    accountant: 5,
+    financeAdmin: 1,
     collaborator: 4,
     photographer: 3,
   }))
@@ -189,7 +189,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       terms: ['Phí cho cả kỳ thuê; cọc đối soát sau nhận trả.'],
     });
     await act(id, users.client, 'quote.accept', { quoteVersion: 1 });
-    await act(id, users.accountant, 'payment.record', {
+    await act(id, users.financeAdmin, 'payment.record', {
       kind: 'deposit',
       amount: 200000,
       method: 'cash',
@@ -395,8 +395,8 @@ test('rental workflow uses the same real resource lock as photography', async (t
       await act(id, users.admin, 'resources.confirm');
       const key = randomUUID();
       const command = { kind: 'balance', amount: 100000, method: 'cash' };
-      await act(id, users.accountant, 'payment.record', command, 200, key);
-      await act(id, users.accountant, 'payment.record', command, 200, key);
+      await act(id, users.financeAdmin, 'payment.record', command, 200, key);
+      await act(id, users.financeAdmin, 'payment.record', command, 200, key);
       assert.equal(await models.Transaction.countDocuments({ rentalOrder: id, type: 'income' }), 2);
       const tx = await models.Transaction.findOne({ rentalOrder: id });
       assert.equal(
@@ -429,7 +429,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       });
       await act(
         id,
-        users.accountant,
+        users.financeAdmin,
         'payment.record',
         { kind: 'refund', amount: 150000, method: 'cash' },
         409,
@@ -437,7 +437,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       await act(id, users.client, 'settlement.accept', { settlementVersion: 1 });
       await act(
         id,
-        users.accountant,
+        users.financeAdmin,
         'payment.record',
         { kind: 'refund', amount: 150001, method: 'cash' },
         409,
@@ -445,7 +445,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       const refundKey = randomUUID();
       await act(
         id,
-        users.accountant,
+        users.financeAdmin,
         'payment.record',
         { kind: 'refund', amount: 150000, method: 'cash' },
         200,
@@ -453,7 +453,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       );
       await act(
         id,
-        users.accountant,
+        users.financeAdmin,
         'payment.record',
         { kind: 'refund', amount: 150000, method: 'cash' },
         200,
@@ -498,7 +498,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
         terms: ['Giữ phí đã thỏa thuận'],
       });
       await act(first, users.client, 'change.accept', { changeId: (await read(first)).change._id });
-      await act(first, users.accountant, 'payment.record', {
+      await act(first, users.financeAdmin, 'payment.record', {
         kind: 'refund',
         amount: 190000,
         method: 'cash',
@@ -512,7 +512,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       const costume = await item(),
         id = await prepare(costume);
       await act(id, users.admin, 'resources.confirm');
-      await act(id, users.accountant, 'payment.record', {
+      await act(id, users.financeAdmin, 'payment.record', {
         kind: 'balance',
         amount: 100000,
         method: 'cash',
@@ -554,7 +554,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       await act(id, users.admin, 'resources.confirm', {}, 409);
       await act(id, users.sale, 'change.propose', { finalFee: 0, terms: ['Hoàn toàn bộ cọc'] });
       await act(id, users.client, 'change.accept', { changeId: (await read(id)).change._id });
-      await act(id, users.accountant, 'payment.record', {
+      await act(id, users.financeAdmin, 'payment.record', {
         kind: 'refund',
         amount: 200000,
         method: 'cash',

@@ -1,0 +1,21 @@
+# Local queue only. MongoDB stays on Windows; this file does not start a database.
+services:
+  redis:
+    image: redis:7.4-alpine@sha256:7f7d30b7fdd09467bac58198a1f166dd69789d348d4fe859cccb20e0cf287fbe
+    command: ['redis-server', '/usr/local/etc/redis/redis.conf']
+    ports: ['127.0.0.1:6385:6379']
+    volumes:
+      - redis_queue_data:/data
+      - ./.workflow-tools/background-jobs/docker-redis.conf:/usr/local/etc/redis/redis.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "REDISCLI_AUTH=$$(sed -n 's/^requirepass //p' /usr/local/etc/redis/redis.conf) redis-cli ping | grep -qx PONG",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+volumes:
+  redis_queue_data:

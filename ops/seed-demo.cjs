@@ -13,8 +13,6 @@ const PROJECT = 'studio-manage-graduation-demo';
 const ACCOUNTS = [
   { username: 'superadmin', password: 'Admin@1234', roles: [0], name: 'Quản trị đồ án' },
   { username: 'demo.client', password: 'Client@1234', roles: [6], name: 'Khách hàng demo' },
-  { username: 'demo.accountant', password: 'Staff@1234', roles: [5], name: 'Kế toán demo' },
-  { username: 'demo.sale', password: 'Staff@1234', roles: [2], name: 'Sale demo' },
   { username: 'demo.photographer', password: 'Staff@1234', roles: [3], name: 'Thợ chụp demo' },
 ];
 

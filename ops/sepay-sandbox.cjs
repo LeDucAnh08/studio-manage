@@ -262,7 +262,7 @@ async function seed() {
   const source = mongoose.connection.client.db('studio_db');
   const users = await source
     .collection('users')
-    .find({ isActive: true, $or: [{ username: 'mango' }, { roles: { $in: [0, 1, 3, 5] } }] })
+    .find({ isActive: true, $or: [{ username: 'mango' }, { roles: { $in: [0, 1, 3] } }] })
     .project({ _id: 1, username: 1, name: 1, roles: 1, password: 1, isActive: 1 })
     .toArray();
   const client = users.find((user) => user.username === 'mango');

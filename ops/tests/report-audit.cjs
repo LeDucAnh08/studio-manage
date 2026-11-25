@@ -37,13 +37,19 @@ test('service and inventory reports reconcile read-only snapshots on real MongoD
   await new Promise((resolve) => server.once('listening', resolve));
   const User = source('models/User').default;
   const users = [];
-  for (const role of [0, 1, 2, 3, 4, 5, 6])
-    users[role] = await User.create({
+  for (const role of [0, 1, 2, 3, 4, 5, 6]) {
+    const data = {
       username: `reports.${role}`,
       password: 'ReportAudit123!',
       roles: [role],
       isActive: true,
-    });
+    };
+    if ([2, 4, 5].includes(role)) {
+      data._id = new mongoose.Types.ObjectId();
+      await User.collection.insertOne(data);
+      users[role] = data;
+    } else users[role] = await User.create(data);
+  }
   const ids = await seedReportData(mongoose.connection.db, mongoose.Types.ObjectId);
   const call = async (type = 'finance', query = 'from=2026-10-01&to=2026-10-03', role = 0) => {
     const response = await fetch(
@@ -60,12 +66,12 @@ test('service and inventory reports reconcile read-only snapshots on real MongoD
     );
     return { status: response.status, body: await response.json() };
   };
-  await t.test('only admin and accountant can read either report', async () => {
+  await t.test('only administrators can read either report', async () => {
     for (const type of ['finance', 'inventory']) {
       assert.equal((await call(type, undefined, null)).status, 401);
-      for (const role of [2, 3, 4, 6])
-        assert.equal((await call(type, undefined, role)).status, 403);
-      for (const role of [0, 1, 5]) assert.equal((await call(type, undefined, role)).status, 200);
+      for (const role of [2, 4, 5]) assert.equal((await call(type, undefined, role)).status, 401);
+      for (const role of [3, 6]) assert.equal((await call(type, undefined, role)).status, 403);
+      for (const role of [0, 1]) assert.equal((await call(type, undefined, role)).status, 200);
     }
   });
   await t.test(

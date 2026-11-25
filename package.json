@@ -30,7 +30,12 @@
     "test:e2e": "yarn workspace studio-management-frontend test:e2e",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "seed": "yarn workspace studio-management-backend seed"
+    "seed": "yarn workspace studio-management-backend seed",
+    "jobs:redis": "node ops/background-jobs.cjs redis-start",
+    "jobs:start": "node ops/background-jobs.cjs start",
+    "jobs:status": "node ops/background-jobs.cjs status",
+    "jobs:enable": "node ops/background-jobs.cjs enable",
+    "jobs:stop": "node ops/background-jobs.cjs stop"
   },
   "devDependencies": {
     "turbo": "^2.5.0"

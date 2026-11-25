@@ -151,7 +151,7 @@ async function seedGroups(context) {
     'Vườn hoa Bách Thảo',
   ];
   const photographers = catalog.staff.filter((user) => user.roles.includes(3));
-  const sales = catalog.staff.filter((user) => user.roles.includes(2));
+  const coordinators = catalog.staff.filter((user) => user.roles.some((role) => [0, 1].includes(role)));
   const groups = [];
   for (const [index, [className, school, district]] of names.entries()) {
     const key = `class-${String(index + 1).padStart(2, '0')}`;
@@ -174,7 +174,7 @@ async function seedGroups(context) {
       total: count,
       totalMale,
       totalFemale: count - totalMale,
-      createdBy: sales[index % sales.length]._id,
+      createdBy: coordinators[index % coordinators.length]._id,
       season: season._id,
       notes:
         index % 2
@@ -281,7 +281,7 @@ async function seedExpenses({ ensure, catalog, groups, at, day }) {
         : `${description} · đợt ${Math.floor(index / rows.length) + 1}`,
       ...(contextual ? { customer: group.customer._id } : {}),
       date,
-      createdBy: catalog.staffByKey.accountant._id,
+      createdBy: catalog.staffByKey.admin._id,
       season: season?._id,
       accountantRefunded: false,
       createdAt: date,

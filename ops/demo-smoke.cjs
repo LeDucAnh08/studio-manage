@@ -61,16 +61,16 @@ async function main() {
       admin.getByRole('heading', { name: 'Kết quả nhận trả', exact: true }),
     ).toBeVisible();
     checks.push('Completed rental and returns');
-    const accountant = await login('demo.accountant', 'Staff@1234', { width: 360, height: 800 });
-    const financeResponse = accountant.waitForResponse(
+    const financeAdmin = await login('superadmin', 'Admin@1234', { width: 360, height: 800 });
+    const financeResponse = financeAdmin.waitForResponse(
       (response) => new URL(response.url()).pathname === '/api/reports/finance' && response.ok(),
     );
-    await accountant.goto('/manage/reports');
+    await financeAdmin.goto('/manage/reports');
     await expect(
-      accountant.getByRole('heading', { name: 'Báo cáo dịch vụ và kho', exact: true }),
+      financeAdmin.getByRole('heading', { name: 'Báo cáo dịch vụ và kho', exact: true }),
     ).toBeVisible();
     await expect(
-      accountant.getByRole('table', { name: 'So sánh dịch vụ trong kỳ', exact: true }),
+      financeAdmin.getByRole('table', { name: 'So sánh dịch vụ trong kỳ', exact: true }),
     ).toBeVisible();
     const finance = await (await financeResponse).json();
     const due = finance.data.snapshot.reduce((total, row) => total + row.due, 0);
@@ -79,25 +79,25 @@ async function main() {
       currency: 'VND',
       maximumFractionDigits: 0,
     }).format(due);
-    await expect(accountant.getByText(formattedDue, { exact: true }).first()).toBeVisible();
+    await expect(financeAdmin.getByText(formattedDue, { exact: true }).first()).toBeVisible();
     checks.push('Mobile finance report matches current outstanding payment from API');
-    await accountant.screenshot({
+    await financeAdmin.screenshot({
       path: path.join(screenshots, 'demo-reports-mobile.png'),
       fullPage: true,
     });
-    await accountant.getByRole('button', { name: 'Phân bổ kho', exact: true }).click();
+    await financeAdmin.getByRole('button', { name: 'Phân bổ kho', exact: true }).click();
     await expect(
-      accountant.getByRole('heading', { name: 'Phân bổ theo mẫu và kích cỡ', exact: true }),
+      financeAdmin.getByRole('heading', { name: 'Phân bổ theo mẫu và kích cỡ', exact: true }),
     ).toBeVisible();
     await expect(
-      accountant.getByRole('table', { name: 'Phân bổ trang phục theo mẫu và size' }),
+      financeAdmin.getByRole('table', { name: 'Phân bổ trang phục theo mẫu và size' }),
     ).toBeVisible();
     assert.ok(
-      await accountant.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2),
+      await financeAdmin.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2),
       'Mobile page overflows',
     );
     checks.push('Mobile shared-stock report without page overflow');
-    await accountant.screenshot({
+    await financeAdmin.screenshot({
       path: path.join(screenshots, 'demo-inventory-mobile.png'),
       fullPage: true,
     });
@@ -117,12 +117,12 @@ async function main() {
       photographer.getByRole('heading', { name: 'Demo · Lớp sắp chụp', exact: true }),
     ).toBeVisible();
     checks.push('Assigned photographer can read upcoming job');
-    const sale = await login('demo.sale', 'Staff@1234');
-    await sale.goto(`/rental-orders/${scenario.records.completedRental}`);
+    const coordinator = await login('superadmin', 'Admin@1234');
+    await coordinator.goto(`/rental-orders/${scenario.records.completedRental}`);
     await expect(
-      sale.getByRole('heading', { name: 'Khách thuê demo đồ án', exact: true }),
+      coordinator.getByRole('heading', { name: 'Khách thuê demo đồ án', exact: true }),
     ).toBeVisible();
-    checks.push('Sale can read rental service');
+    checks.push('Admin can read rental service');
     assert.deepEqual(errors, [], 'Uncaught browser errors');
     const evidence = {
       generatedAt: new Date().toISOString(),

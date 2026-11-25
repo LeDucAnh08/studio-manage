@@ -180,52 +180,52 @@ async function main() {
     );
     checks.push('Current handed-over rental retains its security deposit and awaits return');
 
-    const accountant = await login('ketoan.maianh', 'Staff@1234', { width: 360, height: 800 });
+    const financeAdmin = await login('quanly.ha', 'Staff@1234', { width: 360, height: 800 });
     const from = seed.anchorDay.slice(0, 8) + '01';
     const to = seed.anchorDay;
     const range = `from=${from}&to=${to}`;
     const finance = (
-      await api(accountant, `/reports/finance?${range}&view=cash&service=all&page=1`)
+      await api(financeAdmin, `/reports/finance?${range}&view=cash&service=all&page=1`)
     ).data;
     const photoDebt = finance.snapshot.find((row) => row._id === 'photography')?.due || 0;
     assert.ok(
       photoDebt > 0,
       'Open service histories should supply a realistic outstanding balance.',
     );
-    await accountant.goto(`/manage/reports?${range}`);
+    await financeAdmin.goto(`/manage/reports?${range}`);
     await expect(
-      accountant.getByRole('heading', { name: 'Báo cáo dịch vụ và kho', exact: true }),
+      financeAdmin.getByRole('heading', { name: 'Báo cáo dịch vụ và kho', exact: true }),
     ).toBeVisible();
-    const debtTable = accountant.getByRole('table', {
+    const debtTable = financeAdmin.getByRole('table', {
       name: 'Giá trị hợp đồng và công nợ hiện tại',
       exact: true,
     });
     await expect(
       debtTable.getByRole('row').filter({ hasText: 'Chụp ảnh' }).getByRole('cell').nth(2),
     ).toHaveText(money(photoDebt));
-    await noOverflow(accountant);
+    await noOverflow(financeAdmin);
     checks.push(
-      'Mobile accountant report matches the API outstanding balance without page overflow',
+      'Mobile financeAdmin report matches the API outstanding balance without page overflow',
     );
-    await accountant.screenshot({
+    await financeAdmin.screenshot({
       path: path.join(screenshots, 'realistic-reports-mobile.png'),
       fullPage: true,
     });
 
-    const inventory = (await api(accountant, `/reports/inventory?${range}&page=1`)).data;
+    const inventory = (await api(financeAdmin, `/reports/inventory?${range}&page=1`)).data;
     assert.equal(inventory.summary.conflictRows, 0);
-    await accountant.getByRole('button', { name: 'Phân bổ kho', exact: true }).click();
+    await financeAdmin.getByRole('button', { name: 'Phân bổ kho', exact: true }).click();
     await expect(
-      accountant.getByRole('heading', { name: 'Phân bổ theo mẫu và kích cỡ', exact: true }),
+      financeAdmin.getByRole('heading', { name: 'Phân bổ theo mẫu và kích cỡ', exact: true }),
     ).toBeVisible();
     await expect(
-      accountant.getByRole('table', { name: 'Phân bổ trang phục theo mẫu và size', exact: true }),
+      financeAdmin.getByRole('table', { name: 'Phân bổ trang phục theo mẫu và size', exact: true }),
     ).toBeVisible();
-    await noOverflow(accountant);
+    await noOverflow(financeAdmin);
     checks.push(
       'Mobile shared-stock report displays the larger catalog without conflicts or page overflow',
     );
-    await accountant.screenshot({
+    await financeAdmin.screenshot({
       path: path.join(screenshots, 'realistic-inventory-mobile.png'),
       fullPage: true,
     });

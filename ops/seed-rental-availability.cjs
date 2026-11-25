@@ -118,7 +118,7 @@ function buildRecords(anchorDay, refs, now = new Date()) {
           method: 'cash',
           reference: creationKey,
           at: now,
-          actor: refs.accountant._id,
+          actor: refs.coordinator._id,
           transaction: transactionId,
         },
       ],
@@ -131,7 +131,7 @@ function buildRecords(anchorDay, refs, now = new Date()) {
         },
         {
           action: 'quote.propose',
-          actor: refs.sale._id,
+          actor: refs.coordinator._id,
           at: now,
           message: 'Studio đã gửi báo giá theo ngày.',
         },
@@ -143,7 +143,7 @@ function buildRecords(anchorDay, refs, now = new Date()) {
         },
         {
           action: 'payment.record',
-          actor: refs.accountant._id,
+          actor: refs.coordinator._id,
           at: now,
           message: 'Đã nhận đủ cọc và giữ trang phục trong kỳ thuê.',
         },
@@ -161,7 +161,7 @@ function buildRecords(anchorDay, refs, now = new Date()) {
       categoryId: refs.depositCategory._id,
       description: `Cọc thuê trang phục ${day(anchorDay, hold.startOffset)} – ${day(anchorDay, hold.endOffset)}`,
       date: now,
-      createdBy: refs.accountant._id,
+      createdBy: refs.coordinator._id,
       accountantRefunded: false,
       createdAt: now,
       updatedAt: now,
@@ -174,12 +174,9 @@ async function loadRefs(db, session) {
   const client = await db
     .collection('users')
     .findOne({ username: 'demo.client', roles: 6, isActive: true }, { session });
-  const accountant = await db
+  const coordinator = await db
     .collection('users')
-    .findOne({ username: 'demo.accountant', roles: 5, isActive: true }, { session });
-  const sale = await db
-    .collection('users')
-    .findOne({ username: 'demo.sale', roles: 2, isActive: true }, { session });
+    .findOne({ username: 'superadmin', roles: 0, isActive: true }, { session });
   const depositCategory = await db
     .collection('categories')
     .findOne({ name: 'Cọc thuê', type: 'income' }, { session });
@@ -194,9 +191,9 @@ async function loadRefs(db, session) {
         .toArray()
     ).map((type) => [type.name, type._id]),
   );
-  if (!client || !accountant || !sale || !depositCategory)
-    throw new Error('Demo customer, sale, accountant or rental deposit category is missing.');
-  return { client, accountant, sale, depositCategory, types };
+  if (!client || !coordinator || !depositCategory)
+    throw new Error('Demo customer, coordinator, administrator or rental deposit category is missing.');
+  return { client, coordinator, depositCategory, types };
 }
 
 async function validateRecords(records) {
