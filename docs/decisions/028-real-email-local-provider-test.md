@@ -4,6 +4,8 @@
 
 Accepted — 14/11/2026, Asia/Bangkok. Thay thế riêng quy tắc chặn email thật khi SePay provider Test chạy trên app chính local trong ADR-012, ADR-015 và ADR-021.
 
+Mở rộng ngày 25/11/2026 bởi [ADR-038](038-atlas-provider-test-email.md): hỗ trợ `studio_db` trên MongoDB Atlas với opt-in riêng theo lựa chọn của người dùng; quy tắc loopback dưới đây vẫn áp dụng cho cấu hình local.
+
 ## Bối cảnh
 
 Người dùng yêu cầu giữ dữ liệu `studio_db`, SePay provider Test và nhận email thật vào hộp thư. Database app chính không phải database sandbox riêng; cờ thanh toán Test không nên ngăn chức năng email đã được người dùng bật rõ ràng.

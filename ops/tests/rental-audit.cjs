@@ -11,7 +11,6 @@ process.env.JWT_SECRET = 'rental-audit-local';
 process.env.CLIENT_PORTAL_ENABLED = 'true';
 process.env.CLIENT_WORKFLOW_ENABLED = 'true';
 process.env.GAS_WEBHOOK_URL = '';
-process.env.TELEGRAM_BOT_TOKEN = '';
 r('ts-node/register/transpile-only');
 const mongoose = r('mongoose'),
   express = r('express'),

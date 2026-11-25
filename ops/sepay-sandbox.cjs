@@ -74,7 +74,6 @@ const env = {
   CORS_ORIGIN: frontendUrl,
   GAS_WEBHOOK_URL: '',
   GAS_WEBHOOK_SECRET: '',
-  TELEGRAM_BOT_TOKEN: '',
   EMAIL_ENABLED: 'true',
   EMAIL_MODE: 'test',
   EMAIL_FROM: 'Yume Sandbox <notifications@example.test>',
@@ -273,7 +272,7 @@ async function seed() {
     'Need existing mango, admin and two active photographers',
   );
   // Copy password hashes unchanged so users can use their existing login in the
-  // separate sandbox. No profile, Telegram or other private account fields copied.
+  // separate sandbox. No profile or other private account fields copied.
   for (const user of users)
     await User.collection.updateOne({ _id: user._id }, { $setOnInsert: user }, { upsert: true });
   // The sandbox uses a reserved test address, never the customer's real email.

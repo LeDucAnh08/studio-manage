@@ -107,7 +107,7 @@ Cảnh báo công nợ, khoản hoàn cọc/chờ quyết toán và chi vận h�
 
 Launcher bật CLIENT_PORTAL_ENABLED, CLIENT_WORKFLOW_ENABLED cho backend demo và VITE_CLIENT_PORTAL_ENABLED khi build. Thuê mặc định mở, không cần cờ riêng. URI database, JWT secret local, port và CORS được truyền riêng cho runtime. Không sửa `.env` hiện có; không đổi MongoDB studio_db ở cổng 27017. Các integration/E2E test vẫn dùng database riêng của harness.
 
-Telegram/GAS webhook và các biến PAYMENT\_\* bị để trống riêng cho demo; thông báo nội bộ vẫn hoạt động. Phần Drive dùng link giả hoặc tài liệu kiểm thử do người trình diễn cung cấp; demo không tạo folder/sheet trên tài khoản Google thật. Không nhập thông tin chuyển khoản thật để trình diễn.
+GAS webhook và các biến PAYMENT\_\* bị để trống riêng cho demo; thông báo nội bộ vẫn hoạt động. Tích hợp Telegram đã được loại bỏ theo ADR-039. Phần Drive dùng link giả hoặc tài liệu kiểm thử do người trình diễn cung cấp; demo không tạo folder/sheet trên tài khoản Google thật. Không nhập thông tin chuyển khoản thật để trình diễn.
 
 JWT secret demo và token dừng runtime lưu trong `.workflow-tools/demo-config.json` / `demo-state.json`, thuộc thư mục git-ignore. Không cần đưa chúng vào source hoặc biên bản. Báo cáo đọc dữ liệu được ghi thành `demo-readiness-<timestamp>.json`; status chỉ hiển thị đường dẫn/counts. `phase=ready` nghĩa là ứng dụng đã khởi chạy; trường `readiness.ready` nói riêng về dữ liệu. Cảnh báo công nợ/hoàn tiền còn mở có thể là tình huống nghiệp vụ hợp lệ.
 

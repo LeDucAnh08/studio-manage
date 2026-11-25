@@ -108,7 +108,7 @@ Theo phạm vi người thực hiện đã chốt, các yêu cầu staging/produ
 
 Chrome kiểm tra 8 nội dung trên bản build cho 5 vai trò, có báo cáo mobile 360px: đạt, không có lỗi JavaScript hoặc tràn toàn trang. Audit launcher đã xử lý cấu hình payment/webhook kế thừa, trạng thái process bất thường và kịch bản mẫu bị ngắt qua ngày; dữ liệu vẫn được giữ. Biên bản: audit/demo-local-2026-10-05.md. Kết quả 107 regression trước vẫn được ghi riêng, không thay bằng smoke demo.
 
-Mốc triển khai local đã hoàn thành và ứng dụng được giữ chạy để trình diễn. Các dòng UAT thủ công trong STUDIO_ACCEPTANCE.md dùng để tự nghiệm thu khi thuyết trình; không là điều kiện ngăn tiếp tục code. Các tích hợp Google/Telegram/thanh toán thật và phương án VPS là ngoài phạm vi demo hiện tại. Không còn chờ môi trường staging/prod hoặc dữ liệu studio thật.
+Mốc triển khai local đã hoàn thành và ứng dụng được giữ chạy để trình diễn. Các dòng UAT thủ công trong STUDIO_ACCEPTANCE.md dùng để tự nghiệm thu khi thuyết trình; không là điều kiện ngăn tiếp tục code. Các tích hợp Google/thanh toán thật và phương án VPS là ngoài phạm vi demo hiện tại. Telegram đã được loại bỏ theo ADR-039. Không còn chờ môi trường staging/prod hoặc dữ liệu studio thật.
 
 ## 12. Tiến độ ngày 06/10/2026 — dữ liệu giả lập phong phú
 

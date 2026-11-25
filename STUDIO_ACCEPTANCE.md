@@ -24,7 +24,7 @@ Hướng dẫn đầy đủ và tài khoản mẫu nằm trong [DEMO_LOCAL.md](D
 | Dữ liệu sau restart | ID một hồ sơ trước và sau khởi động lại; không mất dữ liệu |
 | Backup trước reset/nâng cấp | File sao lưu, thời gian và lệnh dùng nếu database đã có dữ liệu cần giữ |
 
-MongoDB phải là replica set hỗ trợ transaction. Một member local đủ cho đồ án, không cung cấp high availability. Dùng tài khoản và thông tin thanh toán minh họa, không nhập tài khoản ngân hàng thật hoặc liên kết Telegram thật. Nếu trình diễn Drive, dùng thư mục thử và URL minh họa phù hợp; kiểm thử tích hợp thực tế riêng khi đã cấu hình dịch vụ ngoài.
+MongoDB phải là replica set hỗ trợ transaction. Một member local đủ cho đồ án, không cung cấp high availability. Dùng tài khoản và thông tin thanh toán minh họa, không nhập tài khoản ngân hàng thật. Tích hợp Telegram đã được loại bỏ theo ADR-039. Nếu trình diễn Drive, dùng thư mục thử và URL minh họa phù hợp; kiểm thử tích hợp thực tế riêng khi đã cấu hình dịch vụ ngoài.
 
 Backup và restore thử là phần kiểm chứng bảo toàn dữ liệu có thể trình diễn local; không cần một môi trường staging khác. Trước thao tác reset hoặc đổi topology trên dữ liệu muốn giữ, sao lưu trước. Restore vào một database local riêng rồi đối chiếu collection, index và thu–hoàn, giữ nguyên database demo đang dùng.
 

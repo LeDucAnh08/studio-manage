@@ -272,7 +272,6 @@ async function serve() {
         CORS_ORIGIN: 'http://localhost:4001,http://127.0.0.1:4001',
         CLIENT_PORTAL_ENABLED: 'true',
         CLIENT_WORKFLOW_ENABLED: 'true',
-        TELEGRAM_BOT_TOKEN: '',
         GAS_WEBHOOK_URL: '',
         GAS_WEBHOOK_SECRET: '',
         PAYMENT_BANK_NAME: '',
