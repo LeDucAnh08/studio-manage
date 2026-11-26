@@ -20,6 +20,10 @@ async function main() {
   process.env.TS_NODE_PROJECT = path.join(root, 'backend/tsconfig.json');
   backendRequire('ts-node/register/transpile-only');
   const Package = backendRequire(path.join(root, 'backend/src/models/Package')).default;
+  const PackageDetail = backendRequire(path.join(root, 'backend/src/models/PackageDetail')).default;
+  const { attachPackageDetails, savePackageDetails, packageDetailContent } = backendRequire(
+    path.join(root, 'backend/src/services/packageDetails'),
+  );
   const { storePackageImage, deletePackageImages } = backendRequire(
     path.join(root, 'backend/src/services/packageMedia'),
   );
@@ -33,7 +37,8 @@ async function main() {
     if (mongoose.connection.name !== 'studio_db') throw new Error('Unexpected target database.');
     const packages = await Package.find().sort({ pricePerMember: 1 }).lean();
     const report = [];
-    for (const [index, pkg] of packages.entries()) {
+    for (const [index, record] of packages.entries()) {
+      const pkg = await attachPackageDetails(record);
       if (pkg.details?.gallery?.length) {
         report.push({
           id: String(pkg._id),
@@ -63,38 +68,37 @@ async function main() {
             caption: 'Ảnh demo tham khảo từ portfolio Yume Studio.',
           });
         }
-        // Apply nested schema defaults so legacy packages gain all required detail arrays.
-        const details = new Package({ details: { ...pkg.details, gallery } }).details.toObject();
-        const version = pkg.detailsVersion || 0;
-        const versionFilter =
-          version === 0
-            ? { $or: [{ detailsVersion: 0 }, { detailsVersion: { $exists: false } }] }
-            : { detailsVersion: version };
-        writeAttempted = true;
-        const result = await Package.updateOne(
-          {
-            _id: pkg._id,
-            ...versionFilter,
-            'details.gallery.0': { $exists: false },
-          },
-          { $set: { details }, $inc: { detailsVersion: 1 } },
-          { runValidators: true },
+        const details = packageDetailContent(
+          new PackageDetail({ package: pkg._id, ...pkg.details, gallery }).toObject(),
         );
-        committed = result.modifiedCount === 1;
+        const version = pkg.detailsVersion || 0;
+        writeAttempted = true;
+        await savePackageDetails(pkg._id, version, details);
+        committed = true;
         report.push({
           id: String(pkg._id),
           name: pkg.name,
           result: committed ? 'seeded' : 'concurrent-change-skipped',
           images: committed ? gallery.length : 0,
         });
+      } catch (error) {
+        if (error.status !== 409) throw error;
+        report.push({
+          id: String(pkg._id),
+          name: pkg.name,
+          result: 'concurrent-change-skipped',
+          images: 0,
+        });
       } finally {
         if (!committed && gallery.length) {
           let unused = gallery;
           if (writeAttempted) {
             try {
-              const latest = await Package.findById(pkg._id).select('details.gallery').lean();
+              const latest = await PackageDetail.findOne({ package: pkg._id })
+                .select('gallery')
+                .lean();
               unused = gallery.filter(
-                (image) => !latest?.details?.gallery?.some((saved) => saved.id === image.id),
+                (image) => !latest?.gallery?.some((saved) => saved.id === image.id),
               );
             } catch {
               // Keep uncertain files rather than remove images committed before a connection error.

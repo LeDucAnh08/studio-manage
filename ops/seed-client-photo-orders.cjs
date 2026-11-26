@@ -12,9 +12,8 @@ const names = [
   'User',
   'Package',
   'Category',
-  'Season',
   'Costume',
-  'Customer',
+  'Class',
   'Student',
   'Booking',
   'BookingWorkflow',
@@ -68,7 +67,7 @@ async function main() {
     const id = (model, key) =>
       new mongoose.Types.ObjectId(
         createHash('sha256')
-          .update(`${namespace}:${user._id}:${model}:${key}`)
+          .update(`${namespace}:${user._id}:${model === 'Class' ? 'Customer' : model}:${key}`)
           .digest('hex')
           .slice(0, 24),
       );
@@ -87,7 +86,6 @@ async function main() {
       schedules,
       workflows,
       rentals,
-      seasons,
     ] = await Promise.all([
       models.User.findOne({ isActive: true, roles: { $in: [0, 1] } }).lean(),
       models.User.findOne({ isActive: true, roles: { $in: [0, 1] } }).lean(),
@@ -104,7 +102,6 @@ async function main() {
       models.RentalOrder.find({ status: { $in: ['confirmed', 'checked_out'] } })
         .select('quote.receiveDate quote.returnDate')
         .lean(),
-      models.Season.find({}).lean(),
     ]);
     assert.ok(
       admin &&
@@ -173,8 +170,7 @@ async function main() {
         continue;
       }
       if (process.argv.includes('--check')) throw new Error(`Missing seeded state: ${state}`);
-      const day = pickDay(offset),
-        season = seasons.find((row) => row.startDate <= at(day) && at(day) <= row.endDate)?._id;
+      const day = pickDay(offset);
       const terminal = ['rejected', 'cancelled'].includes(state);
       const scheduled = [
         'confirmed',
@@ -211,7 +207,7 @@ async function main() {
         costumeSizes: costumes.map((costume) => ({ costumeId: costume._id, size: 'M' })),
       }));
       const customer = scheduled
-        ? add('Customer', key, {
+        ? add('Class', key, {
             className,
             school: 'THPT Yume (dữ liệu mẫu)',
             contactName: user.name,
@@ -221,7 +217,6 @@ async function main() {
             totalMale: 13,
             totalFemale: 12,
             createdBy: user._id,
-            season,
             notes: 'Dữ liệu mẫu kiểm thử trạng thái đơn chụp của mango.',
           })
         : null;
@@ -255,7 +250,6 @@ async function main() {
         ? add('Schedule', key, {
             customer: customer._id,
             package: pack._id,
-            season,
             costumes: costumes.map((costume) => costume._id),
             shootDate: at(day, '00:00'),
             startTime: '08:00',
@@ -307,7 +301,6 @@ async function main() {
             : new Date(Math.min(+acceptedAt + 3600000, +now));
         const transaction = add('Transaction', `${key}:${kind}`, {
           customer: customer?._id,
-          season,
           type: 'income',
           amount,
           categoryId: (kind === 'deposit' ? depositCategory : balanceCategory)._id,

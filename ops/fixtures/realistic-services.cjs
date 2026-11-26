@@ -52,7 +52,6 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
   };
   const payment = async ({ service, owner, stableKey, kind, amount, date, customer, label }) => {
     const paymentId = id(`${service}Payment`, stableKey);
-    const season = catalog.seasons.find((row) => row.startDate <= date && date <= row.endDate)?._id;
     const categoryKey =
       service === 'photo'
         ? kind === 'refund'
@@ -67,7 +66,6 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
             : 'rentalBalance';
     const transaction = await ensure('Transaction', `${stableKey}:transaction`, {
       customer: customer?._id,
-      ...(season ? { season } : {}),
       type: kind === 'refund' ? 'expense' : 'income',
       amount,
       categoryId: categories[categoryKey]._id,
@@ -234,7 +232,6 @@ exports.seedServices = async ({ models, ensure, id, at, day, now, catalog, group
         {
           customer: customer._id,
           package: pack._id,
-          season: customer.season,
           costumes: [...new Set(costumes.map((row) => String(row.costumeId)))],
           shootDate: at(shootDay, '00:00'),
           startTime,

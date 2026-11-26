@@ -23,7 +23,7 @@ const models = Object.fromEntries(
     'Package',
     'CostumeType',
     'Costume',
-    'Customer',
+    'Class',
     'Student',
     'Schedule',
     'Transaction',
@@ -297,7 +297,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
       1,
     );
     assert.equal(
-      await models.Customer.countDocuments(),
+      await models.Class.countDocuments(),
       1,
       'Losing transaction must not leave an orphan class',
     );
@@ -675,7 +675,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
         { $set: { inventory: [{ size: 'M', quantity: 2, condition: 'good' }] } },
       );
       const fixture = await prepare(165);
-      const customer = await models.Customer.create({
+      const customer = await models.Class.create({
         className: 'Lớp lịch cũ',
         contactName: 'Đại diện',
         contactPhone: '0901234567',
@@ -732,7 +732,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
         type: kind._id,
         inventory: [],
       });
-      const customer = await models.Customer.create({
+      const customer = await models.Class.create({
         className: 'Lớp đối soát kho',
         contactName: 'Đại diện',
         contactPhone: '0901234567',
@@ -842,7 +842,7 @@ test('independent workflow audit against isolated replica set', async (t) => {
         0,
         'The protection must work with photography only',
       );
-      const customer = await models.Customer.create({
+      const customer = await models.Class.create({
         className: 'Rollback audit',
         contactName: 'Audit',
         contactPhone: '0901234567',

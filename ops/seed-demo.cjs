@@ -57,7 +57,7 @@ function loadModels() {
       'Schedule',
       'Transaction',
       'Feedback',
-      'Customer',
+      'Class',
       'Student',
       'AccountRequest',
     ].map((name) => [
@@ -88,7 +88,7 @@ async function seedDemo(uri = DEMO_URI) {
     for (const model of Object.values(models)) await model.createIndexes();
     const ensure = async (name, filter, input) => {
       const id = createHash('sha256')
-        .update(`${PROJECT}:v1:${name}:${JSON.stringify(filter)}`)
+        .update(`${PROJECT}:v1:${name === 'Class' ? 'Customer' : name}:${JSON.stringify(filter)}`)
         .digest('hex')
         .slice(0, 24);
       // The stable ID also finds a record whose display name was edited in the UI.

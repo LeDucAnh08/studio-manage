@@ -15,12 +15,11 @@ const NAMESPACE = 'realistic:v1';
 const DAY = 86400000;
 const modelNames = [
   'User',
-  'Season',
   'CostumeType',
   'Costume',
   'Package',
   'Category',
-  'Customer',
+  'Class',
   'Student',
   'Booking',
   'BookingWorkflow',
@@ -63,7 +62,7 @@ function helpers(anchorDay, mongoose) {
     id: (model, key) =>
       new mongoose.Types.ObjectId(
         createHash('sha256')
-          .update(`${PROJECT}:${NAMESPACE}:${model}:${key}`)
+          .update(`${PROJECT}:${NAMESPACE}:${model === 'Class' ? 'Customer' : model}:${key}`)
           .digest('hex')
           .slice(0, 24),
       ),
@@ -151,7 +150,9 @@ async function seedGroups(context) {
     'Vườn hoa Bách Thảo',
   ];
   const photographers = catalog.staff.filter((user) => user.roles.includes(3));
-  const coordinators = catalog.staff.filter((user) => user.roles.some((role) => [0, 1].includes(role)));
+  const coordinators = catalog.staff.filter((user) =>
+    user.roles.some((role) => [0, 1].includes(role)),
+  );
   const groups = [];
   for (const [index, [className, school, district]] of names.entries()) {
     const key = `class-${String(index + 1).padStart(2, '0')}`;
@@ -160,12 +161,8 @@ async function seedGroups(context) {
     const client = catalog.clients[index % catalog.clients.length];
     const shootDay = day(offsets[index]);
     const createdAt = at(day(Math.min(offsets[index] - 30, -12)), '10:15');
-    const season = catalog.seasons.find(
-      (row) => row.startDate <= at(shootDay) && row.endDate >= at(shootDay),
-    );
-    if (!season) throw new Error('A class has no matching season.');
     const totalMale = Math.floor(count / 2);
-    const customer = await ensure('Customer', key, {
+    const customer = await ensure('Class', key, {
       className,
       school,
       contactName: client.name,
@@ -175,7 +172,6 @@ async function seedGroups(context) {
       totalMale,
       totalFemale: count - totalMale,
       createdBy: coordinators[index % coordinators.length]._id,
-      season: season._id,
       notes:
         index % 2
           ? 'Lớp trưởng tổng hợp danh sách, thống nhất concept tông trắng và xanh navy.'
@@ -271,7 +267,6 @@ async function seedExpenses({ ensure, catalog, groups, at, day }) {
     const date = contextual
       ? new Date(+at(group.shootDay, '16:15') + (4 + (Math.floor(index / 10) % 3)) * DAY)
       : at(day(-118 + index * 2), '16:15');
-    const season = catalog.seasons.find((row) => row.startDate <= date && row.endDate >= date);
     const record = await ensure('Transaction', `operating-expense:${index + 1}`, {
       type: 'expense',
       amount: amount + (index % 5) * 50000,
@@ -282,7 +277,6 @@ async function seedExpenses({ ensure, catalog, groups, at, day }) {
       ...(contextual ? { customer: group.customer._id } : {}),
       date,
       createdBy: catalog.staffByKey.admin._id,
-      season: season?._id,
       accountantRefunded: false,
       createdAt: date,
       updatedAt: date,
@@ -407,30 +401,12 @@ async function seedRealistic(uri = DEMO_URI, { validateOnly = false, target = 'd
         counts: previous.counts,
       };
     const anchorDay = previous?.anchorDay || today;
-    // This edition deliberately models the 2026 school year rather than silently shifting seasons.
+    // This edition deliberately models the 2026 school year with a fixed fixture period.
     if (anchorDay < '2026-09-01' || anchorDay > '2026-11-15')
       throw new Error(
-        'This fixture models autumn 2026; update its season ranges before a new edition.',
+        'This fixture models autumn 2026; update its fixture dates before a new edition.',
       );
     context = { models, ensure, now, ...helpers(anchorDay, mongoose) };
-    const plannedSeasons = [
-      ['summer', '2026-05-01', '2026-08-31'],
-      ['autumn', '2026-09-01', '2026-10-31'],
-      ['yearEnd', '2026-11-01', '2026-12-31'],
-    ];
-    for (const season of await models.Season.find({})) {
-      if (
-        plannedSeasons.some(
-          ([key, start, end]) =>
-            String(season._id) !== String(context.id('Season', `season:${key}`)) &&
-            season.startDate <= context.at(end, '23:59:59') &&
-            season.endDate >= context.at(start, '00:00'),
-        )
-      )
-        throw new Error(
-          'An existing season overlaps the new fixture. Existing seasons were preserved.',
-        );
-    }
     for (const model of Object.values(models)) await model.createIndexes();
     const before = await fingerprints(db);
     const stamp = now.toISOString().replace(/[:.]/g, '-');

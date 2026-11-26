@@ -47,6 +47,10 @@ async function main() {
   process.env.TS_NODE_PROJECT = path.join(root, 'backend/tsconfig.json');
   backendRequire('ts-node/register/transpile-only');
   const Package = backendRequire(path.join(root, 'backend/src/models/Package')).default;
+  const PackageDetail = backendRequire(path.join(root, 'backend/src/models/PackageDetail')).default;
+  const { attachPackageDetails, savePackageDetails, packageDetailContent } = backendRequire(
+    path.join(root, 'backend/src/services/packageDetails'),
+  );
   const { readPackageContent } = backendRequire(
     path.join(root, 'backend/src/utils/packageContentInput'),
   );
@@ -55,7 +59,8 @@ async function main() {
     assert.equal(mongoose.connection.name, 'studio_db');
     const packages = await Package.find().sort({ pricePerMember: 1 }).lean();
     const report = [];
-    for (const pkg of packages) {
+    for (const record of packages) {
+      const pkg = await attachPackageDetails(record);
       const sample = samples[pkg.name];
       if (!sample) {
         report.push({ name: pkg.name, result: 'no-sample-skipped' });
@@ -242,22 +247,22 @@ async function main() {
       // Reuse the API validator before touching data. Existing galleries are left untouched.
       readPackageContent({ version: 0, details: content }, 0);
       const version = pkg.detailsVersion || 0;
-      const versionFilter =
-        version === 0
-          ? { $or: [{ detailsVersion: 0 }, { detailsVersion: { $exists: false } }] }
-          : { detailsVersion: version };
-      const updates = Object.fromEntries(missing.map((key) => [`details.${key}`, content[key]]));
-      if (!pkg.details) {
-        updates.details = new Package({ details: content }).details.toObject();
-        for (const key of missing) delete updates[`details.${key}`];
-      }
-      const result = await Package.updateOne(
-        { _id: pkg._id, ...versionFilter },
-        { $set: updates, $inc: { detailsVersion: 1 } },
-        { runValidators: true },
+      const next = {
+        ...pkg.details,
+        ...Object.fromEntries(missing.map((key) => [key, content[key]])),
+      };
+      const normalized = packageDetailContent(
+        new PackageDetail({ package: pkg._id, ...next }).toObject(),
       );
-      if (result.modifiedCount === 1) {
-        const saved = await Package.findById(pkg._id).lean();
+      let saved;
+      try {
+        saved = await savePackageDetails(pkg._id, version, normalized);
+      } catch (error) {
+        if (error.status !== 409) throw error;
+        report.push({ name: pkg.name, result: 'concurrent-change-skipped', fields: missing });
+        continue;
+      }
+      {
         for (const key of keys)
           assert.deepEqual(
             saved.details[key],
@@ -274,7 +279,7 @@ async function main() {
       }
       report.push({
         name: pkg.name,
-        result: result.modifiedCount === 1 ? 'seeded' : 'concurrent-change-skipped',
+        result: 'seeded',
         fields: missing,
       });
     }

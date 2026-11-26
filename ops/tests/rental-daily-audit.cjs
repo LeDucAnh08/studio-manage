@@ -21,7 +21,7 @@ const source = (name) => r(path.resolve(__dirname, '../../backend/src', name));
 const models = Object.fromEntries(
   [
     'User',
-    'Customer',
+    'Class',
     'Costume',
     'CostumeType',
     'Schedule',
@@ -91,7 +91,7 @@ test('daily rentals: dated catalog, server pricing, durable payments and shared 
       isActive: true,
     });
   }
-  const customer = await models.Customer.create({
+  const customer = await models.Class.create({
     className: 'Daily rental audit',
     contactName: 'Audit',
     contactPhone: '0901234567',

@@ -21,7 +21,7 @@ const models = Object.fromEntries(
     'User',
     'Costume',
     'CostumeType',
-    'Customer',
+    'Class',
     'Schedule',
     'Category',
     'Transaction',
@@ -86,7 +86,7 @@ test('rental workflow uses the same real resource lock as photography', async (t
       roles: [role],
       isActive: true,
     });
-  const customer = await models.Customer.create({
+  const customer = await models.Class.create({
     className: 'Audit rental',
     contactName: 'Audit',
     contactPhone: '0901234567',

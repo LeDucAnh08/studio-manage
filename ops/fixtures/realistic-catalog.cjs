@@ -3,7 +3,7 @@
 const { realisticPresentation } = require('./rental-catalog-presentation.cjs');
 
 async function seedCatalog({ models, ensure, at, day, now }) {
-  for (const name of ['User', 'Season', 'CostumeType', 'Costume', 'Package', 'Category']) {
+  for (const name of ['User', 'CostumeType', 'Costume', 'Package', 'Category']) {
     if (!models[name]) throw new Error(`Missing demo model: ${name}`);
   }
 
@@ -64,26 +64,6 @@ async function seedCatalog({ models, ensure, at, day, now }) {
         createdAt: at('2026-05-03', '10:30'),
       },
       { username },
-    );
-  }
-
-  const seasons = {};
-  for (const [key, name, start, end] of [
-    ['summer', 'Mùa kỷ yếu hè 2026', '2026-05-01', '2026-08-31'],
-    ['autumn', 'Mùa thu thanh xuân 2026', '2026-09-01', '2026-10-31'],
-    ['yearEnd', 'Mùa tốt nghiệp cuối năm 2026', '2026-11-01', '2026-12-31'],
-  ]) {
-    seasons[key] = await ensure(
-      'Season',
-      `season:${key}`,
-      {
-        name,
-        startDate: at(start, '00:00'),
-        endDate: at(end, '23:59:59'),
-        createdAt: at('2026-04-28', '09:00'),
-        updatedAt: at('2026-04-28', '09:00'),
-      },
-      { name },
     );
   }
 
@@ -293,14 +273,12 @@ async function seedCatalog({ models, ensure, at, day, now }) {
   return {
     staff: Object.values(staff),
     clients: Object.values(clients),
-    seasons: Object.values(seasons),
     types: Object.values(types),
     costumes: Object.values(costumes),
     packages: Object.values(packages),
     categories: Object.values(categories),
     staffByKey: staff,
     clientsByKey: clients,
-    seasonsByKey: seasons,
     typesByKey: types,
     costumesByKey: costumes,
     packagesByKey: packages,

@@ -1,5 +1,11 @@
 # Project UI preferences
 
+- Yearbook package content was moved to model PackageDetail / collection package_details on 2026-11-26 by explicit user request. Do not restore embedded Package.details. Keep its unique package reference, atomic content/version updates, existing details-shaped API responses and immutable booking agreements. See ADR-043.
+
+- The school/class entity was renamed from Customer to Class on 2026-11-26 by explicit user request. Use model Class and collection classes; preserve existing ObjectIds and customer-named API relation fields/routes, including /customers/users. Do not recreate the customers collection. See ADR-042.
+
+- Shooting seasons were removed on 2026-11-26 by explicit user request. Do not restore Season models, API routes, pickers, automatic assignments or seed data. Use the existing date ranges and reporting periods; preserve business records and Drive/Sheet links. See ADR-041.
+
 - Telegram was removed on 2026-11-25 by explicit user request. Do not restore bot linking, webhook/routes, Telegram notifications, account fields or configuration. Keep existing internal notifications, email, payment, schedule and Drive workflows. See ADR-039.
 
 - On 2026-11-25 the user explicitly chose to keep the currently configured MongoDB Atlas `studio_db` instead of restoring Windows MongoDB. Preserve `MONGO_URI` and the selected real Resend/SePay provider Test modes. Atlas development requires both `SEPAY_TEST_ON_MAIN_DB=true` and `SEPAY_TEST_ON_ATLAS=true`; only `studio_db` on a `.mongodb.net` host qualifies. Keep isolated sandbox email restrictions and internal payment simulation disabled on `studio_db`. Do not automatically switch database or background job mode. This supersedes earlier local-only preferences for this configured instance; see ADR-038.
