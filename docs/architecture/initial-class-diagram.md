@@ -1,10 +1,10 @@
 # Thiết kế sơ đồ lớp ban đầu — Hệ thống quản lý studio
 
-Ngày cập nhật: 26/11/2026.
+Ngày cập nhật: 27/11/2026.
 
 Tài liệu liệt kê các thực thể nghiệp vụ, thuộc tính cơ bản và quan hệ để vẽ sơ đồ lớp ở mức thiết kế ban đầu. Đây là bản rút gọn, không phải sơ đồ đầy đủ của toàn bộ collection và mọi trường trong mã nguồn.
 
-Thiết kế phản ánh các thay đổi hiện hành: có **Role**, **Class**, **PackageDetail** và không còn **Season**.
+Thiết kế phản ánh các thay đổi hiện hành: có **Role**, **Class**, **PackageDetail**, dùng chung **Album/Photo** cho kỉ yếu và concept, và không còn **Season**.
 
 ## 1. Quy ước
 
@@ -96,12 +96,12 @@ Lưu ý khi vẽ:
 
 | Lớp | Thuộc tính cơ bản |
 | --- | --- |
-| **BookingAlbum — Album kỉ yếu** | `booking: Booking`<br>`title: String`<br>`status: String`<br>`shared: Boolean`<br>`limit: Number` |
-| **BookingAlbumPhoto — Ảnh kỉ yếu** | `album: BookingAlbum`<br>`drive: Object`<br>`selected: Boolean`<br>`available: Boolean`<br>`note: String`<br>`order: Number` |
-| **ConceptAlbum — Album concept** | `order: ConceptOrder`<br>`title: String`<br>`status: String`<br>`extraAmount: Number`<br>`allowDownload: Boolean` |
-| **ConceptPhoto — Ảnh concept** | `album: ConceptAlbum`<br>`drive: Object`<br>`selected: Boolean`<br>`available: Boolean`<br>`note: String`<br>`order: Number` |
+| **Album — Album dùng chung** | `service: String`<br>`booking: Booking`<br>`order: ConceptOrder`<br>`title: String`<br>`status: String`<br>`shared: Boolean`<br>`limit: Number`<br>`extraAmount: Number`<br>`allowDownload: Boolean` |
+| **Photo — Ảnh dùng chung** | `album: Album`<br>`kind: String`<br>`drive: Object`<br>`name: String`<br>`deliveryVersion: Number`<br>`publishedVersions: Number[]`<br>`selected: Boolean`<br>`available: Boolean`<br>`note: String`<br>`order: Number` |
 
-`drive` chứa thông tin file ảnh trên Drive. `order` trong hai lớp ảnh là thứ tự hiển thị; `ConceptAlbum.order` là tham chiếu tới đơn concept.
+Hai collection thực tế là `albums` và `photos`, dùng chung cho kỉ yếu và concept. `Album.service` là `yearbook` hoặc `concept`; mỗi album chỉ có một trong hai tham chiếu `booking` (đơn kỉ yếu) và `order` (đơn concept). `Photo.kind` phân biệt `yearbook_drive`, `concept_drive` và `yearbook_upload`. Các thuộc tính nghiệp vụ như `limit`, `extraAmount`, `shared`, `allowDownload` dùng theo dịch vụ, không bắt buộc có trên mọi album.
+
+`drive` chứa thông tin file trên Drive; ảnh tải lên máy chủ dùng `name`, thông tin kích thước và metadata file riêng. `Photo.order` là thứ tự hiển thị. Ảnh Drive dùng `deliveryVersion` (0: ảnh chọn, -1: bản nháp kỉ yếu, số dương: bản bàn giao); ảnh tải lên giữ `publishedVersions` để một file có thể xuất hiện trong nhiều bản bàn giao mà không nhân đôi file. Hiện mỗi đơn có tối đa một album, với nhiều phiên bản ảnh bên trong. Xem ADR-044.
 
 ### 2.8. Thu chi và đánh giá
 
@@ -194,10 +194,9 @@ Lịch chụp có thể thuộc đơn kỉ yếu hoặc concept; không bắt bu
 
 | Hai lớp cần nối | Quan hệ | Ý nghĩa |
 | --- | --- | --- |
-| `Booking — BookingAlbum` | 1–0..1 | Một đơn có tối đa một album kỉ yếu |
-| `BookingAlbum — BookingAlbumPhoto` | 1–N | Một album có nhiều ảnh |
-| `ConceptOrder — ConceptAlbum` | 1–0..1 | Một đơn có tối đa một album concept |
-| `ConceptAlbum — ConceptPhoto` | 1–N | Một album có nhiều ảnh |
+| `Booking — Album` | 1–0..1 | Một đơn kỉ yếu có tối đa một album dùng chung |
+| `ConceptOrder — Album` | 1–0..1 | Một đơn concept có tối đa một album dùng chung |
+| `Album — Photo` | 1–N | Một album có nhiều ảnh; mỗi ảnh thuộc một album |
 | `Category — Transaction` | 1–N | Một danh mục phân loại nhiều giao dịch |
 | `User — Transaction` | 1–N | Người tạo giao dịch |
 | `Class — Transaction` | 1–N | Giao dịch của lớp; giao dịch có thể không gắn lớp |

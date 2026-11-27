@@ -1,0 +1,16 @@
+{
+  "database": "studio_db",
+  "albums": 1,
+  "photos": 59,
+  "drivePhotos": 58,
+  "uploads": 1,
+  "legacyCollections": 0,
+  "anonymous": 401,
+  "admin": 200,
+  "owner": 200,
+  "otherCustomer": 404,
+  "staffVisiblePhotos": 58,
+  "ownerVisiblePhotos": 58,
+  "preservedSelectionAndNotes": true,
+  "realWrites": 0
+}
