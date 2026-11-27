@@ -16,7 +16,7 @@ async function main() {
     const actor = await db.db().collection('users').findOne({ username: 'mango' });
     const family = await db
       .db()
-      .collection('conceptpackages')
+      .collection('concept_details')
       .findOne({ name: 'Khoảnh khắc sum vầy', active: true });
     assert.ok(actor);
     assert.ok(family);

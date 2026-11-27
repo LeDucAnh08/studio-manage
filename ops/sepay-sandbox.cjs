@@ -283,7 +283,7 @@ async function seed() {
   // Copy the public catalog only; never copy orders, receipts or reservations.
   for (const name of [
     'concepts',
-    'conceptpackages',
+    'concept_details',
     'conceptsettings',
     'photographerprofiles',
     'costumetypes',

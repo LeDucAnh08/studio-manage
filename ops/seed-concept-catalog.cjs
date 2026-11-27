@@ -8,7 +8,7 @@ process.env.TS_NODE_PROJECT = path.join(root, 'backend/tsconfig.json');
 r('ts-node/register/transpile-only');
 const mongoose = r('mongoose');
 const Concept = r('../backend/src/models/Concept').default;
-const Package = r('../backend/src/models/ConceptPackage').default;
+const Package = r('../backend/src/models/ConceptDetail').default;
 const Profile = r('../backend/src/models/PhotographerProfile').default;
 const User = r('../backend/src/models/User').default;
 const CostumeType = r('../backend/src/models/CostumeType').default;

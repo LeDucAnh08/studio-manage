@@ -1,5 +1,7 @@
 # Project UI preferences
 
+- The concept package entity was renamed to model ConceptDetail / collection `concept_details` on 2026-11-27 by explicit user request. Preserve catalog ObjectIds, fields, indexes and accepted order snapshots. Keep the package-named API routes/DTOs and ConceptOrder.package relation field; its model reference is ConceptDetail. Do not recreate `conceptpackages`, rerun seeds or rename the yearbook PackageDetail store. See ADR-045.
+
 - Album and photo storage is shared by yearbook and concept orders as models Album / Photo, collections `albums` / `photos`, requested on 2026-11-27. The BookingAlbum, ConceptAlbum, BookingAlbumPhoto, ConceptPhoto and BookingDeliveryPhoto modules are service-scoped Mongoose discriminators over those two collections; do not recreate their former collections. Preserve service isolation, IDs, Drive links, private uploads, immutable delivery versions, selections, fees, feedback and job idempotency. Each album belongs to exactly one yearbook Booking or ConceptOrder; the current workflow keeps one album per order. See ADR-044.
 
 - Yearbook package content was moved to model PackageDetail / collection package_details on 2026-11-26 by explicit user request. Do not restore embedded Package.details. Keep its unique package reference, atomic content/version updates, existing details-shaped API responses and immutable booking agreements. See ADR-043.

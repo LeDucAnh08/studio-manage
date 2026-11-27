@@ -20,7 +20,7 @@ async function main() {
   try {
     const User = require('../backend/src/models/User').default,
       Concept = require('../backend/src/models/Concept').default,
-      Package = require('../backend/src/models/ConceptPackage').default,
+      Package = require('../backend/src/models/ConceptDetail').default,
       Profile = require('../backend/src/models/PhotographerProfile').default;
     const users = {};
     for (const [name, role, label] of [

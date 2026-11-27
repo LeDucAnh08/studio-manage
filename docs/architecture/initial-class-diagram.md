@@ -4,7 +4,7 @@ Ngày cập nhật: 27/11/2026.
 
 Tài liệu liệt kê các thực thể nghiệp vụ, thuộc tính cơ bản và quan hệ để vẽ sơ đồ lớp ở mức thiết kế ban đầu. Đây là bản rút gọn, không phải sơ đồ đầy đủ của toàn bộ collection và mọi trường trong mã nguồn.
 
-Thiết kế phản ánh các thay đổi hiện hành: có **Role**, **Class**, **PackageDetail**, dùng chung **Album/Photo** cho kỉ yếu và concept, và không còn **Season**.
+Thiết kế phản ánh các thay đổi hiện hành: có **Role**, **Class**, **PackageDetail**, **ConceptDetail** (tên cũ ConceptPackage), dùng chung **Album/Photo** cho kỉ yếu và concept, và không còn **Season**.
 
 ## 1. Quy ước
 
@@ -81,8 +81,10 @@ Lưu ý khi vẽ:
 | Lớp | Thuộc tính cơ bản |
 | --- | --- |
 | **Concept — Concept chụp ảnh** | `name: String`<br>`description: String`<br>`coverUrl: String`<br>`styleSummary: String`<br>`preparation: String`<br>`active: Boolean` |
-| **ConceptPackage — Gói chụp concept** | `concept: Concept`<br>`name: String`<br>`price: Number`<br>`durationMinutes: Number`<br>`maxPeople: Number`<br>`retouchQuota: Number`<br>`extraPhotoPrice: Number`<br>`active: Boolean` |
-| **ConceptOrder — Đơn chụp concept** | `client: User`<br>`concept: Concept`<br>`package: ConceptPackage`<br>`photographer: User`<br>`editor: User`<br>`contactName: String`<br>`phone: String`<br>`people: Number`<br>`startAt: Date`<br>`endAt: Date`<br>`brief: String`<br>`status: String` |
+| **ConceptDetail — Gói chụp concept** | `concept: Concept`<br>`name: String`<br>`price: Number`<br>`durationMinutes: Number`<br>`maxPeople: Number`<br>`retouchQuota: Number`<br>`extraPhotoPrice: Number`<br>`active: Boolean` |
+| **ConceptOrder — Đơn chụp concept** | `client: User`<br>`concept: Concept`<br>`package: ConceptDetail`<br>`photographer: User`<br>`editor: User`<br>`contactName: String`<br>`phone: String`<br>`people: Number`<br>`startAt: Date`<br>`endAt: Date`<br>`brief: String`<br>`status: String` |
+
+`ConceptDetail` dùng collection `concept_details`, là thực thể gói concept trước đây có tên `ConceptPackage`. API vẫn gọi trường liên kết là `package`; `PackageDetail` ở phần kỉ yếu là thực thể riêng, không đổi tên hoặc gộp vào đây. Xem ADR-045.
 
 ### 2.6. Thuê trang phục
 
@@ -177,8 +179,8 @@ Quan hệ `Class — BookingWorkflow` là đường liên kết lớp với đơ
 
 | Hai lớp cần nối | Quan hệ | Ý nghĩa |
 | --- | --- | --- |
-| `Concept — ConceptPackage` | 1–N | Một concept có nhiều gói |
-| `ConceptPackage — ConceptOrder` | 1–N | Một gói concept có nhiều đơn |
+| `Concept — ConceptDetail` | 1–N | Một concept có nhiều gói |
+| `ConceptDetail — ConceptOrder` | 1–N | Một gói concept có nhiều đơn |
 | `Concept — ConceptOrder` | 1–N | Một concept xuất hiện trong nhiều đơn |
 | `User — ConceptOrder` | 1–N | Quan hệ khách hàng tạo đơn |
 | `User — ConceptOrder` | 1–N | Quan hệ riêng mang tên thợ chụp |

@@ -1,0 +1,13 @@
+{
+  "database": "studio_db",
+  "model": "ConceptDetail",
+  "collection": "concept_details",
+  "records": 6,
+  "oldCollectionExists": false,
+  "apiAdmin": 200,
+  "anonymous": 401,
+  "customerManage": 403,
+  "ordersPopulated": 1,
+  "allReferencesValid": true,
+  "realWrites": 0
+}
