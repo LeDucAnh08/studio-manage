@@ -22,7 +22,6 @@ module.exports = async ({ base, actors, token, orderId }) => {
       stdio: 'pipe',
       env: {
         ...process.env,
-        VITE_CONCEPT_BOOKING_ENABLED: 'true',
         VITE_API_URL: '/api',
         DEV_API_PROXY_TARGET: base.replace(/\/api$/, ''),
       },

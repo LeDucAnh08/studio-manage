@@ -16,16 +16,13 @@ webhook và quy trình album không đổi.
 
 Đơn concept độc lập với kỷ yếu, dùng chung User, Schedule, kho, resource transaction,
 Transaction, SePayReceipt, email outbox và dịch vụ ảnh Drive. Không chuyển đổi đơn cũ.
-Mặc định tắt; bật `CONCEPT_BOOKING_ENABLED=true` ở backend và
-`VITE_CONCEPT_BOOKING_ENABLED=true` ở frontend rồi restart/build. Cần
+Luồng chụp concept luôn khả dụng. Cần
 `CLIENT_WORKFLOW_ENABLED=true`, MongoDB replica set, cấu hình SePay hiện có và
 xác thực email. Album cần `GOOGLE_DRIVE_API_KEY` phía server như ADR-014.
 Nếu webhook SePay đang lọc mã thanh toán, bổ sung tiền tố `CONC` bên cạnh các
 mã kỷ yếu/thuê hiện có; giữ JSON và HMAC-SHA256 như cấu hình đang dùng.
-Với Docker Compose, đặt hai cờ concept trong root `.env`; frontend nhận cờ qua
-build argument, backend nhận qua environment. Mặc định trong Compose vẫn tắt.
 
-Khách mở `/concept-booking` (hoặc `/concepts` khi bật), đơn ở tab Chụp concept của
+Khách mở `/concept-booking` (hoặc `/concepts`), đơn ở tab Chụp concept của
 `/account/orders`. Nhân sự mở `/concept-orders`; admin cấu hình tại
 `/settings/concepts`. Tạo concept, gói và hồ sơ thợ published, đánh dấu concept thợ
 có thể chụp; ảnh portfolio chỉ công khai khi có quyền sử dụng. Giá tối thiểu 1.000đ,
